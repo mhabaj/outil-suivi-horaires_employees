@@ -4,6 +4,10 @@ import java.time.LocalTime;
 
 public class Worker {
 
+	private int id_Worker;
+	private String firstname_Worker, lastname_Worker;
+	private LocalTime default_ArrivalTime_Worker, default_DepartureTime_Worker;
+
 	/**
 	 * @param id_Worker
 	 * @param firstname_Worker
@@ -11,10 +15,6 @@ public class Worker {
 	 * @param default_ArrivalTime_Worker
 	 * @param default_DepartureTime_Worker
 	 */
-
-	private int id_Worker;
-	private String firstname_Worker, lastname_Worker;
-	private LocalTime default_ArrivalTime_Worker, default_DepartureTime_Worker;
 
 	public Worker(int id_Worker, String firstname_Worker, String lastname_Worker, LocalTime default_ArrivalTime_Worker,
 			LocalTime default_DepartureTime_Worker) {
@@ -95,5 +95,4 @@ public class Worker {
 		this.default_DepartureTime_Worker = default_DepartureTime_Worker;
 	}
 
-	
 }

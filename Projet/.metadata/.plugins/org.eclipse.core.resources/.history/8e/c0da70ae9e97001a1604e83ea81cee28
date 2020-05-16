@@ -1,0 +1,14 @@
+package centralApplication;
+
+public class PersonalWorkerCard {
+
+	private int id_Card;
+	private int card_Owner_id;
+
+	/**
+	 * @param id_Card
+	 * @param card_Owner
+	 * @param card_Owner_id
+	 */
+	
+}

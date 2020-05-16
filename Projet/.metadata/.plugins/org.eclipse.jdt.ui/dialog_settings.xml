@@ -32,7 +32,7 @@
 		<item key="Comments" value="true"/>
 	</section>
 	<section name="GenerateConstructorUsingFieldsSelectionDialog">
-		<item key="OmitCallToSuper" value="false"/>
+		<item key="OmitCallToSuper" value="true"/>
 	</section>
 	<section name="DialogBounds_GenerateConstructorUsingFieldsSelectionDialog">
 		<item key="DIALOG_X_ORIGIN" value="710"/>
@@ -46,9 +46,13 @@
 		<item key="height" value="400"/>
 	</section>
 	<section name="SelfEncapsulateFieldWizard">
-		<item key="GenerateJavadoc" value="false"/>
+		<item key="GenerateJavadoc" value="true"/>
 	</section>
 	<section name="BuildPathsPropertyPage">
 		<item key="pageIndex" value="3"/>
+	</section>
+	<section name="RenameInformationPopup">
+	</section>
+	<section name="org.eclipse.ltk.ui.refactoring.settings">
 	</section>
 </section>

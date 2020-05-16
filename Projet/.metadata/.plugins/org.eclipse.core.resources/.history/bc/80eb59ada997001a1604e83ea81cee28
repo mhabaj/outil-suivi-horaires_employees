@@ -1,0 +1,20 @@
+
+package centralApplication;
+
+import java.time.LocalDate;
+
+public class TimeKeeper {
+	private LocalDate current_Date_TimeKeeper;
+
+	
+
+	
+	
+	/**
+	 * @brief Update current date
+	 */
+	public void updateCurrentDate() {
+		this.setCurrent_Date(java.time.LocalDate.now());
+	}
+
+}

@@ -1,5 +1,0 @@
-package centralApplication;
-
-public class Department {
-	private int id_Department
-}

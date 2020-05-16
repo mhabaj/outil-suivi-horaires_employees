@@ -78,7 +78,7 @@ public class Company {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * @param searched_department_Name
 	 * @return true if searched department found, else false
@@ -91,7 +91,5 @@ public class Company {
 		}
 		return false;
 	}
-	
-	
-	
+
 }

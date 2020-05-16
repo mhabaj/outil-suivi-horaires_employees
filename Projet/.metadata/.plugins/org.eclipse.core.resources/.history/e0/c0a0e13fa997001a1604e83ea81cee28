@@ -1,0 +1,10 @@
+
+package centralApplication;
+
+import java.time.LocalTime;
+
+public class TimeKeeper {
+	private LocalTime default_ArrivalTime_Worker, default_DepartureTime_Worker;
+	private LocalDate current_Date = java.time.LocalDate.now()
+
+}
