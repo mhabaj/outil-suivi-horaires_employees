@@ -1,0 +1,67 @@
+package centralApplication;
+
+import java.util.ArrayList;
+
+public class Company {
+
+	private int id_Company;
+	private String name_Company;
+	private ArrayList<Department> Department_List = new ArrayList<Department>();;
+
+	/**
+	 * @param id_Company
+	 * @param name_Company
+	 */
+	public Company(int id_Company, String name_Company) {
+		this.setId_Company(id_Company);
+		this.setName_Company(name_Company);
+	}
+	
+	
+
+	/**
+	 * @return the department_List
+	 */
+	public ArrayList<Department> getDepartment_List() {
+		return Department_List;
+	}
+
+	/**
+	 * @param department_List the department_List to set
+	 */
+	public void setDepartment_List(ArrayList<Department> department_List) {
+		Department_List = department_List;
+	}
+
+	/**
+	 * @return the id_Company
+	 */
+	public int getId_Company() {
+		return id_Company;
+	}
+
+	/**
+	 * @param id_Company the id_Company to set
+	 */
+	public void setId_Company(int id_Company) {
+		this.id_Company = id_Company;
+	}
+
+	/**
+	 * @return the name_Company
+	 */
+	public String getName_Company() {
+		return name_Company;
+	}
+
+	/**
+	 * @param name_Company the name_Company to set
+	 */
+	public void setName_Company(String name_Company) {
+		this.name_Company = name_Company;
+	}
+
+	public void add_Department(Department dpt) {
+		
+	}
+}

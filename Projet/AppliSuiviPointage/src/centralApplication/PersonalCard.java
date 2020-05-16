@@ -3,17 +3,16 @@ package centralApplication;
 public class PersonalCard {
 
 	private int id_Card;
-	private Worker card_Owner;
 	private int card_Owner_id;
-
 
 	/**
 	 * @param id_Card
-	 * @param card_owner
+	 * @param card_Owner
+	 * @param card_Owner_id
 	 */
-	public PersonalCard(int id_Card, Worker card_owner) {
-		this.setId_Card(id_Card);
-		this.setCard_Owner(card_owner);
+	public PersonalCard(int id_Card, int card_Owner_id) {
+		this.id_Card = id_Card;
+		this.card_Owner_id = card_Owner_id;
 	}
 
 	public int getId_Card() {
@@ -24,11 +23,11 @@ public class PersonalCard {
 		this.id_Card = id_Card;
 	}
 
-	public Worker getCard_Owner() {
-		return card_Owner;
+	public int getCard_Owner_id() {
+		return card_Owner_id;
 	}
 
-	public void setCard_Owner(Worker card_Owner) {
-		this.card_Owner = card_Owner;
+	public void setCard_Owner_id(int card_Owner_id) {
+		this.card_Owner_id = card_Owner_id;
 	}
 }

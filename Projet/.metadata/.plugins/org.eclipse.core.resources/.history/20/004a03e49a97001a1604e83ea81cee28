@@ -1,0 +1,54 @@
+package centralApplication;
+
+import java.util.ArrayList;
+
+public class Department {
+	private int id_Department;
+	private String name_Department;
+	private ArrayList<Worker> Worker_List = new ArrayList<Worker>();;
+
+
+	/**
+	 * @param id_Department
+	 * @param name_Department
+	 */
+	public Department(int id_Department, String name_Department) {
+		this.setId_Department(id_Department);
+		this.setName_Department(name_Department);
+	}
+
+
+	/**
+	 * @return the worker_List
+	 */
+	public ArrayList<Worker> getWorker_List() {
+		return Worker_List;
+	}
+
+
+	/**
+	 * @param worker_List the worker_List to set
+	 */
+	public void setWorker_List(ArrayList<Worker> worker_List) {
+		Worker_List = worker_List;
+	}
+
+
+	/**
+	 * @return the id_Department
+	 */
+	public int getId_Department() {
+		return id_Department;
+	}
+
+
+	/**
+	 * @param id_Department the id_Department to set
+	 */
+	public void setId_Department(int id_Department) {
+		this.id_Department = id_Department;
+	}
+
+
+
+}
