@@ -1,0 +1,8 @@
+package centralApplication;
+
+public class Company {
+
+	private int id_Company;
+	private int id_Company;
+	
+}

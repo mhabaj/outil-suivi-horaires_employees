@@ -1,0 +1,7 @@
+package centralApplication;
+
+public class PersonalCard {
+
+	private int id_Card;
+	private Worker owner;
+}

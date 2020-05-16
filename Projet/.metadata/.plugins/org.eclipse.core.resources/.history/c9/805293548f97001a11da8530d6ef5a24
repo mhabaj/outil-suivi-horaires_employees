@@ -1,0 +1,10 @@
+package centralApplication;
+
+public class Worker {
+
+	private int id_Worker;
+	private String firstname_Worker, lastname_Worker;
+	private LocalTime default_ArrivalTime_Worker, default_DepartureTime_Worker;
+	
+	
+}

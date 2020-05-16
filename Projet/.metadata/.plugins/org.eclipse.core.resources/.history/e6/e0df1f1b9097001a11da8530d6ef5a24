@@ -1,0 +1,16 @@
+package centralApplication;
+
+public class PersonalCard {
+
+	/**
+	 * @param id_Card
+	 * @param card_owner
+	 */
+	public PersonalCard(int id_Card, Worker card_owner) {
+		super();
+		this.id_Card = id_Card;
+		this.card_owner = card_owner;
+	}
+	private int id_Card;
+	private Worker card_Owner;
+}

@@ -1,0 +1,28 @@
+package centralApplication;
+
+import java.time.LocalTime;
+
+public class Worker {
+
+	/**
+	 * @param id_Worker
+	 * @param firstname_Worker
+	 * @param lastname_Worker
+	 * @param default_ArrivalTime_Worker
+	 * @param default_DepartureTime_Worker
+	 */
+	public Worker(int id_Worker, String firstname_Worker, String lastname_Worker, LocalTime default_ArrivalTime_Worker,
+			LocalTime default_DepartureTime_Worker) {
+		super();
+		this.id_Worker = id_Worker;
+		this.firstname_Worker = firstname_Worker;
+		this.lastname_Worker = lastname_Worker;
+		this.default_ArrivalTime_Worker = default_ArrivalTime_Worker;
+		this.default_DepartureTime_Worker = default_DepartureTime_Worker;
+	}
+
+	private int id_Worker;
+	private String firstname_Worker, lastname_Worker;
+	private LocalTime default_ArrivalTime_Worker, default_DepartureTime_Worker;
+
+}

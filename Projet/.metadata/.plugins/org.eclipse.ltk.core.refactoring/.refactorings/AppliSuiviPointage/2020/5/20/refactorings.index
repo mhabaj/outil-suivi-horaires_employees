@@ -1,0 +1,12 @@
+1589644531490	Delete element
+1589645690403	Encapsulate field 'id_Card'
+1589645695956	Encapsulate field 'card_Owner'
+1589645750411	Encapsulate field 'id_Company'
+1589645753616	Encapsulate field 'name_Company'
+1589645801919	Encapsulate field 'id_Department'
+1589645805228	Encapsulate field 'name_Department'
+1589645885468	Encapsulate field 'id_Worker'
+1589645889111	Encapsulate field 'firstname_Worker'
+1589645892179	Encapsulate field 'lastname_Worker'
+1589645896117	Encapsulate field 'default_ArrivalTime_Worker'
+1589645899053	Encapsulate field 'default_DepartureTime_Worker'
