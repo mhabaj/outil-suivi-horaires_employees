@@ -28,3 +28,13 @@
 1589656503323	Encapsulate field 'current_Date'
 1589656560197	Encapsulate field 'current_Date_TimeKeeper'
 1589656798528	Encapsulate field 'registered_rounded_time'
+1589720077135	Encapsulate field 'id_Worker'
+1589720185102	Extract interface 'TimeKeeperInterface'
+1589720206315	Delete element
+1589729237319	Delete element
+1589729330143	Move file
+1589733455847	Rename type 'DataTransfer'
+1589736320723	Move compilation unit
+1589736353079	Move compilation unit
+1589736461738	Rename local variable 'ss'
+1589736726620	Rename field 'mainDeviceSocket'

@@ -1,0 +1,49 @@
+package centralApplication;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
+public class DataManager {
+
+	private FileOutputStream fos;
+	private ObjectOutputStream oos;
+	
+	private FileInputStream fis;
+	private ObjectInputStream ois;
+
+	/**
+	 * @param fileUrl
+	 * @param fos
+	 * @throws IOException
+	 */
+	public DataManager(String fileUrl) throws FileNotFoundException, IOException {
+		///////////////////////////////////////////////
+		this.fos = new FileOutputStream(fileUrl);
+		this.oos = new ObjectOutputStream(this.fos);
+		///////////////////////////////////////////////
+		this.fis = new FileInputStream(fileUrl);
+		this.ois = new ObjectInputStream(this.fis);
+
+	}
+
+	public void serialiseObject(Object ObjectToSerialise) throws IOException {
+
+		this.oos.writeObject(ObjectToSerialise);
+
+	}
+	public void deserialiseObject() throws IOException {
+
+		this.ois.readObject();
+
+	}
+
+	public void finalizeDataManager() throws IOException {
+		this.oos.close();
+		this.fos.close();
+	}
+
+}

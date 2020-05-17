@@ -1,9 +1,14 @@
 package centralApplication;
 
+import java.io.Serializable;
 import java.time.LocalTime;
 
-public class Worker {
+public class Worker implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7337982580589824925L;
 	private int id_Worker;
 	private String firstname_Worker, lastname_Worker;
 	private LocalTime default_ArrivalTime_Worker, default_DepartureTime_Worker;
@@ -93,6 +98,13 @@ public class Worker {
 	 */
 	public void setDefault_DepartureTime_Worker(LocalTime default_DepartureTime_Worker) {
 		this.default_DepartureTime_Worker = default_DepartureTime_Worker;
+	}
+
+	@Override
+	public String toString() {
+		return "Worker [id_Worker=" + id_Worker + ", firstname_Worker=" + firstname_Worker + ", lastname_Worker="
+				+ lastname_Worker + ", default_ArrivalTime_Worker=" + default_ArrivalTime_Worker
+				+ ", default_DepartureTime_Worker=" + default_DepartureTime_Worker + "]";
 	}
 
 }

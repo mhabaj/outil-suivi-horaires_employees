@@ -1,0 +1,33 @@
+package centralApplication;
+
+import java.io.IOException;
+import java.time.LocalTime;
+
+public class main {
+
+	public static void main(String[] args) {
+
+		Worker Tom = new Worker(1, "Tom", "Belda", LocalTime.parse("07:30:15"), LocalTime.parse("17:30:00"));
+		Worker Mah = new Worker(2, "Mah", "Alhabaj", LocalTime.parse("10:30:00"), LocalTime.parse("19:30:00"));
+
+		TimeKeeper pointeuse = new TimeKeeper(1);
+		TimeKeeper pointeuse2 = new TimeKeeper(2);
+		System.out.println(pointeuse);
+		System.out.println(pointeuse2);
+
+		try {
+			DataManager dm = new DataManager();
+			dm.serialiseObject(pointeuse);
+
+			TimeKeeper pointeuse3 = (TimeKeeper) dm.deserialiseObject();
+			System.out.println("////////////");
+			System.out.println(pointeuse3);
+
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		System.out.println("Yes");
+	}
+
+}
