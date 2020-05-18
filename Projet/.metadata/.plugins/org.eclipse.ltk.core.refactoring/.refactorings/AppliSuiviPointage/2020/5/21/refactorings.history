@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;centralApplication.PersonalWorkerCard&apos; to &apos;PersonalCard&apos;&#x0D;&#x0A;- Original project: &apos;AppliSuiviPointage&apos;&#x0D;&#x0A;- Original element: &apos;centralApplication.PersonalWorkerCard&apos;&#x0D;&#x0A;- Renamed element: &apos;centralApplication.PersonalCard&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;PersonalWorkerCard&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src&lt;centralApplication{PersonalWorkerCard.java[PersonalWorkerCard" matchStrategy="1" name="PersonalCard" qualified="false" references="true" similarDeclarations="false" stamp="1589817126379" textual="false" version="1.0"/>
+</session>

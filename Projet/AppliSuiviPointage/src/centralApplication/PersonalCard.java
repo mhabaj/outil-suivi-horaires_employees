@@ -1,0 +1,46 @@
+package centralApplication;
+
+public class PersonalCard {
+
+	private int id_Card;
+
+	/**
+	 * @param id_Card
+	 * @param card_Owner_id
+	 */
+	public PersonalCard(int id_Card, int card_Owner_id) {
+		this.id_Card = id_Card;
+		this.card_Owner_id = card_Owner_id;
+	}
+
+	private int card_Owner_id;
+
+	/**
+	 * @return the id_Card
+	 */
+	public int getId_Card() {
+		return id_Card;
+	}
+
+	/**
+	 * @param id_Card the id_Card to set
+	 */
+	public void setId_Card(int id_Card) {
+		this.id_Card = id_Card;
+	}
+
+	/**
+	 * @return the card_Owner_id
+	 */
+	public int getCard_Owner_id() {
+		return card_Owner_id;
+	}
+
+	/**
+	 * @param card_Owner_id the card_Owner_id to set
+	 */
+	public void setCard_Owner_id(int card_Owner_id) {
+		this.card_Owner_id = card_Owner_id;
+	}
+
+}

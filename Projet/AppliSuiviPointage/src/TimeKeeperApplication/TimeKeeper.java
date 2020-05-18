@@ -9,10 +9,12 @@ import java.time.temporal.ChronoUnit;
 
 public class TimeKeeper implements Serializable {
 
+
 	private static final long serialVersionUID = 7883183033977595538L;
 	private LocalDate current_Date_TimeKeeper;
 	private LocalTime registered_rounded_time;
 	private int id_Worker;
+	private int status;
 
 	/**
 	 * @return the current_Date_TimeKeeper
@@ -76,22 +78,26 @@ public class TimeKeeper implements Serializable {
 		return roundedTime;
 	}
 
+
 	/**
 	 * @param current_Date_TimeKeeper
 	 * @param registered_rounded_time
 	 * @param id_Worker
 	 */
-	public TimeKeeper(int id_Worker) {
+	public TimeKeeper(int id_Worker, int status) {
 		this.updateCurrentDate();
-		setRegistered_rounded_time(roundedTime(LocalDateTime.now()));
-		setId_Worker(id_Worker);
+		this.setRegistered_rounded_time(roundedTime(LocalDateTime.now())); // A CHANGER APRES AVEC LE VRAI TEMPS DARRIVEE MANUELEMENT?
+		this.setId_Worker(id_Worker);
+		this.status = status;
+
 	}
 
-	@Override
-	public String toString() {
+	@Override 
+	public String toString() { //A CHANGER POUR STRINGBUFFER
 		return "TimeKeeper [current_Date_TimeKeeper=" + current_Date_TimeKeeper + ", registered_rounded_time="
-				+ registered_rounded_time + ", id_Worker=" + id_Worker + "]";
+				+ registered_rounded_time + ", id_Worker=" + id_Worker + ", status=" + status + "]";
 	}
 
 	
+
 }

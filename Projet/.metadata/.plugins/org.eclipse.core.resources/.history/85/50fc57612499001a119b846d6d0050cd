@@ -1,0 +1,52 @@
+package TimeKeeperApplication;
+
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+
+public class DataTransferClient<Element> {
+
+	private Socket socket;
+	private OutputStream outputStream;
+	private ObjectOutputStream objectOutputStream;
+
+	
+	public DataTransferClient() throws UnknownHostException, IOException {
+		// Initialisation du socket d'envoie
+		this.socket = new Socket("127.0.0.1", 7778);
+		// Flux de donnees:
+		this.outputStream = socket.getOutputStream();
+		
+		
+	}
+
+	public void send(ArrayList<Element> ObjectsToSendArray) throws UnknownHostException, IOException {
+
+		
+		// Envoie des donnes via objectOutputStream:
+		objectOutputStream = new ObjectOutputStream(outputStream);
+		System.out.println("Envoie d'objets au serveur");
+		objectOutputStream.writeObject(ObjectsToSendArray);
+
+		System.out.println("Fin de la tache, Fermeture de connexion");
+		socket.close();
+	}
+	
+	public void send(Element ObjectToSend) throws UnknownHostException, IOException {
+
+		
+		// Flux de donnees:
+		outputStream = socket.getOutputStream();
+		// Envoie des donnes via objectOutputStream:
+		objectOutputStream = new ObjectOutputStream(outputStream);
+		System.out.println("Envoie d'objets au serveur");
+		objectOutputStream.writeObject(ObjectToSend);
+
+		System.out.println("Fin de la tache, Fermeture de connexion");
+		socket.close();
+	}
+
+}
