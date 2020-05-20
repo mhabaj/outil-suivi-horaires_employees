@@ -52,41 +52,53 @@ public class MainTest {
 		AledS6.add_Department(top);
 		DataManager<Company> dm = new DataManager<Company>();
 
-		/*
-		 * try {
-		 * 
-		 * dm.serialiseObject(AledS6);
-		 * 
-		 * } catch (IOException e) { e.printStackTrace(); }
-		 * 
-		 * Company cp = dm.deserialiseObject(); System.out.println(cp.toString());
-		 * System.out.println("///////"); System.out.println(cp.getDepartment_List());
-		 * cp.showEveryDepartmentName();
-		 * System.out.println("/////////////////////////////////////");
-		 * 
-		 * Department dpTest; Worker wTest; try {
-		 * System.out.println("--Test:getDepartmentByName: Jungle "); dpTest =
-		 * cp.getDepartmentByName("Jungle"); System.out.println(dpTest.toString());
-		 * System.out.println("--Test:getDepartmentById: 2 "); dpTest =
-		 * cp.getDepartmentById(2); System.out.println(dpTest.toString());
-		 * System.out.println("/////////////////////////////////////");
-		 * System.out.println("--getWorkerById: 12347 Adrien ");
-		 * 
-		 * wTest = dpTest.getWorkerById(12347); System.out.println(wTest.toString());
-		 * 
-		 * 
-		 * 
-		 * } catch (Exception e) { e.printStackTrace(); }
-		 */
+	/*	try {
+
+			dm.serialiseObject(AledS6);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		Company cp = dm.deserialiseObject();
+		System.out.println(cp.toString());
+		System.out.println("///////");
+		System.out.println(cp.getDepartment_List());
+		cp.showEveryDepartmentName();
+		System.out.println("/////////////////////////////////////");
+
+		Department dpTest;
+		Worker wTest;
+		try {
+			System.out.println("--Test:getDepartmentByName: Jungle ");
+			dpTest = cp.getDepartmentByName("Jungle");
+			System.out.println(dpTest.toString());
+			System.out.println("--Test:getDepartmentById: 2 ");
+			dpTest = cp.getDepartmentById(2);
+			System.out.println(dpTest.toString());
+			System.out.println("/////////////////////////////////////");
+			System.out.println("--getWorkerById: 12347 Adrien ");
+
+			wTest = dpTest.getWorkerById(12347);
+			System.out.println(wTest.toString());
+
+			
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		*/
 		System.out.println("/////////////////////////////////////");
 		System.out.println("--DeleteWorker: 12347 Adrien ");
-
+		
 		try {
 			System.out.println(bot.getWorkerById(12346).toString());
 			bot.deleteWorker(bot.getWorkerById(12346));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
 			System.out.println(bot.getWorkerById(12346).toString());
-			bot.add_Worker(Mah); // on reset les tests
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

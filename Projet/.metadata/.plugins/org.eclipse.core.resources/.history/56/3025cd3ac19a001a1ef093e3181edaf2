@@ -134,13 +134,14 @@ public class Department implements Serializable {
 		throw new Exception("Error Search: Worker Not Found");
 	}
 
-	public int deleteWorker(Worker workerToDelete) throws Exception {
+	public void deleteWorker(Worker workerToDelete) throws Exception {
 
 		for (Worker worker : Worker_List) {
 			if (worker.getId_Worker() == workerToDelete.getId_Worker()) {
 				this.Worker_List.remove(worker);
-				return 1;
+				System.out.println("CEST FAIT");
 			}
+
 		}
 		throw new Exception("Error Remove: Worker Not Found");
 
