@@ -1,0 +1,23 @@
+package centralApplication;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+public class WorkingDay {
+
+	private String todaysDate;
+	private String arrivalTime;
+	private String departureTime;
+
+	/**
+	 * @param todaysDate
+	 * @param arrivalTime
+	 * @param departureTime
+	 */
+	public WorkingDay(String todaysDate, String arrivalTime, String departureTime) {
+		this.todaysDate = todaysDate;
+		this.arrivalTime = arrivalTime;
+		this.departureTime = departureTime;
+	}
+
+}
