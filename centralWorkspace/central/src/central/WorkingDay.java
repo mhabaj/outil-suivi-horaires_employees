@@ -4,71 +4,77 @@ import java.io.Serializable;
 
 public class WorkingDay implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3677369569047290839L;
-	private String todaysDate;
-	private String arrivalTime;
-	private String departureTime;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 3677369569047290839L;
+    private String todaysDate;
+    private String arrivalTime;
+    private String departureTime;
 
-	/**
-	 * @param todaysDate
-	 * @param arrivalTime
-	 * @param departureTime
-	 */
-	public WorkingDay(String todaysDate, String arrivalTime, String departureTime) {
-		this.setTodaysDate(todaysDate);
-		this.setArrivalTime(arrivalTime);
-		this.setDepartureTime(departureTime);
-	}
+    /**
+     * @param todaysDate
+     * @param arrivalTime
+     * @param departureTime
+     */
+    public WorkingDay(String todaysDate, String arrivalTime, String departureTime) {
+        this.setTodaysDate(todaysDate);
+        this.setArrivalTime(arrivalTime);
+        this.setDepartureTime(departureTime);
+    }
 
-	@Override
-	public String toString() {
-		return "WorkingDay [todaysDate=" + todaysDate + ", arrivalTime=" + arrivalTime + ", departureTime="
-				+ departureTime + "]";
-	}
+    public WorkingDay(String todaysDate) {
+        this.setTodaysDate(todaysDate);
+        this.setArrivalTime(arrivalTime);
+        this.setDepartureTime(departureTime);
+    }
 
-	/**
-	 * @return the todaysDate
-	 */
-	public String getTodaysDate() {
-		return todaysDate;
-	}
+    @Override
+    public String toString() {
+        return "WorkingDay [todaysDate=" + todaysDate + ", arrivalTime=" + arrivalTime + ", departureTime="
+                + departureTime + "]";
+    }
 
-	/**
-	 * @param todaysDate the todaysDate to set
-	 */
-	public void setTodaysDate(String todaysDate) {
-		this.todaysDate = todaysDate;
-	}
+    /**
+     * @return the todaysDate
+     */
+    public String getTodaysDate() {
+        return todaysDate;
+    }
 
-	/**
-	 * @return the arrivalTime
-	 */
-	public String getArrivalTime() {
-		return arrivalTime;
-	}
+    /**
+     * @param todaysDate the todaysDate to set
+     */
+    public void setTodaysDate(String todaysDate) {
+        this.todaysDate = todaysDate;
+    }
 
-	/**
-	 * @param arrivalTime the arrivalTime to set
-	 */
-	public void setArrivalTime(String arrivalTime) {
-		this.arrivalTime = arrivalTime;
-	}
+    /**
+     * @return the arrivalTime
+     */
+    public String getArrivalTime() {
+        return arrivalTime;
+    }
 
-	/**
-	 * @return the departureTime
-	 */
-	public String getDepartureTime() {
-		return departureTime;
-	}
+    /**
+     * @param arrivalTime the arrivalTime to set
+     */
+    public void setArrivalTime(String arrivalTime) {
+        this.arrivalTime = arrivalTime;
+    }
 
-	/**
-	 * @param departureTime the departureTime to set
-	 */
-	public void setDepartureTime(String departureTime) {
-		this.departureTime = departureTime;
-	}
+    /**
+     * @return the departureTime
+     */
+    public String getDepartureTime() {
+        return departureTime;
+    }
+
+    /**
+     * @param departureTime the departureTime to set
+     */
+    public void setDepartureTime(String departureTime) {
+        this.departureTime = departureTime;
+    }
 
 }

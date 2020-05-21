@@ -72,6 +72,11 @@ public class Company implements Serializable {
 	public void add_Department(Department department_To_Add) {
 		this.Department_List.add(department_To_Add);
 	}
+	
+	public void add_New_Department( int id_Department, String name_Department) {
+		Department dptTemp = new Department(id_Department, name_Department);
+		this.Department_List.add(dptTemp);
+	}
 
 	/**
 	 * @param searched_Department_Id
@@ -84,6 +89,14 @@ public class Company implements Serializable {
 				return true;
 		}
 		return false;
+	}
+	
+	public Department whereIsWorker(int searched_Worker_Id) throws Exception {
+		for (Department department : Department_List) {			
+			if (department.isWorkerValidId(searched_Worker_Id) == true)
+				return department;
+		}
+		throw new Exception("Error Search: Worker not found");
 	}
 
 	/**
@@ -114,7 +127,7 @@ public class Company implements Serializable {
 		}
 		throw new Exception("Error Search: Department Not Found");
 	}
-	
+
 	public Department getDepartmentById(int searched_Department_Id) throws Exception {
 		for (Department department : Department_List) {
 			int current_Department_Id = department.getId_Department();
@@ -125,7 +138,7 @@ public class Company implements Serializable {
 	}
 
 	@Override
-	public String toString() { //A refaire avec string buffer
+	public String toString() { // A refaire avec string buffer
 		return "Company [id_Company=" + id_Company + ", name_Company=" + name_Company + ", Department_List="
 				+ Department_List + "]";
 	}

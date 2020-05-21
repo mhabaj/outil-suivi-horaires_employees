@@ -70,6 +70,22 @@ public class Worker implements Serializable {
 		this.firstname_Worker = firstname_Worker;
 	}
 
+	public void addWorkingDay(String todaysDate, String arrivalTime) {
+		WorkingDay wdTemp = new WorkingDay(todaysDate);
+		wdTemp.setArrivalTime(arrivalTime);
+		workingDaysArray.add(wdTemp);
+	}
+
+	public WorkingDay getLastWorkingDay() throws Exception {
+
+		if (workingDaysArray != null && !workingDaysArray.isEmpty()) {
+
+			return workingDaysArray.get(workingDaysArray.size() - 1);
+		}
+		throw new Exception("Error getLastWorkingDay: no working days found ");
+
+	}
+
 	/**
 	 * @return the lastname_Worker
 	 */
