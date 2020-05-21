@@ -43,6 +43,7 @@ public class DataTransferServer {
 		// read the list of messages from the socket
 		listOfUpdates.add(objectInputStream.readObject());
 		System.out.println("Recu [" + listOfUpdates.size() + "] entrees de: " + ClientToServerSocket);
+		
 
 		System.out.println("Closing sockets.");
 		mainDeviceServerSocket.close();
