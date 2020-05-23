@@ -75,12 +75,42 @@ public class Worker implements Serializable {
 		wdTemp.setArrivalTime(arrivalTime);
 		workingDaysArray.add(wdTemp);
 	}
+	
+	public void addWorkingDay(String todaysDate, String arrivalTime, String departureTime) {
+		WorkingDay wdTemp = new WorkingDay(todaysDate);
+		wdTemp.setArrivalTime(arrivalTime);
+		wdTemp.setDepartureTime(departureTime);
+		workingDaysArray.add(wdTemp);
+	}
 
 	public WorkingDay getLastWorkingDay() throws Exception {
 
 		if (workingDaysArray != null && !workingDaysArray.isEmpty()) {
 
 			return workingDaysArray.get(workingDaysArray.size() - 1);
+		}
+		throw new Exception("Error getLastWorkingDay: no working days found ");
+
+	}
+	
+	public ArrayList<WorkingDay> getLastWorkingDays() throws Exception {
+
+		if (workingDaysArray != null && !workingDaysArray.isEmpty()) {
+
+			ArrayList<WorkingDay> workingDays = new ArrayList<>();
+			
+			workingDays.add(workingDaysArray.get(workingDaysArray.size() - 1));
+			
+			if(workingDaysArray.size() > 1)
+				workingDays.add(workingDaysArray.get(workingDaysArray.size() - 2));
+			if(workingDaysArray.size() > 2)
+				workingDays.add(workingDaysArray.get(workingDaysArray.size() - 3));
+			if(workingDaysArray.size() > 3)
+				workingDays.add(workingDaysArray.get(workingDaysArray.size() - 4));
+			if(workingDaysArray.size() > 4)
+				workingDays.add(workingDaysArray.get(workingDaysArray.size() - 5));
+			
+			return workingDays;
 		}
 		throw new Exception("Error getLastWorkingDay: no working days found ");
 

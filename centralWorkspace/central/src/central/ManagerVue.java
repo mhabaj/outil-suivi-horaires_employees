@@ -3,6 +3,7 @@ package central;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -17,8 +18,13 @@ public class ManagerVue extends JFrame implements ListSelectionListener {
 	
 	private JScrollPane departPane;
 	private JScrollPane workerPane;
+	private JScrollPane infosPane;
 	
+	private JSplitPane splitPane1;
 	private JSplitPane splitPane2;
+	
+	private int lastDepartIndex = -1;
+	private int lastWorkerIndex = -1;
 	
 	private ArrayList<String> departList = new ArrayList<String>();
 	private ArrayList<ArrayList<String>> workerList = new ArrayList<ArrayList<String>>();
@@ -31,17 +37,17 @@ public class ManagerVue extends JFrame implements ListSelectionListener {
 		
 		JTabbedPane tabPane = new JTabbedPane();
 		
-		JScrollPane scrollPane3 = new JScrollPane();
+		infosPane = new JScrollPane();
 
 		departPane = new JScrollPane();
 		
 		workerPane = new JScrollPane();
 
 		splitPane2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-				workerPane, scrollPane3);
+				workerPane, infosPane);
 		splitPane2.setDividerLocation(150);
 		
-		JSplitPane splitPane1 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+		splitPane1 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
 				departPane, splitPane2);
 		splitPane1.setDividerLocation(150);
 
@@ -101,11 +107,43 @@ public class ManagerVue extends JFrame implements ListSelectionListener {
 		
 		workerPane.setViewportView(wList);
 	}
+	
+	public void updateInfo(int departId, int workerId) {
+		
+		JList<String> jInfo;
+		ArrayList<String> infos = new ArrayList<String>();
+		Worker w = comp.getDepartment_List().get(departId).getWorker_List().get(workerId);
+		
+		infos.add("Nom : " +w.getLastname_Worker());
+		infos.add("Prenom : " +w.getFirstname_Worker());
+		infos.add("Horaire par defaut : " +w.getDefault_ArrivalTime_Worker() +" - " +w.getDefault_DepartureTime_Worker());
+		
+		try {
+			for(WorkingDay wd : w.getLastWorkingDays()) {
+				infos.add(wd.getTodaysDate() +" : " +wd.getArrivalTime() +" - " +wd.getDepartureTime());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		jInfo = new JList(infos.toArray());
+		infosPane.setViewportView(jInfo);
+	}
 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-		int index = ((JList)(((JViewport)departPane.getComponents()[0]).getView())).getSelectedIndex();
-		updateWList(index);
+		int departIndex = ((JList)(((JViewport)departPane.getComponents()[0]).getView())).getSelectedIndex();
+		if(departIndex !=  lastDepartIndex) {
+			lastDepartIndex = departIndex;
+			updateWList(departIndex);
+		}
+		int workerIndex = ((JList)(((JViewport)workerPane.getComponents()[0]).getView())).getSelectedIndex();
+		if(workerIndex >= 0) {
+			if(workerIndex != lastWorkerIndex) {
+				lastWorkerIndex = workerIndex;
+				updateInfo(departIndex, workerIndex);
+			}
+		}
 	}
 
 }

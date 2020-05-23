@@ -105,22 +105,30 @@ public class ManagerController {
 		Worker Alexandre = new Worker(12348, "Alexandre", "-----");
 		Worker MohamadAli = new Worker(12349, "MohamadAli", "------");
 		Worker Tim = new Worker(12350, "Tim", "----");
+		Worker tom = new Worker(12352, "Tom", "Belda", "10h30", "20h00");
+		
+		tom.addWorkingDay("21/05/2020", "11h00", "21h00");
+		tom.addWorkingDay("20/05/2020", "10h30", "20h30");
+		tom.addWorkingDay("19/05/2020", "8h30", "19h00");
 
 		Department bot = new Department(1, "Botlane");
 		Department mid = new Department(2, "Midlane");
 		Department jungl = new Department(3, "Jungle");
 		Department top = new Department(4, "Toplane");
+		Department pro = new Department(5, "Les pros");
 
 		bot.add_Worker(Mah);
 		bot.add_Worker(Alexandre);
 		mid.add_Worker(Adrien);
 		jungl.add_Worker(MohamadAli);
 		top.add_Worker(Tim);
+		pro.add_Worker(tom);
 
 		mg.getCompany().add_Department(bot);
 		mg.getCompany().add_Department(mid);
 		mg.getCompany().add_Department(jungl);
 		mg.getCompany().add_Department(top);
+		mg.getCompany().add_Department(pro);
 		
 		ManagerVue vue = new ManagerVue(mg.getCompany());
 		
