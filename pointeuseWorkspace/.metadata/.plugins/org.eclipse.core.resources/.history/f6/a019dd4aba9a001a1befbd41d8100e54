@@ -1,0 +1,62 @@
+package pointeuse;
+
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+public class EmulatorVue extends JFrame implements ActionListener{
+
+	private EmulatorController emc;
+	private JPanel mainPane = new JPanel();
+	private JPanel timePane = new JPanel();
+	private JPanel entryPane = new JPanel();
+	private BorderLayout mainLayout;
+	private GridLayout timeLayout;
+	private BoxLayout entryLayout;
+	private JLabel timeLabel;
+	private JLabel roundedTimeLabel;
+	private JTextField idField;
+	private JButton sendIdButton;
+	
+	public EmulatorVue(EmulatorController emc) {
+		
+		this.emc = emc;
+		
+		idField = new JTextField(5);
+		idField.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		
+		sendIdButton = new JButton("IN/OUT");
+		sendIdButton.addActionListener(this);
+		
+		entryLayout = new BoxLayout(entryPane, BoxLayout.X_AXIS);
+		entryPane.add(idField);
+		entryPane.add(sendIdButton);
+		
+		timeLabel = new JLabel("");
+		
+		roundedTimeLabel = new JLabel("");
+		
+		timeLayout = new GridLayout(2, 1);
+		timePane.setLayout(timeLayout);
+		
+		timePane.add(timeLabel);
+		timePane.add(roundedTimeLabel);
+		
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
+}
