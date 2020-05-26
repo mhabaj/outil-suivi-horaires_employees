@@ -1,0 +1,11 @@
+package central;
+
+public class WorkerView {
+
+	private Company comp;
+	
+	public WorkerView(Company comp) {
+		this.comp = comp;
+	}
+	
+}

@@ -1,0 +1,30 @@
+package central;
+
+import java.awt.BorderLayout;
+
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+
+public class WorkerView extends JPanel {
+
+	private JScrollPane scrollPane;
+	private JPanel pane;
+	private JSplitPane splitPane;
+	private Company comp;
+	
+	public WorkerView(Company comp) {
+		this.comp = comp;
+		
+		scrollPane = new JScrollPane();
+		pane = new JPanel();
+		
+		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollPane, pane);
+		
+		this.setLayout(new BorderLayout());
+		
+		this.add(splitPane);
+		
+	}
+	
+}

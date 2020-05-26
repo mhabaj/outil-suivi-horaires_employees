@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;central.ManagerVue&apos; to &apos;ManagerView&apos;&#x0D;&#x0A;- Original project: &apos;central&apos;&#x0D;&#x0A;- Original element: &apos;central.ManagerVue&apos;&#x0D;&#x0A;- Renamed element: &apos;central.ManagerView&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;ManagerVue&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src&lt;central{ManagerVue.java[ManagerVue" matchStrategy="1" name="ManagerView" qualified="false" references="true" similarDeclarations="false" stamp="1590503360579" textual="false" version="1.0"/>
+</session>

@@ -1,0 +1,30 @@
+package central;
+
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JViewport;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+public class CompanyOverviewView extends JPanel implements ListSelectionListener{
+
+	@Override
+	public void valueChanged(ListSelectionEvent e) {
+		int departIndex = ((JList)(((JViewport)departPane.getComponents()[0]).getView())).getSelectedIndex();
+		if(departIndex !=  lastDepartIndex) {
+			lastDepartIndex = departIndex;
+			updateWList(departIndex);
+		}
+		int workerIndex = ((JList)(((JViewport)workerPane.getComponents()[0]).getView())).getSelectedIndex();
+		if(workerIndex >= 0) {
+			if(workerIndex != lastWorkerIndex) {
+				lastWorkerIndex = workerIndex;
+				updateInfo(departIndex, workerIndex);
+			}
+		}
+		else {
+			lastWorkerIndex = -1;
+		}
+	}
+	
+}

@@ -1,0 +1,24 @@
+package central;
+
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+
+public class WorkerView extends JPanel {
+
+	private JScrollPane scrollPane;
+	private JPanel pane;
+	private JSplitPane splitPane;
+	private Company comp;
+	
+	public WorkerView(Company comp) {
+		this.comp = comp;
+		
+		scrollPane = new JScrollPane();
+		pane = new JPanel();
+		
+		splitPane = new SplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollPane, pane);
+		
+	}
+	
+}

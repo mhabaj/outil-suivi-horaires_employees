@@ -130,7 +130,7 @@ public class ManagerController {
 		mg.getCompany().add_Department(top);
 		mg.getCompany().add_Department(pro);
 		
-		ManagerVue vue = new ManagerVue(mg.getCompany());
+		ManagerView vue = new ManagerView(mg.getCompany());
 		
 /*
 		new Thread(mg.server).start();

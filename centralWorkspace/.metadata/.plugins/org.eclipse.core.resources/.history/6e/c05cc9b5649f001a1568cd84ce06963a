@@ -1,0 +1,14 @@
+package central;
+
+public class WorkerView {
+
+	private JSplitPane splitPane;
+	private Company comp;
+	
+	public WorkerView(Company comp) {
+		this.comp = comp;
+		
+		
+	}
+	
+}

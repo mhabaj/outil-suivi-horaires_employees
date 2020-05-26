@@ -1,0 +1,54 @@
+package central;
+
+import java.awt.BorderLayout;
+import java.util.ArrayList;
+
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+
+public class WorkerView extends JPanel {
+
+	private JScrollPane scrollPane;
+	private JPanel pane;
+	private JSplitPane splitPane;
+
+	private ArrayList<String> workerList = new ArrayList<String>();
+	
+	private Company comp;
+	
+	public WorkerView(Company comp) {
+		this.comp = comp;
+		
+		scrollPane = new JScrollPane();
+		pane = new JPanel();
+		
+		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollPane, pane);
+		
+		this.setLayout(new BorderLayout());
+		
+		this.add(splitPane);
+		
+	}
+	
+	public void setData() {
+
+		ArrayList<Department> departArray = comp.getDepartment_List();
+
+		int index = 0;
+
+		for(Department depart : departArray) {
+			workerList.add(new ArrayList<String>());
+
+			ArrayList<Worker> workerArray = depart.getWorker_List();
+			for(Worker worker : workerArray) {
+				workerList.get(index).add(worker.getFirstname_Worker());
+			}
+
+			index++;
+		}
+
+		updateDList();
+	}
+	
+}
