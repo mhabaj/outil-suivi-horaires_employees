@@ -110,6 +110,18 @@ public class ManagerController {
 		tom.addWorkingDay("21/05/2020", "11h00", "21h00");
 		tom.addWorkingDay("20/05/2020", "10h30", "20h30");
 		tom.addWorkingDay("19/05/2020", "8h30", "19h00");
+		tom.addWorkingDay("18/05/2020", "11h00", "21h00");
+		tom.addWorkingDay("17/05/2020", "10h30", "20h30");
+		tom.addWorkingDay("16/05/2020", "8h30", "19h00");
+		tom.addWorkingDay("15/05/2020", "11h00", "21h00");
+		tom.addWorkingDay("14/05/2020", "10h30", "20h30");
+		tom.addWorkingDay("13/05/2020", "8h30", "19h00");
+		tom.addWorkingDay("12/05/2020", "11h00", "21h00");
+		tom.addWorkingDay("11/05/2020", "10h30", "20h30");
+		tom.addWorkingDay("10/05/2020", "8h30", "19h00");
+		tom.addWorkingDay("09/05/2020", "11h00", "21h00");
+		tom.addWorkingDay("08/05/2020", "10h30", "20h30");
+		tom.addWorkingDay("07/05/2020", "8h30", "19h00");
 
 		Department bot = new Department(1, "Botlane");
 		Department mid = new Department(2, "Midlane");

@@ -1,1 +1,5 @@
 1590503360579	Rename type 'ManagerVue'
+1590584375915	Rename field 'scrollPane'
+1590584391012	Rename field 'pane'
+1590587397795	Rename local variable 'jInfo'
+1590587412341	Rename local variable 'infos'
