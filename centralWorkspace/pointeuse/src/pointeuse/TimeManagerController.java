@@ -1,18 +1,22 @@
 package pointeuse;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Locale;
 
 public class TimeManagerController implements Runnable {
 
 	private LocalDate current_Date;
 	private LocalTime current_Time;
 	private LocalTime rounded_Time;
-	
+
 	private EmulatorVue vue;
 
 	/**
@@ -29,7 +33,8 @@ public class TimeManagerController implements Runnable {
 	 */
 	public void updateCurrent_Time() {
 		this.current_Time = LocalTime.now().parse(LocalTime.now().truncatedTo(ChronoUnit.HOURS)
-				.plusMinutes(LocalTime.now().getMinute()).format(DateTimeFormatter.ofPattern("HH:mm")));;
+				.plusMinutes(LocalTime.now().getMinute()).format(DateTimeFormatter.ofPattern("HH:mm")));
+		;
 	}
 
 	/**
@@ -85,9 +90,25 @@ public class TimeManagerController implements Runnable {
 		this.updateCurrent_Time();
 		this.updateCurrent_Date();
 		this.updateRounded_Time();
-		
+
 		vue.setTime(getCurrent_Time());
 		vue.setRoundedTime(getRounded_Time());
+	}
+
+	public String getTodayWeekDay() {
+		Date tmpDate;
+		String todayweekDay = null;
+		try {
+
+			tmpDate = new SimpleDateFormat("yy-MM-dd").parse(getCurrent_Date());
+
+			DateFormat format2 = new SimpleDateFormat("EEEE", Locale.US);
+			todayweekDay = format2.format(tmpDate);
+
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return todayweekDay;
 	}
 
 	@Override

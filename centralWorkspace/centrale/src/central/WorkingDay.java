@@ -114,7 +114,7 @@ public class WorkingDay implements Serializable {
 
 			DateFormat format2 = new SimpleDateFormat("EEEE", Locale.US);
 			weekDay = format2.format(tmpDate);
-
+			
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}

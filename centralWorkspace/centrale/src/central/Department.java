@@ -11,12 +11,13 @@ public class Department implements Serializable {
 	private int id_Department;
 	private String name_Department;
 	private ArrayList<Worker> Worker_List = new ArrayList<Worker>();
+	private Company cp;
 
 	/**
 	 * @param id_Department
 	 * @param name_Department
 	 */
-	public Department(int id_Department, String name_Department) {
+	public Department(int id_Department, String name_Department, Company cp) {
 		this.setId_Department(id_Department);
 		this.setName_Department(name_Department);
 	}
@@ -75,6 +76,22 @@ public class Department implements Serializable {
 	public void add_Worker(Worker worker_To_Add) {
 
 		this.Worker_List.add(worker_To_Add);
+	}
+
+	public void add_New_Worker_CustomTime(String firstname_Worker, String lastname_Worker,
+			String[] default_ArrivalTime_Worker, String[] default_DepartureTime_Worker) {
+		Worker worker_To_Add = new Worker(cp.getId_Worker_Counter(), firstname_Worker, lastname_Worker,
+				default_ArrivalTime_Worker, default_DepartureTime_Worker);
+		this.Worker_List.add(worker_To_Add);
+		cp.incrementWorkersNumber();
+
+		
+	}
+
+	public void add_New_Worker_DefaultTime(String firstname_Worker, String lastname_Worker) {
+		Worker worker_To_Add = new Worker(cp.getId_Worker_Counter(), firstname_Worker, lastname_Worker);
+		this.Worker_List.add(worker_To_Add);
+		cp.incrementWorkersNumber();
 	}
 
 	/**

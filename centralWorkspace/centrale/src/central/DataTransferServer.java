@@ -9,7 +9,7 @@ import java.net.Socket;
 
 public class DataTransferServer implements Runnable {
 
-	private final int APPLICATION_DEFAULT_PORT = 7100;
+	private final int DEFAULT_SERVER_PORT = 7778;
 
 	private ServerSocket mainDeviceServerSocket;
 	private Socket ClientToServerSocket;
@@ -17,165 +17,91 @@ public class DataTransferServer implements Runnable {
 	private ObjectInputStream objectInputStream;
 	private ManagerController mc;
 	private int serverPort;
-	private volatile boolean onlineStatus;
-	Thread srv;
-
-	/**
-	 * @param mainDeviceServerSocket
-	 * @param clientToServerSocket
-	 * @throws IOException
-	 */
+	private boolean status_Server; // true = up, false = down
 
 	public DataTransferServer(ManagerController mc, int serverPort) {
 
-		this.mc = mc;
 		this.serverPort = serverPort;
-		this.onlineStatus = true;
-		try {
-			try {
-				this.mainDeviceServerSocket = new ServerSocket(this.serverPort);
-			} catch (java.net.BindException t) {
-				System.out.println("Default port 7100 not available. Please change network settings to a new port");
-				this.shutdown_Server();
+		this.mc = mc;
 
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		if (mainDeviceServerSocket != null) {
-			this.srv = new Thread(this);
-		}
 	}
 
 	public DataTransferServer(ManagerController mc) {
-
+		this.serverPort = DEFAULT_SERVER_PORT;
 		this.mc = mc;
-		this.serverPort = APPLICATION_DEFAULT_PORT;
-		this.onlineStatus = true;
-		try {
-			try {
-				this.mainDeviceServerSocket = new ServerSocket(this.serverPort);
-			} catch (java.net.BindException t) {
-				System.out.println("Default port 7100 not available. Please change network settings to a new port");
-				this.shutdown_Server();
-
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		if (mainDeviceServerSocket != null) {
-			startup_Server();
-		}
 	}
 
-	public void connect() throws IOException, ClassNotFoundException {
+	public void init() throws IOException {
 
-		System.out.println("Server listening on port:" + serverPort + " :");
 		try {
-			if (mainDeviceServerSocket != null) {
-				this.ClientToServerSocket = mainDeviceServerSocket.accept(); // En attente de connection
-				System.out.println("Connection en cours de la part de " + ClientToServerSocket + "...");
+			this.mainDeviceServerSocket = new ServerSocket(this.serverPort);
+			status_Server = true;
+		} catch (java.net.BindException e) {
+			System.out.println("Selected Server port unavailable.");
+			status_Server = false;
 
-				if (ClientToServerSocket != null) {
-					this.inputStream = this.ClientToServerSocket.getInputStream();
-					if (inputStream != null) {
-						// Lecture des donnees
-						this.objectInputStream = new ObjectInputStream(inputStream);
-					}
-				}
-			}
-		} catch (NullPointerException e) {
-			e.printStackTrace();
 		}
+
 	}
 
-	public void resetFlux() throws IOException {
-		try {
-			this.ClientToServerSocket = mainDeviceServerSocket.accept();
+	public void connectAndRetrieveData() throws IOException, ClassNotFoundException {
+
+		if (status_Server == true) {
+			this.ClientToServerSocket = mainDeviceServerSocket.accept(); // socket client
+			System.out.println("New Connection from:  " + ClientToServerSocket + System.lineSeparator());
+
 			this.inputStream = this.ClientToServerSocket.getInputStream();
+
 			this.objectInputStream = new ObjectInputStream(inputStream);
-		} catch (NullPointerException e) {
-			e.printStackTrace();
+
+			while (!ClientToServerSocket.isClosed()) {
+				listenToData();
+			}
 		}
+
+	}
+
+	public void resetFlux() throws IOException, ClassNotFoundException {
+		ClientToServerSocket.close();
+		this.ClientToServerSocket = mainDeviceServerSocket.accept();
+		this.inputStream = this.ClientToServerSocket.getInputStream();
+		this.objectInputStream = new ObjectInputStream(inputStream);
 	}
 
 	public void listenToData() throws ClassNotFoundException, IOException {
 		// read the list of messages from the socket
-		if (objectInputStream != null) {
-			try {
-				mc.parseEmulatorInput((String) objectInputStream.readObject());
-
-			} catch (EOFException e) {
-				// e.printStackTrace();
-			}
-		}
-	}
-
-	public void startup_Server() {
-		srv = new Thread(this);
-		onlineStatus = true;
-		srv.start();
-	}
-
-	public void shutdown_Server() {
-		onlineStatus = false;
 		try {
-			if (mainDeviceServerSocket != null && ClientToServerSocket != null) {
-				mainDeviceServerSocket.close();
-				ClientToServerSocket.close();
-			}
-			if (srv != null) {
-				srv.join();
-				System.out.println("Server offline");
-			}
+			mc.parseEmulatorInput((String) objectInputStream.readObject());
 
-		} catch (InterruptedException | IOException e) {
-			e.printStackTrace();
+		} catch (EOFException e) {
+			resetFlux();
 		}
+	}
+
+	public void stopCurrentServer() {
+
+		status_Server = false;
 
 	}
 
-	public void updateServerSettings(int newPortNumber) {
-
-		this.shutdown_Server();
-
-		serverPort = newPortNumber;
-
-		try {
-			try {
-				this.mainDeviceServerSocket = new ServerSocket(serverPort);
-			} catch (java.net.BindException t) {
-				System.out.println("Selected port " + serverPort + " not available. Try Again");
-				this.shutdown_Server();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		if (mainDeviceServerSocket != null && onlineStatus == false) {
-			startup_Server();
-
-		}
-
+	public void setPort(int newPort) {
+		this.serverPort = newPort;
 	}
 
 	@Override
 	public void run() {
 
 		try {
+			this.init();
 
-			this.connect();
-			while (onlineStatus == true) {
-				listenToData();
-				System.out.println("LAAA");
+			while (status_Server == true) {
+				connectAndRetrieveData();
 			}
 
 		} catch (IOException | ClassNotFoundException e) {
+			System.out.println("Server exception: " + e.getMessage());
 			e.printStackTrace();
 		}
-	}
 
+	}
 }

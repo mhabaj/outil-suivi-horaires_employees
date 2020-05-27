@@ -23,8 +23,8 @@ public class Worker implements Serializable {
 	private int id_Worker;
 	private long workingTimeOverflow_Worker;
 	private String firstname_Worker, lastname_Worker;
-	private String[] default_ArrivalTime_Worker;
-	private String[] default_DepartureTime_Worker;
+	private String[] default_ArrivalTime_Worker = { "7:00", "7:00", "7:00", "7:00", "7:00" };
+	private String[] default_DepartureTime_Worker = { "17:00", "17:00", "17:00", "17:00", "17:00" };
 	private ArrayList<WorkingDay> workingDaysArray;
 
 	/**
@@ -37,6 +37,7 @@ public class Worker implements Serializable {
 
 	public Worker(int id_Worker, String firstname_Worker, String lastname_Worker, String[] default_ArrivalTime_Worker,
 			String[] default_DepartureTime_Worker) {
+
 		this.setId_Worker(id_Worker);
 		this.setFirstname_Worker(firstname_Worker);
 		this.setLastname_Worker(lastname_Worker);
@@ -47,11 +48,10 @@ public class Worker implements Serializable {
 	}
 
 	public Worker(int id_Worker, String firstname_Worker, String lastname_Worker) {
+
 		this.setId_Worker(id_Worker);
 		this.setFirstname_Worker(firstname_Worker);
 		this.setLastname_Worker(lastname_Worker);
-		default_ArrivalTime_Worker = new String[5];
-		default_DepartureTime_Worker = new String[5];
 		this.workingDaysArray = new ArrayList<WorkingDay>();
 
 	}
@@ -80,6 +80,7 @@ public class Worker implements Serializable {
 			} else if (todayWorkingDay.getWeekDay().equals(weekDay_Code_ToString(FRIDAY))) {
 				defaultArrivalTimeTMP = df.parse(default_ArrivalTime_Worker[FRIDAY]);
 			}
+
 			long diffTmp = defaultArrivalTimeTMP.getTime() - arrivalTimeTMP.getTime();
 
 			workingTimeOverflow_Worker += diffTmp / (60 * 1000) % 60;
@@ -236,7 +237,7 @@ public class Worker implements Serializable {
 		int dayCode = weekDay_Name_ToCode(day);
 		this.default_ArrivalTime_Worker[dayCode] = NewArrivalTime;
 	}
-	
+
 	public void setDefault_DepartureTime_Worker(String day, String NewArrivalTime) throws Exception {
 		int dayCode = weekDay_Name_ToCode(day);
 		this.default_DepartureTime_Worker[dayCode] = NewArrivalTime;

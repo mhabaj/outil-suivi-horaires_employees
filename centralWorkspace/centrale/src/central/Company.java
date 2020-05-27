@@ -13,7 +13,8 @@ public class Company implements Serializable {
 	private int id_Company;
 
 	private String name_Company;
-	private ArrayList<Department> Department_List = new ArrayList<Department>();
+	private ArrayList<Department> Department_List;
+	private int id_Worker_Counter = 10000;
 
 	/**
 	 * @param id_Company
@@ -22,6 +23,7 @@ public class Company implements Serializable {
 	public Company(int id_Company, String name_Company) {
 		this.setId_Company(id_Company);
 		this.setName_Company(name_Company);
+		Department_List = new ArrayList<Department>();
 	}
 
 	/**
@@ -72,12 +74,16 @@ public class Company implements Serializable {
 	public void add_Department(Department department_To_Add) {
 		this.Department_List.add(department_To_Add);
 	}
-	
-	public void add_New_Department( int id_Department, String name_Department) {
-		Department dptTemp = new Department(id_Department, name_Department);
+
+	public void add_New_Department(int id_Department, String name_Department) {
+		Department dptTemp = new Department(id_Department, name_Department, this);
 		this.Department_List.add(dptTemp);
 	}
 
+	public void incrementWorkersNumber() {
+		id_Worker_Counter++;
+	}
+	
 	/**
 	 * @param searched_Department_Id
 	 * @return true if searched department found, else false
@@ -90,9 +96,9 @@ public class Company implements Serializable {
 		}
 		return false;
 	}
-	
+
 	public Department whereIsWorker(int searched_Worker_Id) throws Exception {
-		for (Department department : Department_List) {			
+		for (Department department : Department_List) {
 			if (department.isWorkerValidId(searched_Worker_Id) == true)
 				return department;
 		}
@@ -141,6 +147,20 @@ public class Company implements Serializable {
 	public String toString() { // A refaire avec string buffer
 		return "Company [id_Company=" + id_Company + ", name_Company=" + name_Company + ", Department_List="
 				+ Department_List + "]";
+	}
+
+	/**
+	 * @return the id_Worker_Counter
+	 */
+	public int getId_Worker_Counter() {
+		return id_Worker_Counter;
+	}
+
+	/**
+	 * @param id_Worker_Counter the id_Worker_Counter to set
+	 */
+	public void setId_Worker_Counter(int id_Worker_Counter) {
+		this.id_Worker_Counter = id_Worker_Counter;
 	}
 
 }

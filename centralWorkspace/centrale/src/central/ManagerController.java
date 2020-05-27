@@ -1,12 +1,17 @@
 package central;
 
-import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class ManagerController {
 
 	private Company company;
 	private DataTransferServer server;
 	private DataManager<Company> dm;
+	private Thread serverThread;
 
 	public ManagerController(String CompanyName) {
 		company = new Company(1, CompanyName);
@@ -16,42 +21,73 @@ public class ManagerController {
 	}
 
 	public void parseEmulatorInput(String input) {
-
+		System.out.println("Reçu: " + input + System.lineSeparator());
 		String[] strTmp = input.split("/");
 		int id_Worker = Integer.parseInt(strTmp[2]);
-		String date = strTmp[0];
+		String datetmp = strTmp[0];
 		String time = strTmp[1];
 
+		////////////////////////////////////////////////////////////// on met le bon
+		////////////////////////////////////////////////////////////// format de date
+
 		try {
-			Worker signingIn_Worker = company.whereIsWorker(id_Worker).getWorkerById(id_Worker);
+			DateFormat oldTMP = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+			DateFormat newTMP = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+			Date date1 = oldTMP.parse(datetmp);
+
+			String date = newTMP.format(date1);
+			// System.out.println("DATEEE: " + date);
+			////////////////////////////////////////////////////////////
 
 			try {
-				WorkingDay wdTemp = signingIn_Worker.getLastWorkingDay();
-				if (wdTemp.getTodaysDate().equals(date)) {
+				Worker signingIn_Worker = company.whereIsWorker(id_Worker).getWorkerById(id_Worker);
 
-					if (wdTemp.getArrivalTime() == null) {
-						wdTemp.setArrivalTime(time);
-						signingIn_Worker.addTimeOverflowArrival(time, wdTemp);
-					} else {
-						if (wdTemp.getDepartureTime() == null) {
-							wdTemp.setDepartureTime(time);
-							signingIn_Worker.addTimeOverflowDepart(time, wdTemp);
+				try {
+					WorkingDay wdTemp = signingIn_Worker.getLastWorkingDay();
+					if (wdTemp.getTodaysDate().equals(date)) {
 
+						if (wdTemp.getArrivalTime() == null) {
+							wdTemp.setArrivalTime(time);
+							signingIn_Worker.addTimeOverflowArrival(time, wdTemp);
+						} else {
+							if (wdTemp.getDepartureTime() == null) {
+								wdTemp.setDepartureTime(time);
+								signingIn_Worker.addTimeOverflowDepart(time, wdTemp);
+
+							}
 						}
-					}
-				} else {
+					} else {
 
-					signingIn_Worker.addWorkingDay(date, time);
+						signingIn_Worker.addWorkingDay(date, time);
+
+					}
+				} catch (Exception e) {
+					
+
+					signingIn_Worker.addWorkingDay(date, time); // on creer le premier jour
 
 				}
+
 			} catch (Exception e) {
-				signingIn_Worker.addWorkingDay(date, time); // on creer le premier jour
-
+				System.out.println("INVAILD WORKER ID");
 			}
-
-		} catch (Exception e) {
-			System.out.println("INVAILD WORKER ID");
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
+
+	}
+
+	public void startServer() {
+		serverThread = new Thread(server);
+		serverThread.start();
+	}
+	
+	public void changeServerConfig(int newPort) {
+		server.stopCurrentServer();
+		DataTransferServer serverTMP = new DataTransferServer(this, newPort);
+		server = serverTMP;
+		startServer();
 
 	}
 
@@ -64,12 +100,12 @@ public class ManagerController {
 	 * }
 	 */
 
-	public void stopServer() {
-		server.shutdown_Server();
-	}
-	public void updateServerPort(int newPortNumber) {
-		this.server.updateServerSettings(newPortNumber);
-	}
+	/*
+	 * public void stopServer() { server.shutdown_Server(); }
+	 * 
+	 * public void updateServerPort(int newPortNumber) {
+	 * this.server.updateServerSettings(newPortNumber); }
+	 */
 
 	/**
 	 * @return the company
@@ -122,12 +158,12 @@ public class ManagerController {
 
 		ManagerController mg = new ManagerController("AledS6");
 
-		Worker Mah = new Worker(12345, "Mah", "----");
+		Worker Mah = new Worker(12344, "Mah", "----");
 		Worker Adrien = new Worker(12347, "Adrien", "----");
 		Worker Alexandre = new Worker(12348, "Alexandre", "-----");
 		Worker MohamadAli = new Worker(12349, "MohamadAli", "------");
 		Worker Tim = new Worker(12350, "Tim", "----");
-		Worker tom = new Worker(12352, "Tom", "Belda");
+		Worker tom = new Worker(12345, "Tom", "Belda");
 
 		String tmpArrivee[] = { "7:00", "7:00", "7:00", "7:00", "7:00" };
 		String tmpDepart[] = { "17:00", "17:00", "17:00", "17:00", "17:00" };
@@ -159,11 +195,11 @@ public class ManagerController {
 		tom.addWorkingDay("08/05/2020", "10:30", "20:30");
 		tom.addWorkingDay("07/05/2020", "8:30", "19:00");
 
-		Department bot = new Department(1, "Botlane");
-		Department mid = new Department(2, "Midlane");
-		Department jungl = new Department(3, "Jungle");
-		Department top = new Department(4, "Toplane");
-		Department pro = new Department(5, "Les pros");
+		Department bot = new Department(1, "Botlane", mg.getCompany());
+		Department mid = new Department(2, "Midlane",mg.getCompany());
+		Department jungl = new Department(3, "Jungle",mg.getCompany());
+		Department top = new Department(4, "Toplane",mg.getCompany());
+		Department pro = new Department(5, "Les pros",mg.getCompany());
 
 		bot.add_Worker(Mah);
 		bot.add_Worker(Alexandre);
@@ -179,12 +215,12 @@ public class ManagerController {
 		mg.getCompany().add_Department(pro);
 
 		ManagerView vue = new ManagerView(mg.getCompany());
-		mg.updateServerPort(7200);
-		mg.updateServerPort(6890);
-		mg.updateServerPort(6895);
+		mg.startServer();
+		mg.changeServerConfig(7720);
+		// mg.updateServerPort(7200);
+		// mg.updateServerPort(6890);
+		// mg.updateServerPort(6895);
 
-		
-		
 		/*
 		 * new Thread(mg.server).start();
 		 * 
