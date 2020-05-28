@@ -10,7 +10,7 @@ public class Department implements Serializable {
 	private static final long serialVersionUID = 1212195773920642415L;
 	private int id_Department;
 	private String name_Department;
-	private ArrayList<Worker> Worker_List = new ArrayList<Worker>();;
+	private ArrayList<Worker> Worker_List = new ArrayList<Worker>();
 
 	/**
 	 * @param id_Department

@@ -32,7 +32,6 @@ public class DataManager<Type> {
 		this.oos.writeObject(ObjectToSerialise);
 		this.oos.close();
 		this.fos.close();
-
 	}
 
 	public Type deserialiseObject() {

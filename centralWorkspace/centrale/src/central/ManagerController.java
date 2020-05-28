@@ -1,6 +1,7 @@
 package central;
 
 public class ManagerController {
+	private final int APPLICATION_DEFAULT_PORT = 7771;
 
 	private Company company;
 	private DataTransferServer server;
@@ -8,8 +9,9 @@ public class ManagerController {
 
 	public ManagerController(String CompanyName) {
 		company = new Company(1, CompanyName);
-		//server = new DataTransferServer(this);
+		 server = new DataTransferServer(this, APPLICATION_DEFAULT_PORT);
 		dm = new DataManager<Company>();
+		new Thread(this.server).start();
 	}
 
 	public void parseEmulatorInput(String input) {
@@ -47,6 +49,15 @@ public class ManagerController {
 			System.out.println("INVAILD WORKER ID");
 		}
 
+	}
+
+	public void updateServerSettings(int portNumber) {
+
+		server.stopCurrentServer();
+		server = new DataTransferServer(this, portNumber);
+		new Thread(this.server).start();
+
+		
 	}
 
 	/**
@@ -105,8 +116,8 @@ public class ManagerController {
 		Worker Alexandre = new Worker(12348, "Alexandre", "-----");
 		Worker MohamadAli = new Worker(12349, "MohamadAli", "------");
 		Worker Tim = new Worker(12350, "Tim", "----");
-		Worker tom = new Worker(12352, "Tom", "Belda", "10h30", "20h00");
-		
+		Worker tom = new Worker(12352, "Tom", "Belda");
+
 		tom.addWorkingDay("21/05/2020", "11h00", "21h00");
 		tom.addWorkingDay("20/05/2020", "10h30", "20h30");
 		tom.addWorkingDay("19/05/2020", "8h30", "19h00");
@@ -141,27 +152,29 @@ public class ManagerController {
 		mg.getCompany().add_Department(jungl);
 		mg.getCompany().add_Department(top);
 		mg.getCompany().add_Department(pro);
-		
-		ManagerView vue = new ManagerView(mg.getCompany());
-		
-/*
-		new Thread(mg.server).start();
-		
-		//TEST SI ON AJOUTE LE ARRIVAL TIME ET DEPARTURE TIME DE LEMPLOYEE: 
-		while (true) {
-			try {
-				if(mg.getCompany().whereIsWorker(12346).getWorkerById(12346).checkWorkingDayByDate("2020-05-21")) {
-					System.out.println("PRESENT");
-					System.out.println(mg.getCompany().whereIsWorker(12346).getWorkerById(12346).getLastWorkingDay().getArrivalTime());
-					System.out.println(mg.getCompany().whereIsWorker(12346).getWorkerById(12346).getLastWorkingDay().getDepartureTime());
-					Thread.sleep(2000);
-				}
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
+		Mah.addWorkingDay("28/05/2020", "14:12");
+
+		try {
+			System.out.println(Mah.getLastWorkingDay().getWeekDay());
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-*/
+
+		ManagerView vue = new ManagerView(mg.getCompany());
+
+		/*
+		 * new Thread(mg.server).start();
+		 * 
+		 * //TEST SI ON AJOUTE LE ARRIVAL TIME ET DEPARTURE TIME DE LEMPLOYEE: while
+		 * (true) { try { if(mg.getCompany().whereIsWorker(12346).getWorkerById(12346).
+		 * checkWorkingDayByDate("2020-05-21")) { System.out.println("PRESENT");
+		 * System.out.println(mg.getCompany().whereIsWorker(12346).getWorkerById(12346).
+		 * getLastWorkingDay().getArrivalTime());
+		 * System.out.println(mg.getCompany().whereIsWorker(12346).getWorkerById(12346).
+		 * getLastWorkingDay().getDepartureTime()); Thread.sleep(2000); } } catch
+		 * (Exception e) { // TODO Auto-generated catch block e.printStackTrace(); } }
+		 */
 		/*
 		 * try { // System.out.println(mg.getCompany().getDepartmentByName("Botlane").
 		 * getWorker_List()); } catch (Exception e1) { // TODO Auto-generated catch

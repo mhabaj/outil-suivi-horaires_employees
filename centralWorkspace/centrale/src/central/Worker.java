@@ -8,10 +8,17 @@ public class Worker implements Serializable {
 	/**
 	 * 
 	 */
+	private final int MONDAY = 0;
+	private final int TUESDAY = 1;
+	private final int WEDNESDAY = 2;
+	private final int THURSDAY = 3;
+	private final int FRIDAY = 4;
+
 	private static final long serialVersionUID = 7337982580589824925L;
 	private int id_Worker;
 	private String firstname_Worker, lastname_Worker;
-	private String default_ArrivalTime_Worker, default_DepartureTime_Worker;
+	private String[] default_ArrivalTime_Worker;
+	private String[] default_DepartureTime_Worker;
 	private ArrayList<WorkingDay> workingDaysArray;
 
 	/**
@@ -22,14 +29,15 @@ public class Worker implements Serializable {
 	 * @param default_DepartureTime_Worker
 	 */
 
-	public Worker(int id_Worker, String firstname_Worker, String lastname_Worker, String default_ArrivalTime_Worker,
-			String default_DepartureTime_Worker) {
+	public Worker(int id_Worker, String firstname_Worker, String lastname_Worker, String[] default_ArrivalTime_Worker,
+			String[] default_DepartureTime_Worker) {
 		this.setId_Worker(id_Worker);
 		this.setFirstname_Worker(firstname_Worker);
 		this.setLastname_Worker(lastname_Worker);
 		this.setDefault_ArrivalTime_Worker(default_ArrivalTime_Worker);
 		this.setDefault_DepartureTime_Worker(default_DepartureTime_Worker);
 		this.workingDaysArray = new ArrayList<WorkingDay>();
+
 	}
 
 	public Worker(int id_Worker, String firstname_Worker, String lastname_Worker) {
@@ -75,7 +83,7 @@ public class Worker implements Serializable {
 		wdTemp.setArrivalTime(arrivalTime);
 		workingDaysArray.add(wdTemp);
 	}
-	
+
 	public void addWorkingDay(String todaysDate, String arrivalTime, String departureTime) {
 		WorkingDay wdTemp = new WorkingDay(todaysDate);
 		wdTemp.setArrivalTime(arrivalTime);
@@ -92,29 +100,29 @@ public class Worker implements Serializable {
 		throw new Exception("Error getLastWorkingDay: no working days found ");
 
 	}
-	
+
 	public ArrayList<WorkingDay> getLastWorkingDays() throws Exception {
 
 		if (workingDaysArray != null && !workingDaysArray.isEmpty()) {
 
 			ArrayList<WorkingDay> workingDays = new ArrayList<>();
-			
+
 			workingDays.add(workingDaysArray.get(workingDaysArray.size() - 1));
-			
-			if(workingDaysArray.size() > 1)
+
+			if (workingDaysArray.size() > 1)
 				workingDays.add(workingDaysArray.get(workingDaysArray.size() - 2));
-			if(workingDaysArray.size() > 2)
+			if (workingDaysArray.size() > 2)
 				workingDays.add(workingDaysArray.get(workingDaysArray.size() - 3));
-			if(workingDaysArray.size() > 3)
+			if (workingDaysArray.size() > 3)
 				workingDays.add(workingDaysArray.get(workingDaysArray.size() - 4));
-			if(workingDaysArray.size() > 4)
+			if (workingDaysArray.size() > 4)
 				workingDays.add(workingDaysArray.get(workingDaysArray.size() - 5));
-			
+
 			return workingDays;
 		}
 		throw new Exception("Error getLastWorkingDay: no working days found ");
 	}
-	
+
 	public ArrayList<WorkingDay> getWorkingDays() throws Exception {
 
 		if (workingDaysArray != null && !workingDaysArray.isEmpty()) {
@@ -122,7 +130,7 @@ public class Worker implements Serializable {
 		}
 		throw new Exception("Error getLastWorkingDay: no working days found ");
 	}
-	
+
 	public int getNumberWorkedDays() {
 		return workingDaysArray.size();
 	}
@@ -144,29 +152,31 @@ public class Worker implements Serializable {
 	/**
 	 * @return the default_ArrivalTime_Worker
 	 */
-	public String getDefault_ArrivalTime_Worker() {
+	public String[] getDefault_ArrivalTime_Worker() {
 		return default_ArrivalTime_Worker;
 	}
 
 	/**
 	 * @param default_ArrivalTime_Worker the default_ArrivalTime_Worker to set
 	 */
-	public void setDefault_ArrivalTime_Worker(String default_ArrivalTime_Worker) {
+	public void setDefault_ArrivalTime_Worker(String[] default_ArrivalTime_Worker) {
 		this.default_ArrivalTime_Worker = default_ArrivalTime_Worker;
 	}
 
 	/**
 	 * @return the default_DepartureTime_Worker
 	 */
-	public String getDefault_DepartureTime_Worker() {
+	public String[] getDefault_DepartureTime_Worker() {
 		return default_DepartureTime_Worker;
 	}
 
 	/**
 	 * @param default_DepartureTime_Worker the default_DepartureTime_Worker to set
 	 */
-	public void setDefault_DepartureTime_Worker(String default_DepartureTime_Worker) {
+	public void setDefault_DepartureTime_Worker(String[] default_DepartureTime_Worker) {
+
 		this.default_DepartureTime_Worker = default_DepartureTime_Worker;
+
 	}
 
 	public void showEveryWorkingDay() {
@@ -193,6 +203,66 @@ public class Worker implements Serializable {
 		}
 		return false;
 	}
+
+	public String weekDay_Code_ToString(int dayCode) throws Exception {
+		switch (dayCode) {
+		case MONDAY:
+			return "Monday";
+		case TUESDAY:
+			return "Tuesday";
+		case WEDNESDAY:
+			return "Wednesday";
+		case THURSDAY:
+			return "Thursday";
+		case FRIDAY:
+			return "Friday";
+		default:
+			throw new Exception("Error WeekDayToString: invalid DayCode ");
+		}
+	}
+
+	public int weekDay_Name_ToCode(String dayName) throws Exception {
+		switch (dayName) {
+		case "Monday":
+			return MONDAY;
+		case "Tuesday":
+			return TUESDAY;
+		case "Wednesday":
+			return WEDNESDAY;
+		case "Thursday":
+			return THURSDAY;
+		case "Friday":
+			return FRIDAY;
+		default:
+			throw new Exception("Error WeekDayToString: invalid dayName ");
+		}
+	}
+
+	public String getDefault_DepartureTime_Worker_ByWeekDayCode(int DayCode) {
+
+		return default_DepartureTime_Worker[DayCode];
+
+	}
+
+	public String getDefault_DepartureTime_Worker_ByWeekDayName(String DayName) throws Exception {
+
+		return default_DepartureTime_Worker[weekDay_Name_ToCode(DayName)];
+
+	}
+
+	public String getDefault_ArrivalTime_Worker_ByWeekDayCode(int DayCode) {
+
+		return default_ArrivalTime_Worker[DayCode];
+
+	}
+
+	public String getDefault_ArrivalTime_Worker_ByWeekDayName(String DayName) throws Exception {
+
+		return default_ArrivalTime_Worker[weekDay_Name_ToCode(DayName)];
+
+	}
+	
+	
 
 	@Override
 	public String toString() {

@@ -14,19 +14,23 @@ public class DataTransferServer implements Runnable {
 	private InputStream inputStream;
 	private ObjectInputStream objectInputStream;
 	private ManagerController mc;
+	private int serverPort;
 
 	/**
 	 * @param mainDeviceServerSocket
 	 * @param clientToServerSocket
 	 * @throws IOException
 	 */
-	public DataTransferServer(ManagerController mc) {
+
+	public DataTransferServer(ManagerController mc, int serverPort) {
 		this.mc = mc;
+		this.serverPort = serverPort;
 		try {
-			this.mainDeviceServerSocket = new ServerSocket(7771);
-			Runtime.getRuntime().addShutdownHook(new Thread() {		//Une routine de nettoyage afin d'éviter l'occupation des ports
+			this.mainDeviceServerSocket = new ServerSocket(serverPort);
+			Runtime.getRuntime().addShutdownHook(new Thread() { // Une routine de nettoyage afin d'éviter l'occupation
+																// des ports
 				public void run() {
-					try {					
+					try {
 						mainDeviceServerSocket.close();
 					} catch (IOException e) {
 
@@ -34,8 +38,7 @@ public class DataTransferServer implements Runnable {
 				}
 			});
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Erreur: ServerSocket initialization");
 		} // machine local donc pas d'adress
 
 	}
@@ -66,6 +69,20 @@ public class DataTransferServer implements Runnable {
 		} catch (EOFException e) {
 			resetFlux();
 		}
+	}
+
+	public void stopCurrentServer() {
+
+		try {
+			objectInputStream.close();
+			inputStream.close();
+			ClientToServerSocket.close();
+			mainDeviceServerSocket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Couldn't stop server");
+		}
+
 	}
 
 	@Override
