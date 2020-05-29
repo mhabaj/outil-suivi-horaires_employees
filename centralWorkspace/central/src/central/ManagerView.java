@@ -1,27 +1,29 @@
 package central;
 
-import java.util.ArrayList;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-public class ManagerView extends JFrame {
+public class ManagerView extends JFrame implements WindowListener{
 	
 	private JTabbedPane tabPane;
 	private CompanyOverviewView compOverview;
+	private WorkerView workerView;
 	
-	private Company comp;
+	private ManagerController mc;
 
-	public ManagerView(Company comp) {
+	public ManagerView(ManagerController mc) {
 		
-		this.comp = comp;
+		this.mc = mc;
 		
 		tabPane = new JTabbedPane();
 		
-		compOverview = new CompanyOverviewView(comp);
+		compOverview = new CompanyOverviewView(mc.getCompany());
 
-		WorkerView workerView = new WorkerView(comp);
+		workerView = new WorkerView(mc.getCompany());
 		
 		JPanel pane3 = new JPanel();
 
@@ -32,6 +34,32 @@ public class ManagerView extends JFrame {
 		this.setContentPane(tabPane);
 		this.setSize(600, 400);
 		this.setVisible(true);
+		
+		this.addWindowListener(this);
 	}
+
+	@Override
+	public void windowOpened(WindowEvent e) {}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		mc.serialize();
+		System.exit(0);
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {}
+
+	@Override
+	public void windowIconified(WindowEvent e) {}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {}
+
+	@Override
+	public void windowActivated(WindowEvent e) {}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {}
 
 }

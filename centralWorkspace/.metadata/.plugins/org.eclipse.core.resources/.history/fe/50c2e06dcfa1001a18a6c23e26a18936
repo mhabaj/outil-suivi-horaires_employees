@@ -1,0 +1,78 @@
+package central;
+
+import java.awt.Dimension;
+
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+
+public class DefaultTimeTableView extends JScrollPane implements TableModelListener {
+
+	private JTable defaultTimeTab;
+
+	private Worker w;
+
+	public DefaultTimeTableView(Worker w) {
+
+		this.w = w;
+
+		Object[][] defaultTimeList = new Object[2][5];
+
+		for(int loopDays = 0; loopDays < 5; loopDays++) {
+			defaultTimeList[0][loopDays] = w.getDefault_ArrivalTime_Worker_ByWeekDayCode(loopDays);
+			defaultTimeList[1][loopDays] = w.getDefault_DepartureTime_Worker_ByWeekDayCode(loopDays);
+		}
+
+		String[] defaultTimeHeader = {"Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"};
+
+		defaultTimeTab = new JTable(defaultTimeList, defaultTimeHeader);
+		defaultTimeTab.getTableHeader().setResizingAllowed(false);
+		defaultTimeTab.getTableHeader().setReorderingAllowed(false);
+
+		this.setViewportView(defaultTimeTab);
+		this.setPreferredSize(new Dimension(300, 55));
+	}
+
+	@Override
+	public void tableChanged(TableModelEvent e) {
+		int row = defaultTimeTab.getSelectedRow();
+		int column = defaultTimeTab.getSelectedColumn();
+		String changedHour = (String)defaultTimeTab.getValueAt(row, column);
+		try {
+			if(row == 1) {
+				switch(column) {
+				case 0 :
+					w.setDefault_ArrivalTime_Worker("lundi", changedHour);
+					break;
+				case 1 :
+
+				case 2 :
+
+				case 3 :
+
+				case 4 :
+
+				}
+			}
+			else if(row == 2) {
+				switch(column) {
+				case 0 :
+					w.set
+				case 1 :
+
+				case 2 :
+
+				case 3 :
+
+				case 4 :
+
+				}
+			}
+		} catch (Exception exception) {
+			exception.printStackTrace();
+		}
+
+	}
+
+}

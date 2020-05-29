@@ -125,6 +125,7 @@ public class CompanyOverviewView extends JPanel implements ListSelectionListener
 		if(departIndex !=  lastDepartIndex) {
 			lastDepartIndex = departIndex;
 			updateWList(departIndex);
+			infosPane.setViewportView(null);
 		}
 		int workerIndex = ((JList)(((JViewport)workerPane.getComponents()[0]).getView())).getSelectedIndex();
 		if(workerIndex >= 0) {

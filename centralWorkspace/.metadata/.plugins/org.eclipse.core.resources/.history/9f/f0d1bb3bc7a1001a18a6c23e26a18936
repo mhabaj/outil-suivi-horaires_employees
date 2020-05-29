@@ -1,0 +1,9 @@
+package central;
+
+public class WorkingDaysTableView implements TableModelListener {
+
+	public WorkingDaysTableView(Worker w) {
+		
+	}
+	
+}

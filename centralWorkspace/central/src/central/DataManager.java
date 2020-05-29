@@ -9,8 +9,8 @@ import java.io.ObjectOutputStream;
 
 public class DataManager<Type> {
 
-	private final String fileUrl = "src" + File.separator + "centralApplication" + File.separator + "ressources"
-			+ File.separator + "DataBase.ser";
+	private final String fileUrl = "src" + File.separator + "central" + File.separator + "assets"
+			+ File.separator + "save.ser";
 
 	private FileOutputStream fos;
 	private ObjectOutputStream oos;

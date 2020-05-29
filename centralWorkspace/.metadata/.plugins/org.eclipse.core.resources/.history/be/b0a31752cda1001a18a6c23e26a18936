@@ -1,0 +1,8 @@
+package central;
+
+import javax.swing.JScrollPane;
+import javax.swing.event.TableModelListener;
+
+public class DefaultTimeTableView extends JScrollPane implements TableModelListener {
+
+}

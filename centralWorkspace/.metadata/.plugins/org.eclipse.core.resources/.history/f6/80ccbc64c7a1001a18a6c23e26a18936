@@ -1,0 +1,18 @@
+package central;
+
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+
+public class WorkingDaysTableView implements TableModelListener {
+
+	public WorkingDaysTableView(Worker w) {
+		
+	}
+
+	@Override
+	public void tableChanged(TableModelEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+}

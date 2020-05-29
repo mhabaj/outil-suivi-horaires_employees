@@ -1,0 +1,9 @@
+package central;
+
+public class WorkingDaysTableView {
+
+	public WorkingDaysTableView(Worker w) {
+		
+	}
+	
+}

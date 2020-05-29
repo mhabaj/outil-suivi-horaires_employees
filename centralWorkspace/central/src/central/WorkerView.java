@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -35,6 +36,9 @@ public class WorkerView extends JPanel implements ListSelectionListener, ActionL
 	private int lastWorkerIndex = -1;
 
 	private ArrayList<Integer> workerList = new ArrayList<Integer>();
+	
+	private JButton modifButton;
+	private JButton delButton;
 	
 	private Company comp;
 	
@@ -91,8 +95,10 @@ public class WorkerView extends JPanel implements ListSelectionListener, ActionL
 		JPanel infoPane = new JPanel();
 		infoPane.setLayout(new BorderLayout());
 		
-		JList<String> infoList;
-		ArrayList<String> infoArray = new ArrayList<String>();
+		JPanel infoList = new JPanel();
+		BoxLayout infoBoxLayout = new BoxLayout(infoList, BoxLayout.Y_AXIS);
+		infoList.setLayout(infoBoxLayout);
+		
 		Worker w = null;
 		try {
 			w = comp.whereIsWorker(workerId).getWorkerById(workerId);
@@ -101,37 +107,32 @@ public class WorkerView extends JPanel implements ListSelectionListener, ActionL
 			e1.printStackTrace();
 		}
 
-		infoArray.add("Nom : " +w.getLastname_Worker());
-		infoArray.add("Prenom : " +w.getFirstname_Worker());
-		infoArray.add("Horaire par defaut : " +w.getDefault_ArrivalTime_Worker() +" - " +w.getDefault_DepartureTime_Worker());
-		infoArray.add("Pointages :");
-
-		infoList = new JList(infoArray.toArray());
+		infoList.add(new JLabel("Nom : " +w.getLastname_Worker()));
+		infoList.add(new JLabel("Prenom : " +w.getFirstname_Worker()));
+		infoList.add(new JLabel("Horaires par defaut : "));
 		
-		Object[][] pointagesList = new Object[w.getNumberWorkedDays()][3];
+		DefaultTimeTableView defaultTimeTable = new DefaultTimeTableView(w);
 		
-		int indexListFill = 0;
+		infoList.add(defaultTimeTable);
 		
-		try {
-			for(WorkingDay wd : w.getWorkingDays()) {
-				pointagesList[indexListFill][0] = wd.getTodaysDate();
-				pointagesList[indexListFill][1] = wd.getArrivalTime();
-				pointagesList[indexListFill][2] = wd.getDepartureTime();
-				indexListFill++;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		String[] entete = {"Jour", "Heure d'arrivé", "Heure de départ"};
+		infoList.add(new JLabel("Pointages :"));
 		
-		JTable pointageTab = new JTable(pointagesList, entete);
-		pointageTab.setPreferredScrollableViewportSize(new Dimension(0, 0));
+		WorkingDaysTableView workedDaysTab = new WorkingDaysTableView(w);
 		
-		JScrollPane pointanePane = new JScrollPane(pointageTab);
+		modifButton = new JButton("modification");
+		modifButton.addActionListener(this);
+		delButton = new JButton("delete");
+		delButton.addActionListener(this);
+		
+		JPanel paramPane = new JPanel();
+		BoxLayout paramLayout = new BoxLayout(paramPane, BoxLayout.X_AXIS);
+		
+		paramPane.add(modifButton);
+		paramPane.add(delButton);
 
 		infoPane.add(infoList, BorderLayout.PAGE_START);
-		infoPane.add(pointanePane, BorderLayout.CENTER);
+		infoPane.add(workedDaysTab, BorderLayout.CENTER);
+		infoPane.add(paramPane, BorderLayout.PAGE_END);
 		
 		workerInfoPane.setViewportView(infoPane);
 	}
@@ -161,12 +162,17 @@ public class WorkerView extends JPanel implements ListSelectionListener, ActionL
 	public void valueChanged(ListSelectionEvent e) {
 		int workerIndex = ((JList)(((JViewport)workersListPane.getComponents()[0]).getView())).getSelectedIndex();
 		
-		updateInfo(workerList.get(workerIndex));
+		if(workerIndex != lastWorkerIndex) {
+			updateInfo(workerList.get(workerIndex));
+			lastWorkerIndex = workerIndex;
+		}
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		System.out.println(e.getActionCommand());
+		if(e.getActionCommand() == "search") {
+			
+		}
 	}
 	
 }

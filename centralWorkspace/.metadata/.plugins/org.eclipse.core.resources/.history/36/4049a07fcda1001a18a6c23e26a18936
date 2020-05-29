@@ -1,0 +1,37 @@
+package central;
+
+import java.awt.Dimension;
+
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+
+public class DefaultTimeTableView extends JScrollPane implements TableModelListener {
+
+	public DefaultTimeTableView(Worker w) {
+
+		Object[][] defaultTimeList = new Object[2][5];
+
+		for(int loopDays = 0; loopDays < 5; loopDays++) {
+			defaultTimeList[0][loopDays] = w.getDefault_ArrivalTime_Worker_ByWeekDayCode(loopDays);
+			defaultTimeList[1][loopDays] = w.getDefault_DepartureTime_Worker_ByWeekDayCode(loopDays);
+		}
+
+		String[] defaultTimeHeader = {"Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"};
+
+		JTable daysTab = new JTable(defaultTimeList, defaultTimeHeader);
+		daysTab.getTableHeader().setResizingAllowed(false);
+		daysTab.getTableHeader().setReorderingAllowed(false);
+
+		JScrollPane daysPanel = new JScrollPane(daysTab);
+		daysPanel.setPreferredSize(new Dimension(300, 55));
+	}
+
+	@Override
+	public void tableChanged(TableModelEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

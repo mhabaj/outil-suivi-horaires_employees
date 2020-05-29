@@ -1,15 +1,32 @@
 package central;
 
+import java.io.IOException;
+
 public class ManagerController {
+	private final int APPLICATION_DEFAULT_PORT = 7771;
 
 	private Company company;
 	private DataTransferServer server;
 	private DataManager<Company> dm;
 
 	public ManagerController(String CompanyName) {
-		company = new Company(1, CompanyName);
-		//server = new DataTransferServer(this);
 		dm = new DataManager<Company>();
+		company = getDataManager().deserialiseObject();
+		server = new DataTransferServer(this, APPLICATION_DEFAULT_PORT);
+		ManagerView vue = new ManagerView(this);
+		//new Thread(this.server).start();
+	}
+	
+	public void serialize() {
+		try {
+			dm.serialiseObject(company);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public DataManager<Company> getDataManager(){
+		return dm;
 	}
 
 	public void parseEmulatorInput(String input) {
@@ -47,6 +64,15 @@ public class ManagerController {
 			System.out.println("INVAILD WORKER ID");
 		}
 
+	}
+
+	public void updateServerSettings(int portNumber) {
+
+		server.stopCurrentServer();
+		server = new DataTransferServer(this, portNumber);
+		new Thread(this.server).start();
+
+		
 	}
 
 	/**
@@ -99,30 +125,44 @@ public class ManagerController {
 		// DataManager<Company> dm = new DataManager<Company>();
 
 		ManagerController mg = new ManagerController("AledS6");
-
+/*
 		Worker Mah = new Worker(12346, "Mah", "----");
 		Worker Adrien = new Worker(12347, "Adrien", "----");
 		Worker Alexandre = new Worker(12348, "Alexandre", "-----");
 		Worker MohamadAli = new Worker(12349, "MohamadAli", "------");
 		Worker Tim = new Worker(12350, "Tim", "----");
-		Worker tom = new Worker(12352, "Tom", "Belda", "10h30", "20h00");
-		
-		tom.addWorkingDay("21/05/2020", "11h00", "21h00");
-		tom.addWorkingDay("20/05/2020", "10h30", "20h30");
-		tom.addWorkingDay("19/05/2020", "8h30", "19h00");
-		tom.addWorkingDay("18/05/2020", "11h00", "21h00");
-		tom.addWorkingDay("17/05/2020", "10h30", "20h30");
-		tom.addWorkingDay("16/05/2020", "8h30", "19h00");
-		tom.addWorkingDay("15/05/2020", "11h00", "21h00");
-		tom.addWorkingDay("14/05/2020", "10h30", "20h30");
-		tom.addWorkingDay("13/05/2020", "8h30", "19h00");
-		tom.addWorkingDay("12/05/2020", "11h00", "21h00");
-		tom.addWorkingDay("11/05/2020", "10h30", "20h30");
-		tom.addWorkingDay("10/05/2020", "8h30", "19h00");
-		tom.addWorkingDay("09/05/2020", "11h00", "21h00");
-		tom.addWorkingDay("08/05/2020", "10h30", "20h30");
-		tom.addWorkingDay("07/05/2020", "8h30", "19h00");
+		Worker tom = new Worker(12352, "Tom", "Belda");
 
+		String[] defaultArrivalTime1 = {"10:30","10:30","9:30","10:30","10:30"};
+		String[] defaultDepartureTime1 = {"20:00","18:00","20:00","20:00","20:00"};
+		tom.setDefault_ArrivalTime_Worker(defaultArrivalTime1);
+		tom.setDefault_DepartureTime_Worker(defaultDepartureTime1);
+		
+		String[] defaultArrivalTime2 = {"14:30","14:30","14:30","14:30","18:30"};
+		String[] defaultDepartureTime2 = {"22:00","22:00","22:00","23:00","05:00"};
+		Mah.setDefault_ArrivalTime_Worker(defaultArrivalTime2);
+		Mah.setDefault_DepartureTime_Worker(defaultDepartureTime2);
+		
+		tom.addWorkingDay("21/05/2020", "11:00", "21:00");
+        tom.addWorkingDay("20/05/2020", "10:30", "20:30");
+        tom.addWorkingDay("19/05/2020", "8:30", "19:00");
+        tom.addWorkingDay("18/05/2020", "11:00", "21:00");
+        tom.addWorkingDay("17/05/2020", "10:30", "20:30");
+        tom.addWorkingDay("16/05/2020", "8:30", "19:00");
+        tom.addWorkingDay("15/05/2020", "11:00", "21:00");
+        tom.addWorkingDay("14/05/2020", "10:30", "20:30");
+        tom.addWorkingDay("13/05/2020", "8:30", "19:00");
+        tom.addWorkingDay("12/05/2020", "11:00", "21:00");
+        tom.addWorkingDay("11/05/2020", "10:30", "20:30");
+        tom.addWorkingDay("10/05/2020", "8:30", "19:00");
+        tom.addWorkingDay("09/05/2020", "11:00", "21:00");
+        tom.addWorkingDay("08/05/2020", "10:30", "20:30");
+        tom.addWorkingDay("07/05/2020", "8:30", "19:00");
+
+        Mah.addWorkingDay("21/05/2020", "15:00", "21:00");
+        Mah.addWorkingDay("20/05/2020", "18:00", "05:00");
+        Mah.addWorkingDay("19/05/2020", "14:00");
+        
 		Department bot = new Department(1, "Botlane");
 		Department mid = new Department(2, "Midlane");
 		Department jungl = new Department(3, "Jungle");
@@ -141,27 +181,26 @@ public class ManagerController {
 		mg.getCompany().add_Department(jungl);
 		mg.getCompany().add_Department(top);
 		mg.getCompany().add_Department(pro);
-		
-		ManagerView vue = new ManagerView(mg.getCompany());
-		
-/*
-		new Thread(mg.server).start();
-		
-		//TEST SI ON AJOUTE LE ARRIVAL TIME ET DEPARTURE TIME DE LEMPLOYEE: 
-		while (true) {
-			try {
-				if(mg.getCompany().whereIsWorker(12346).getWorkerById(12346).checkWorkingDayByDate("2020-05-21")) {
-					System.out.println("PRESENT");
-					System.out.println(mg.getCompany().whereIsWorker(12346).getWorkerById(12346).getLastWorkingDay().getArrivalTime());
-					System.out.println(mg.getCompany().whereIsWorker(12346).getWorkerById(12346).getLastWorkingDay().getDepartureTime());
-					Thread.sleep(2000);
-				}
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
+		try {
+			System.out.println(Mah.getLastWorkingDay().getWeekDay());
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-*/
+		*/
+
+		/*
+		 * new Thread(mg.server).start();
+		 * 
+		 * //TEST SI ON AJOUTE LE ARRIVAL TIME ET DEPARTURE TIME DE LEMPLOYEE: while
+		 * (true) { try { if(mg.getCompany().whereIsWorker(12346).getWorkerById(12346).
+		 * checkWorkingDayByDate("2020-05-21")) { System.out.println("PRESENT");
+		 * System.out.println(mg.getCompany().whereIsWorker(12346).getWorkerById(12346).
+		 * getLastWorkingDay().getArrivalTime());
+		 * System.out.println(mg.getCompany().whereIsWorker(12346).getWorkerById(12346).
+		 * getLastWorkingDay().getDepartureTime()); Thread.sleep(2000); } } catch
+		 * (Exception e) { // TODO Auto-generated catch block e.printStackTrace(); } }
+		 */
 		/*
 		 * try { // System.out.println(mg.getCompany().getDepartmentByName("Botlane").
 		 * getWorker_List()); } catch (Exception e1) { // TODO Auto-generated catch

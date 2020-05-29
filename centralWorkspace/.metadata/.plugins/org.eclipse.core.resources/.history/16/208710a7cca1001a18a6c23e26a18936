@@ -1,0 +1,61 @@
+package central;
+
+import java.awt.Dimension;
+
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+
+public class WorkingDaysTableView extends JScrollPane implements TableModelListener {
+
+	private JTable workedDaysTab;
+	private Worker w;
+	
+	public WorkingDaysTableView(Worker w) {
+
+		this.w = w;
+		
+		Object[][] workedDaysList = new Object[w.getNumberWorkedDays()][3];
+
+		int indexListFill = 0;
+
+		try {
+			for(WorkingDay wd : w.getWorkingDays()) {
+				workedDaysList[indexListFill][0] = wd.getTodaysDate();
+				workedDaysList[indexListFill][1] = wd.getArrivalTime();
+				workedDaysList[indexListFill][2] = wd.getDepartureTime();
+				indexListFill++;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		String[] workedDaysHeader = {"Jour", "Heure d'arrivé", "Heure de départ"};
+
+		workedDaysTab = new JTable(workedDaysList, workedDaysHeader);
+		workedDaysTab.getModel().addTableModelListener(this);
+		workedDaysTab.setPreferredScrollableViewportSize(new Dimension(0, 0));
+		workedDaysTab.getTableHeader().setResizingAllowed(false);
+		workedDaysTab.getTableHeader().setReorderingAllowed(false);
+
+		this.setViewportView(workedDaysTab);
+	}
+
+	@Override
+	public void tableChanged(TableModelEvent event) {
+		int row = workedDaysTab.getSelectedRow();
+		int column = workedDaysTab.getSelectedColumn();
+		String changedHour = (String)workedDaysTab.getValueAt(row, column);
+		try {
+			if(column == 1)
+				w.getWorkingDayByDate((String)workedDaysTab.getValueAt(row, 0)).setArrivalTime(changedHour);
+			else if(column == 2)
+				w.getWorkingDayByDate((String)workedDaysTab.getValueAt(row, 0)).setArrivalTime(changedHour);
+		} catch (Exception exception) {
+			exception.printStackTrace();
+		}
+
+	}
+
+}

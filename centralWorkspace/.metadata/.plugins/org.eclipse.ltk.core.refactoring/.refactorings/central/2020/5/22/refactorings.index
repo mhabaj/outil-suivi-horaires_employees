@@ -3,3 +3,12 @@
 1590584391012	Rename field 'pane'
 1590587397795	Rename local variable 'jInfo'
 1590587412341	Rename local variable 'infos'
+1590769223485	Rename field 'pointageTab'
+1590769713779	Rename local variable 'pointagesList'
+1590769740968	Rename local variable 'entetePointages'
+1590770048550	Rename local variable 'e'
+1590770057388	Rename local variable 'e1'
+1590770542936	Rename local variable 'defaultDepartureTime'
+1590771445233	Rename local variable 'enteteDays'
+1590771457017	Rename local variable 'daysTab'
+1590773863552	Delete element
