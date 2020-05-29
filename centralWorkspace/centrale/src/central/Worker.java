@@ -1,7 +1,12 @@
 package central;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class Worker implements Serializable {
 
@@ -16,7 +21,7 @@ public class Worker implements Serializable {
 
 	private static final long serialVersionUID = 7337982580589824925L;
 	private int id_Worker;
-	private static int workingTimeOverflow_Worker;
+	private long workingTimeOverflow_Worker;
 	private String firstname_Worker, lastname_Worker;
 	private String[] default_ArrivalTime_Worker;
 	private String[] default_DepartureTime_Worker;
@@ -45,8 +50,8 @@ public class Worker implements Serializable {
 		this.setId_Worker(id_Worker);
 		this.setFirstname_Worker(firstname_Worker);
 		this.setLastname_Worker(lastname_Worker);
-		this.setDefault_ArrivalTime_Worker(default_ArrivalTime_Worker);
-		this.setDefault_DepartureTime_Worker(default_DepartureTime_Worker);
+		default_ArrivalTime_Worker = new String[5];
+		default_DepartureTime_Worker = new String[5];
 		this.workingDaysArray = new ArrayList<WorkingDay>();
 
 	}
@@ -58,12 +63,64 @@ public class Worker implements Serializable {
 		return id_Worker;
 	}
 
-	public void calculateTimeOverflow() {
-		for (WorkingDay workingDay : workingDaysArray) {
-			String current_WorkingDay_Date = workingDay.getTodaysDate();
-			if (current_WorkingDay_Date.equals(searched_Date))
-				return workingDay;
+	public void addTimeOverflowArrival(String arrivalTime, WorkingDay todayWorkingDay) {
+
+		try {
+			DateFormat df = new SimpleDateFormat("HH:mm");
+			Date arrivalTimeTMP = df.parse(arrivalTime);
+			Date defaultArrivalTimeTMP = null;
+			if (todayWorkingDay.getWeekDay().equals(weekDay_Code_ToString(MONDAY))) {
+				defaultArrivalTimeTMP = df.parse(default_ArrivalTime_Worker[MONDAY]);
+			} else if (todayWorkingDay.getWeekDay().equals(weekDay_Code_ToString(TUESDAY))) {
+				defaultArrivalTimeTMP = df.parse(default_ArrivalTime_Worker[TUESDAY]);
+			} else if (todayWorkingDay.getWeekDay().equals(weekDay_Code_ToString(WEDNESDAY))) {
+				defaultArrivalTimeTMP = df.parse(default_ArrivalTime_Worker[WEDNESDAY]);
+			} else if (todayWorkingDay.getWeekDay().equals(weekDay_Code_ToString(THURSDAY))) {
+				defaultArrivalTimeTMP = df.parse(default_ArrivalTime_Worker[THURSDAY]);
+			} else if (todayWorkingDay.getWeekDay().equals(weekDay_Code_ToString(FRIDAY))) {
+				defaultArrivalTimeTMP = df.parse(default_ArrivalTime_Worker[FRIDAY]);
+			}
+			long diffTmp = defaultArrivalTimeTMP.getTime() - arrivalTimeTMP.getTime();
+
+			workingTimeOverflow_Worker += diffTmp / (60 * 1000) % 60;
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+
+	}
+
+	public void addTimeOverflowDepart(String departTime, WorkingDay todayWorkingDay) {
+
+		try {
+			Date defaultDepartTimeTMP = null;
+			DateFormat df = new SimpleDateFormat("HH:mm");
+			Date departTimeTMP = df.parse(departTime);
+
+			if (todayWorkingDay.getWeekDay().equals(weekDay_Code_ToString(MONDAY))) {
+				defaultDepartTimeTMP = df.parse(default_DepartureTime_Worker[MONDAY]);
+			} else if (todayWorkingDay.getWeekDay().equals(weekDay_Code_ToString(TUESDAY))) {
+				defaultDepartTimeTMP = df.parse(default_DepartureTime_Worker[TUESDAY]);
+			} else if (todayWorkingDay.getWeekDay().equals(weekDay_Code_ToString(WEDNESDAY))) {
+				defaultDepartTimeTMP = df.parse(default_DepartureTime_Worker[WEDNESDAY]);
+			} else if (todayWorkingDay.getWeekDay().equals(weekDay_Code_ToString(THURSDAY))) {
+				defaultDepartTimeTMP = df.parse(default_DepartureTime_Worker[THURSDAY]);
+			} else if (todayWorkingDay.getWeekDay().equals(weekDay_Code_ToString(FRIDAY))) {
+				defaultDepartTimeTMP = df.parse(default_DepartureTime_Worker[FRIDAY]);
+			}
+
+			long diffTmp = departTimeTMP.getTime() - defaultDepartTimeTMP.getTime();
+
+			workingTimeOverflow_Worker += diffTmp / (60 * 1000) % 60;
+
+		} catch (
+
+		Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	/**
@@ -91,6 +148,8 @@ public class Worker implements Serializable {
 		WorkingDay wdTemp = new WorkingDay(todaysDate);
 		wdTemp.setArrivalTime(arrivalTime);
 		workingDaysArray.add(wdTemp);
+		addTimeOverflowArrival(arrivalTime, wdTemp);
+
 	}
 
 	public void addWorkingDay(String todaysDate, String arrivalTime, String departureTime) {
@@ -98,6 +157,8 @@ public class Worker implements Serializable {
 		wdTemp.setArrivalTime(arrivalTime);
 		wdTemp.setDepartureTime(departureTime);
 		workingDaysArray.add(wdTemp);
+
+		
 	}
 
 	public WorkingDay getLastWorkingDay() throws Exception {
@@ -276,6 +337,13 @@ public class Worker implements Serializable {
 		return "Worker [id_Worker=" + id_Worker + ", firstname_Worker=" + firstname_Worker + ", lastname_Worker="
 				+ lastname_Worker + ", default_ArrivalTime_Worker=" + default_ArrivalTime_Worker
 				+ ", default_DepartureTime_Worker=" + default_DepartureTime_Worker + "]";
+	}
+
+	/**
+	 * @return the workingTimeOverflow_Worker
+	 */
+	public long getWorkingTimeOverflow_Worker() {
+		return workingTimeOverflow_Worker;
 	}
 
 }

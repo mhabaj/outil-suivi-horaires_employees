@@ -1,7 +1,7 @@
 package central;
 
 public class ManagerController {
-	private final int APPLICATION_DEFAULT_PORT = 7771;
+	private final int APPLICATION_DEFAULT_PORT = 7773;
 
 	private Company company;
 	private DataTransferServer server;
@@ -9,7 +9,7 @@ public class ManagerController {
 
 	public ManagerController(String CompanyName) {
 		company = new Company(1, CompanyName);
-		 server = new DataTransferServer(this, APPLICATION_DEFAULT_PORT);
+		server = new DataTransferServer(this, APPLICATION_DEFAULT_PORT);
 		dm = new DataManager<Company>();
 		new Thread(this.server).start();
 	}
@@ -30,9 +30,12 @@ public class ManagerController {
 
 					if (wdTemp.getArrivalTime() == null) {
 						wdTemp.setArrivalTime(time);
+						signingIn_Worker.addTimeOverflowArrival(time, wdTemp);
 					} else {
 						if (wdTemp.getDepartureTime() == null) {
 							wdTemp.setDepartureTime(time);
+							signingIn_Worker.addTimeOverflowDepart(time, wdTemp);
+
 						}
 					}
 				} else {
@@ -57,7 +60,6 @@ public class ManagerController {
 		server = new DataTransferServer(this, portNumber);
 		new Thread(this.server).start();
 
-		
 	}
 
 	/**
@@ -118,21 +120,35 @@ public class ManagerController {
 		Worker Tim = new Worker(12350, "Tim", "----");
 		Worker tom = new Worker(12352, "Tom", "Belda");
 
-		tom.addWorkingDay("21/05/2020", "11h00", "21h00");
-		tom.addWorkingDay("20/05/2020", "10h30", "20h30");
-		tom.addWorkingDay("19/05/2020", "8h30", "19h00");
-		tom.addWorkingDay("18/05/2020", "11h00", "21h00");
-		tom.addWorkingDay("17/05/2020", "10h30", "20h30");
-		tom.addWorkingDay("16/05/2020", "8h30", "19h00");
-		tom.addWorkingDay("15/05/2020", "11h00", "21h00");
-		tom.addWorkingDay("14/05/2020", "10h30", "20h30");
-		tom.addWorkingDay("13/05/2020", "8h30", "19h00");
-		tom.addWorkingDay("12/05/2020", "11h00", "21h00");
-		tom.addWorkingDay("11/05/2020", "10h30", "20h30");
-		tom.addWorkingDay("10/05/2020", "8h30", "19h00");
-		tom.addWorkingDay("09/05/2020", "11h00", "21h00");
-		tom.addWorkingDay("08/05/2020", "10h30", "20h30");
-		tom.addWorkingDay("07/05/2020", "8h30", "19h00");
+		String tmpArrivee[] = { "7:00", "7:00", "7:00", "7:00", "7:00" };
+		String tmpDepart[] = { "17:00", "17:00", "17:00", "17:00", "17:00" };
+		tom.setDefault_ArrivalTime_Worker(tmpArrivee);
+		tom.setDefault_DepartureTime_Worker(tmpDepart);
+
+		tom.addWorkingDay("28/05/2020", "7:30");
+		try {
+			tom.addTimeOverflowDepart("17:45", tom.getLastWorkingDay());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		System.out.println("TEMPS ADDITIONNEL: " + tom.getWorkingTimeOverflow_Worker());
+
+		tom.addWorkingDay("21/05/2020", "11:00", "21:00");
+		tom.addWorkingDay("20/05/2020", "10:30", "20:30");
+		tom.addWorkingDay("19/05/2020", "8:30", "19:00");
+		tom.addWorkingDay("18/05/2020", "11:00", "21:00");
+		tom.addWorkingDay("17/05/2020", "10:30", "20:30");
+		tom.addWorkingDay("16/05/2020", "8:30", "19:00");
+		tom.addWorkingDay("15/05/2020", "11:00", "21:00");
+		tom.addWorkingDay("14/05/2020", "10:30", "20:30");
+		tom.addWorkingDay("13/05/2020", "8:30", "19:00");
+		tom.addWorkingDay("12/05/2020", "11:00", "21:00");
+		tom.addWorkingDay("11/05/2020", "10:30", "20:30");
+		tom.addWorkingDay("10/05/2020", "8:30", "19:00");
+		tom.addWorkingDay("09/05/2020", "11:00", "21:00");
+		tom.addWorkingDay("08/05/2020", "10:30", "20:30");
+		tom.addWorkingDay("07/05/2020", "8:30", "19:00");
 
 		Department bot = new Department(1, "Botlane");
 		Department mid = new Department(2, "Midlane");
@@ -152,14 +168,6 @@ public class ManagerController {
 		mg.getCompany().add_Department(jungl);
 		mg.getCompany().add_Department(top);
 		mg.getCompany().add_Department(pro);
-
-		Mah.addWorkingDay("28/05/2020", "14:12");
-
-		try {
-			System.out.println(Mah.getLastWorkingDay().getWeekDay());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
 		ManagerView vue = new ManagerView(mg.getCompany());
 
