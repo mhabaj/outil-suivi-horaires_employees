@@ -28,7 +28,7 @@ public class CompanyOverviewView extends JPanel implements ListSelectionListener
 	private ArrayList<ArrayList<String>> workerList = new ArrayList<ArrayList<String>>();
 	
 	private Company comp;
-	
+	+
 	public CompanyOverviewView(Company comp) {
 		
 		this.comp = comp;

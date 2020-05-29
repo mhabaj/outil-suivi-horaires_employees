@@ -16,6 +16,7 @@ public class Worker implements Serializable {
 
 	private static final long serialVersionUID = 7337982580589824925L;
 	private int id_Worker;
+	private static int workingTimeOverflow_Worker;
 	private String firstname_Worker, lastname_Worker;
 	private String[] default_ArrivalTime_Worker;
 	private String[] default_DepartureTime_Worker;
@@ -55,6 +56,14 @@ public class Worker implements Serializable {
 	 */
 	public int getId_Worker() {
 		return id_Worker;
+	}
+
+	public void calculateTimeOverflow() {
+		for (WorkingDay workingDay : workingDaysArray) {
+			String current_WorkingDay_Date = workingDay.getTodaysDate();
+			if (current_WorkingDay_Date.equals(searched_Date))
+				return workingDay;
+		}
 	}
 
 	/**
@@ -261,8 +270,6 @@ public class Worker implements Serializable {
 		return default_ArrivalTime_Worker[weekDay_Name_ToCode(DayName)];
 
 	}
-	
-	
 
 	@Override
 	public String toString() {

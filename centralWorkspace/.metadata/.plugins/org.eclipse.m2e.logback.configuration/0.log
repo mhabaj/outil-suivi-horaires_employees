@@ -19,3 +19,5 @@
 2020-05-28 14:09:11,819 [main] WARN  org.eclipse.jgit.util.FS - Cannot run program "git" (in directory "\usr\bin"): CreateProcess error=2, Le fichier spécifié est introuvable
 2020-05-28 14:09:23,687 [Worker-6: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is up-to-date. Trying to read.
 2020-05-28 17:59:40,546 [main] WARN  org.eclipse.jgit.util.FS - Cannot run program "git" (in directory "\usr\bin"): CreateProcess error=2, Le fichier spécifié est introuvable
+2020-05-28 18:15:23,496 [main] WARN  org.eclipse.jgit.util.FS - Cannot run program "git" (in directory "\usr\bin"): CreateProcess error=2, Le fichier spécifié est introuvable
+2020-05-28 19:40:47,561 [Worker-40: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is out-of-date. Trying to update.
