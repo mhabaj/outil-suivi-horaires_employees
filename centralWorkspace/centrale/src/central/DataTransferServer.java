@@ -15,6 +15,8 @@ public class DataTransferServer implements Runnable {
 	private ObjectInputStream objectInputStream;
 	private ManagerController mc;
 	private int serverPort;
+	private boolean available;
+	Thread srv;
 
 	/**
 	 * @param mainDeviceServerSocket
@@ -23,8 +25,12 @@ public class DataTransferServer implements Runnable {
 	 */
 
 	public DataTransferServer(ManagerController mc, int serverPort) {
+
 		this.mc = mc;
 		this.serverPort = serverPort;
+		this.available = true;
+		this.srv = new Thread(this);
+
 		try {
 			this.mainDeviceServerSocket = new ServerSocket(serverPort);
 			Runtime.getRuntime().addShutdownHook(new Thread() { // Une routine de nettoyage afin d'éviter l'occupation
@@ -46,19 +52,26 @@ public class DataTransferServer implements Runnable {
 	public void connect() throws IOException, ClassNotFoundException {
 
 		System.out.println("En attente");
-		this.ClientToServerSocket = mainDeviceServerSocket.accept(); // En attente de connection
-		System.out.println("Connection en cours de la part de " + ClientToServerSocket + "...");
+		try {
+			this.ClientToServerSocket = mainDeviceServerSocket.accept(); // En attente de connection
+			System.out.println("Connection en cours de la part de " + ClientToServerSocket + "...");
 
-		this.inputStream = this.ClientToServerSocket.getInputStream();
-		// Lecture des donnees
-		this.objectInputStream = new ObjectInputStream(inputStream);
-
+			this.inputStream = this.ClientToServerSocket.getInputStream();
+			// Lecture des donnees
+			this.objectInputStream = new ObjectInputStream(inputStream);
+		} catch (NullPointerException e) {
+			resetFlux();
+		}
 	}
 
 	public void resetFlux() throws IOException, ClassNotFoundException {
-		this.ClientToServerSocket = mainDeviceServerSocket.accept();
-		this.inputStream = this.ClientToServerSocket.getInputStream();
-		this.objectInputStream = new ObjectInputStream(inputStream);
+		try {
+			this.ClientToServerSocket = mainDeviceServerSocket.accept();
+			this.inputStream = this.ClientToServerSocket.getInputStream();
+			this.objectInputStream = new ObjectInputStream(inputStream);
+		} catch (NullPointerException e) {
+			System.out.println();
+		}
 	}
 
 	public void listenToData() throws ClassNotFoundException, IOException {
@@ -66,36 +79,53 @@ public class DataTransferServer implements Runnable {
 		try {
 			mc.parseEmulatorInput((String) objectInputStream.readObject());
 
-		} catch (EOFException e) {
-			resetFlux();
+		} catch (EOFException | NullPointerException e) {
+			e.printStackTrace();
 		}
 	}
 
-	public void stopCurrentServer() {
+	public void finalize() {
 
 		try {
+			try {
+				resetFlux();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
 			objectInputStream.close();
 			inputStream.close();
-			ClientToServerSocket.close();
-			mainDeviceServerSocket.close();
+
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			System.out.println("Couldn't stop server");
 		}
 
 	}
 
+	public void startup_Server() {
+		srv = new Thread(this);
+		available = true;
+		srv.start();
+	}
+
+	public void shutdown_Server() {
+		available = false;
+		srv.interrupt();
+	}
+
 	@Override
 	public void run() {
-		try {
-			this.connect();
-			while (true) {
-
-				listenToData();
+		while (available == true) {
+			try {
+				this.connect();
+				while (true) {
+					listenToData();
+				}
+			} catch (IOException | ClassNotFoundException e) {
+				e.printStackTrace();
 			}
-		} catch (IOException | ClassNotFoundException e) {
-			e.printStackTrace();
+
 		}
+		finalize();
 
 	}
 

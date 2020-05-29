@@ -158,7 +158,6 @@ public class Worker implements Serializable {
 		wdTemp.setDepartureTime(departureTime);
 		workingDaysArray.add(wdTemp);
 
-		
 	}
 
 	public WorkingDay getLastWorkingDay() throws Exception {
@@ -231,6 +230,16 @@ public class Worker implements Serializable {
 	 */
 	public void setDefault_ArrivalTime_Worker(String[] default_ArrivalTime_Worker) {
 		this.default_ArrivalTime_Worker = default_ArrivalTime_Worker;
+	}
+
+	public void setDefault_ArrivalTime_Worker(String day, String NewArrivalTime) throws Exception {
+		int dayCode = weekDay_Name_ToCode(day);
+		this.default_ArrivalTime_Worker[dayCode] = NewArrivalTime;
+	}
+	
+	public void setDefault_DepartureTime_Worker(String day, String NewArrivalTime) throws Exception {
+		int dayCode = weekDay_Name_ToCode(day);
+		this.default_DepartureTime_Worker[dayCode] = NewArrivalTime;
 	}
 
 	/**

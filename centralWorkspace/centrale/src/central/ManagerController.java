@@ -1,7 +1,7 @@
 package central;
 
 public class ManagerController {
-	private final int APPLICATION_DEFAULT_PORT = 7773;
+	private final int APPLICATION_DEFAULT_PORT = 7790;
 
 	private Company company;
 	private DataTransferServer server;
@@ -11,7 +11,7 @@ public class ManagerController {
 		company = new Company(1, CompanyName);
 		server = new DataTransferServer(this, APPLICATION_DEFAULT_PORT);
 		dm = new DataManager<Company>();
-		new Thread(this.server).start();
+		server.startup_Server();
 	}
 
 	public void parseEmulatorInput(String input) {
@@ -56,9 +56,9 @@ public class ManagerController {
 
 	public void updateServerSettings(int portNumber) {
 
-		server.stopCurrentServer();
+		server.shutdown_Server();
+
 		server = new DataTransferServer(this, portNumber);
-		new Thread(this.server).start();
 
 	}
 
@@ -170,7 +170,7 @@ public class ManagerController {
 		mg.getCompany().add_Department(pro);
 
 		ManagerView vue = new ManagerView(mg.getCompany());
-
+		mg.updateServerSettings(7760);
 		/*
 		 * new Thread(mg.server).start();
 		 * 
