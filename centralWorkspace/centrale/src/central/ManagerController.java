@@ -1,7 +1,8 @@
 package central;
 
+import java.io.IOException;
+
 public class ManagerController {
-	private final int APPLICATION_DEFAULT_PORT = 7790;
 
 	private Company company;
 	private DataTransferServer server;
@@ -9,9 +10,9 @@ public class ManagerController {
 
 	public ManagerController(String CompanyName) {
 		company = new Company(1, CompanyName);
-		server = new DataTransferServer(this, APPLICATION_DEFAULT_PORT);
+		server = new DataTransferServer(this);
 		dm = new DataManager<Company>();
-		server.startup_Server();
+
 	}
 
 	public void parseEmulatorInput(String input) {
@@ -54,12 +55,20 @@ public class ManagerController {
 
 	}
 
-	public void updateServerSettings(int portNumber) {
+	/*
+	 * public void updateServerSettings(int portNumber) {
+	 * 
+	 * server.finalize(); srv.interrupt(); server = new DataTransferServer(this,
+	 * portNumber); srv = new Thread(this.server); srv.start();
+	 * 
+	 * }
+	 */
 
+	public void stopServer() {
 		server.shutdown_Server();
-
-		server = new DataTransferServer(this, portNumber);
-
+	}
+	public void updateServerPort(int newPortNumber) {
+		this.server.updateServerSettings(newPortNumber);
 	}
 
 	/**
@@ -113,7 +122,7 @@ public class ManagerController {
 
 		ManagerController mg = new ManagerController("AledS6");
 
-		Worker Mah = new Worker(12346, "Mah", "----");
+		Worker Mah = new Worker(12345, "Mah", "----");
 		Worker Adrien = new Worker(12347, "Adrien", "----");
 		Worker Alexandre = new Worker(12348, "Alexandre", "-----");
 		Worker MohamadAli = new Worker(12349, "MohamadAli", "------");
@@ -170,7 +179,12 @@ public class ManagerController {
 		mg.getCompany().add_Department(pro);
 
 		ManagerView vue = new ManagerView(mg.getCompany());
-		mg.updateServerSettings(7760);
+		mg.updateServerPort(7200);
+		mg.updateServerPort(6890);
+		mg.updateServerPort(6895);
+
+		
+		
 		/*
 		 * new Thread(mg.server).start();
 		 * 
