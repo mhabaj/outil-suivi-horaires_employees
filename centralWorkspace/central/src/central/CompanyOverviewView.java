@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -21,7 +22,8 @@ public class CompanyOverviewView extends JPanel implements ListSelectionListener
 	private JPanel departPane;
 	private JScrollPane departScrollPane;
 	private JButton addDepartmentButton;
-	
+	private JButton delDepartmentButton;
+
 	private JScrollPane workerPane;
 	private JScrollPane infosPane;
 
@@ -31,8 +33,8 @@ public class CompanyOverviewView extends JPanel implements ListSelectionListener
 	private int lastDepartIndex = -1;
 	private int lastWorkerIndex = -1;
 
-	private ArrayList<String> departList;
-	private ArrayList<ArrayList<String>> workerList;
+	private ArrayList<Integer> departList;
+	private ArrayList<ArrayList<Integer>> workerList;
 
 	private Company comp;
 	private ManagerView mv;
@@ -48,14 +50,24 @@ public class CompanyOverviewView extends JPanel implements ListSelectionListener
 
 		departPane = new JPanel();
 		departPane.setLayout(new BoxLayout(departPane, BoxLayout.Y_AXIS));
-		
+
 		departScrollPane = new JScrollPane();
-		
+
 		addDepartmentButton = new JButton("Add");
 		addDepartmentButton.addActionListener(this);
-		
+
+		delDepartmentButton = new JButton("Delete");
+		delDepartmentButton.addActionListener(this);
+
+		JPanel buttonPane = new JPanel();
+		BoxLayout buttonLayout = new BoxLayout(buttonPane, BoxLayout.X_AXIS);
+		buttonPane.setLayout(buttonLayout);
+
+		buttonPane.add(delDepartmentButton);
+		buttonPane.add(addDepartmentButton);
+
 		departPane.add(departScrollPane);
-		departPane.add(addDepartmentButton);
+		departPane.add(buttonPane);
 
 		splitPane2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, workerPane, infosPane);
 		splitPane2.setDividerLocation(150);
@@ -72,21 +84,23 @@ public class CompanyOverviewView extends JPanel implements ListSelectionListener
 	}
 
 	public void setData() {
-		
-		departList = new ArrayList<String>();
-		workerList = new ArrayList<ArrayList<String>>();
+
+		departList = new ArrayList<Integer>();
+		workerList = new ArrayList<ArrayList<Integer>>();
 
 		ArrayList<Department> departArray = comp.getDepartment_List();
 
 		int index = 0;
 
 		for(Department depart : departArray) {
-			departList.add(depart.getName_Department());
-			workerList.add(new ArrayList<String>());
+			departList.add(depart.getId_Department());
+			workerList.add(new ArrayList<Integer>());
 
 			ArrayList<Worker> workerArray = depart.getWorker_List();
-			for(Worker worker : workerArray) {
-				workerList.get(index).add(worker.getFirstname_Worker());
+			if(workerArray != null) {
+				for(Worker worker : workerArray) {
+					workerList.get(index).add(worker.getId_Worker());
+				}
 			}
 
 			index++;
@@ -96,7 +110,15 @@ public class CompanyOverviewView extends JPanel implements ListSelectionListener
 	}
 
 	public void updateDList() {
-		JList dList = new JList(departList.toArray());
+		ArrayList<String> departNameList = new ArrayList<>();
+		for(int idDepart : departList) {
+			try {
+				departNameList.add(comp.getDepartmentByID(idDepart).getName_Department());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		JList dList = new JList(departNameList.toArray());
 
 		dList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		dList.setLayoutOrientation(JList.VERTICAL);
@@ -107,7 +129,16 @@ public class CompanyOverviewView extends JPanel implements ListSelectionListener
 	}
 
 	public void updateWList(int id) {
-		JList wList = new JList(workerList.get(id).toArray());
+		ArrayList<String> workerNameList = new ArrayList<>();
+		for(int idWorker : workerList.get(id)) {
+			try {
+				workerNameList.add(comp.getDepartmentByID(id).getWorkerById(idWorker).getLastname_Worker() +" " +comp.getDepartmentByID(id).getWorkerById(idWorker).getFirstname_Worker());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		JList wList = new JList(workerNameList.toArray());
 
 		wList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		wList.setLayoutOrientation(JList.VERTICAL);
@@ -139,6 +170,10 @@ public class CompanyOverviewView extends JPanel implements ListSelectionListener
 		infosPane.setViewportView(jInfo);
 	}
 
+	public void clearInfos() {
+		infosPane.setViewportView(null);
+	}
+
 	public void update() {
 		setData();
 		updateDList();
@@ -166,13 +201,38 @@ public class CompanyOverviewView extends JPanel implements ListSelectionListener
 			lastWorkerIndex = -1;
 		}
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == addDepartmentButton) {
 			AddDepartmentView.display(mv, comp);
 		}
-		
+		else if(e.getSource() == delDepartmentButton) {
+			int departIndex = ((JList)(((JViewport)departScrollPane.getComponents()[0]).getView())).getSelectedIndex();
+			try {
+				if(comp.getDepartmentByID(departIndex).getWorker_List() != null) {
+					int result = JOptionPane.showConfirmDialog(null, "This department contains workers, are you sure you want to delete it ?", "Delete department",
+							JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+					if (result == JOptionPane.OK_OPTION) {
+						comp.deleteDepartment(comp.getDepartmentByID(departIndex));
+						lastDepartIndex = -1;
+						lastWorkerIndex = -1;
+						mv.update();
+						clearInfos();
+					}
+				}
+				else {
+					comp.deleteDepartment(comp.getDepartmentByID(departIndex));
+					lastDepartIndex = -1;
+					lastWorkerIndex = -1;
+					mv.update();
+					clearInfos();
+				}
+			} catch (Exception exception) {
+				exception.printStackTrace();
+			}
+		}
+
 	}
 
 }

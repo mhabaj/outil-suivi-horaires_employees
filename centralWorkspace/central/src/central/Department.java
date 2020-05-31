@@ -4,21 +4,36 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Department implements Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1212195773920642415L;
-	private String name_Department;
-	private ArrayList<Worker> Worker_List = new ArrayList<Worker>();
-	private Company cp;
+	
+    private static final long serialVersionUID = 1212195773920642415L;
+    private String name_Department;
+    private ArrayList<Worker> Worker_List = new ArrayList<Worker>();
+    private Company cp;
+    private int id_Department;
 
-	/**
-	 * @param id_Department
-	 * @param name_Department
-	 */
-	public Department(String name_Department, Company cp) {
-		this.cp = cp;
+    /**
+     * @param id_Department
+     * @param name_Department
+     */
+    public Department(String name_Department, Company cp) {
+        id_Department = cp.getId_Department_Counter();
+        this.cp = cp;
         this.setName_Department(name_Department);
+        cp.incrementDepartmentNumber();
+    }
+
+    /**
+     * @return the id_Department
+     */
+    public int getId_Department() {
+        return id_Department;
+    }
+
+    /**
+     * @param id_Department the id_Department to set
+     */
+    public void setId_Department(int id_Department) {
+        this.id_Department = id_Department;
     }
 
 	@Override
@@ -31,7 +46,10 @@ public class Department implements Serializable {
 	 * @return the worker_List
 	 */
 	public ArrayList<Worker> getWorker_List() {
-		return Worker_List;
+		if(Worker_List.size() == 0)
+			return null;
+		else
+			return Worker_List;
 	}
 
 	/**

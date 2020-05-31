@@ -13,7 +13,16 @@ public class Company implements Serializable {
 	private String name_Company;
 	private ArrayList<Department> Department_List = new ArrayList<Department>();
 	private int id_Worker_Counter = 10000;
+	private int id_Department_Counter = 1;
 
+	public void incrementDepartmentNumber() {
+		id_Department_Counter++;
+	}
+	
+	public int getId_Department_Counter() {
+		return id_Department_Counter;
+	}
+	
 	public void incrementWorkersNumber() {
 		id_Worker_Counter++;
 	}
@@ -31,7 +40,7 @@ public class Company implements Serializable {
 	public void setId_Worker_Counter(int id_Worker_Counter) {
 		this.id_Worker_Counter = id_Worker_Counter;
 	}
-	
+
 	/**
 	 * @param id_Company
 	 * @param name_Company
@@ -116,6 +125,25 @@ public class Company implements Serializable {
 		}
 		throw new Exception("Error Search: Department Not Found");
 	}
+	
+	public Department getDepartmentByID(int searched_Department_ID) throws Exception {
+		for (Department department : Department_List) {
+			int current_Department_ID = department.getId_Department();
+			if (current_Department_ID == searched_Department_ID)
+				return department;
+		}
+		throw new Exception("Error Search: Department Not Found");
+	}
+	
+	public int deleteDepartment(Department dptToDelete) throws Exception {
+        for (Department dpt : Department_List) {
+            if (dpt.getId_Department() == dptToDelete.getId_Department()) {
+                this.Department_List.remove(dptToDelete);
+                return 1;
+            }
+        }
+        throw new Exception("Error Remove: Department not found");
+    }
 
 	@Override
 	public String toString() { // A refaire avec string buffer

@@ -9,9 +9,6 @@ import java.util.Locale;
 
 public class WorkingDay implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3677369569047290839L;
 	private String todaysDate;
 	private String arrivalTime;
@@ -35,7 +32,6 @@ public class WorkingDay implements Serializable {
 		this.setArrivalTime(arrivalTime);
 		this.setDepartureTime(departureTime);
 		this.setWeekDay();
-
 	}
 
 	public WorkingDay(String todaysDate) {
@@ -43,7 +39,6 @@ public class WorkingDay implements Serializable {
 		this.setArrivalTime(arrivalTime);
 		this.setDepartureTime(departureTime);
 		this.setWeekDay();
-
 	}
 
 	@Override

@@ -18,6 +18,8 @@ public class ManagerController {
 	public ManagerController(String CompanyName) {
 		dm = new DataManager<Company>();
 		company = dm.deserialiseObject();
+		if(company == null)
+			company = new Company("Company");
 		server = new DataTransferServer(this, APPLICATION_DEFAULT_PORT);
 		startServer();
 		ManagerView vue = new ManagerView(this);
