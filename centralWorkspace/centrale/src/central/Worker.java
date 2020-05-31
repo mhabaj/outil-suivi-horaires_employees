@@ -10,9 +10,6 @@ import java.util.Locale;
 
 public class Worker implements Serializable {
 
-	/**
-	 * 
-	 */
 	private final int MONDAY = 0;
 	private final int TUESDAY = 1;
 	private final int WEDNESDAY = 2;

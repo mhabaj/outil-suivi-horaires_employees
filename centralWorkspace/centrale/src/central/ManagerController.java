@@ -1,5 +1,6 @@
 package central;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -7,6 +8,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class ManagerController {
+	private final int APPLICATION_DEFAULT_PORT = 7771;
 
 	private Company company;
 	private DataTransferServer server;
@@ -14,12 +16,21 @@ public class ManagerController {
 	private Thread serverThread;
 
 	public ManagerController(String CompanyName) {
-		company = new Company(1, CompanyName);
-		server = new DataTransferServer(this);
 		dm = new DataManager<Company>();
-
+		company = dm.deserialiseObject();
+		server = new DataTransferServer(this, APPLICATION_DEFAULT_PORT);
+		startServer();
+		ManagerView vue = new ManagerView(this);
 	}
-
+	
+	public void serializeCompany() {
+		try {
+			dm.serialiseObject(company);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void parseEmulatorInput(String input) {
 		System.out.println("Reçu: " + input + System.lineSeparator());
 		String[] strTmp = input.split("/");
@@ -90,30 +101,10 @@ public class ManagerController {
 		startServer();
 
 	}
-
-	/*
-	 * public void updateServerSettings(int portNumber) {
-	 * 
-	 * server.finalize(); srv.interrupt(); server = new DataTransferServer(this,
-	 * portNumber); srv = new Thread(this.server); srv.start();
-	 * 
-	 * }
-	 */
-
-	/*
-	 * public void stopServer() { server.shutdown_Server(); }
-	 * 
-	 * public void updateServerPort(int newPortNumber) {
-	 * this.server.updateServerSettings(newPortNumber); }
-	 */
-
-	/**
-	 * @return the company
-	 */
+	
 	public Company getCompany() {
 		return company;
 	}
-
 	public static void main(String[] args) {
 		/*
 		 * System.out.println("ETAPE1: --------------------"); TimeKeeper pointeuse =

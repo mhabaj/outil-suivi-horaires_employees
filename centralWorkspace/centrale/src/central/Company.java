@@ -10,7 +10,6 @@ public class Company implements Serializable {
 	 */
 	private static final long serialVersionUID = 6607331681733486180L;
 
-	private int id_Company;
 
 	private String name_Company;
 	private ArrayList<Department> Department_List;
@@ -20,8 +19,7 @@ public class Company implements Serializable {
 	 * @param id_Company
 	 * @param name_Company
 	 */
-	public Company(int id_Company, String name_Company) {
-		this.setId_Company(id_Company);
+	public Company(String name_Company) {
 		this.setName_Company(name_Company);
 		Department_List = new ArrayList<Department>();
 	}
@@ -40,19 +38,8 @@ public class Company implements Serializable {
 		Department_List = department_List;
 	}
 
-	/**
-	 * @return the id_Company
-	 */
-	public int getId_Company() {
-		return id_Company;
-	}
+	
 
-	/**
-	 * @param id_Company the id_Company to set
-	 */
-	public void setId_Company(int id_Company) {
-		this.id_Company = id_Company;
-	}
 
 	/**
 	 * @return the name_Company
@@ -83,7 +70,7 @@ public class Company implements Serializable {
 	public void incrementWorkersNumber() {
 		id_Worker_Counter++;
 	}
-	
+
 	/**
 	 * @param searched_Department_Id
 	 * @return true if searched department found, else false
@@ -145,7 +132,7 @@ public class Company implements Serializable {
 
 	@Override
 	public String toString() { // A refaire avec string buffer
-		return "Company [id_Company=" + id_Company + ", name_Company=" + name_Company + ", Department_List="
+		return "name_Company=" + name_Company + ", Department_List="
 				+ Department_List + "]";
 	}
 
