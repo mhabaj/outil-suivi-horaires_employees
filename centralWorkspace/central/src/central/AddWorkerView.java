@@ -39,7 +39,7 @@ public class AddWorkerView {
         if (result == JOptionPane.OK_OPTION) {
             try {
 				comp.getDepartmentByName(departmentsCombo.getSelectedItem().toString()).add_New_Worker_DefaultTime(nameField.getText(), lastnameField.getText());
-				mv.update();
+				mv.updateWorkers(comp.getDepartmentByName(departmentsCombo.getSelectedItem().toString()).getId_Department());
             } catch (Exception e) {
 				e.printStackTrace();
 			}

@@ -263,17 +263,17 @@ public class Worker implements Serializable {
 		}
 	}
 
-	public WorkingDay getWorkingDayByDate(String searched_Date) throws Exception {
+	public WorkingDay getWorkingDayByDate(String searched_Date){
 		for (WorkingDay workingDay : workingDaysArray) {
 			String current_WorkingDay_Date = workingDay.getTodaysDate();
 			if (current_WorkingDay_Date.equals(searched_Date))
 				return workingDay;
 		}
-		throw new Exception("Error Search: WorkingDay Not Found");
+		return null;
 
 	}
 
-	public boolean checkWorkingDayByDate(String searched_Date) throws Exception {
+	public boolean checkWorkingDayByDate(String searched_Date) {
 		for (WorkingDay workingDay : workingDaysArray) {
 			String current_WorkingDay_Date = workingDay.getTodaysDate();
 			if (current_WorkingDay_Date.equals(searched_Date))

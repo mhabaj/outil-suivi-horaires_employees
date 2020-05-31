@@ -1,0 +1,59 @@
+package central;
+
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JViewport;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+public class CompanyOverviewView extends JPanel implements ListSelectionListener, ActionListener{
+
+	private JPanel mainPane;
+	
+	private JScrollPane actuPane;
+	private JScrollPane departPane;
+	
+	private ArrayList<String> actuList;
+	private ArrayList<String> departList;
+	
+	private JComboBox<String> departCombo;
+	
+	private Company comp;
+	
+	public void CompanyOverviewView(Company comp) {
+		this.comp = comp;
+		
+		
+	}
+	
+	public void setData() {
+		
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void valueChanged(ListSelectionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
+
+}

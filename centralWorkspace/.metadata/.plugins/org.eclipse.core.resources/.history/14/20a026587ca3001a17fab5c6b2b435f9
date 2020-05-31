@@ -1,0 +1,58 @@
+package central;
+
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
+import javax.swing.event.ListSelectionListener;
+
+public class parametersView extends JPanel implements ActionListener {
+
+	private JTextField portField;
+	private ManagerController mc;
+	
+	public parametersView(ManagerController mc) {
+		this.mc = mc;
+		
+		JPanel mainPane = new JPanel();
+		BoxLayout mainLayout = new BoxLayout(mainPane, BoxLayout.X_AXIS);
+		mainPane.setLayout(mainLayout);
+		
+		mainPane.add(new JLabel("Port : "));
+		
+		portField = new JTextField();
+		portField.addActionListener(this);
+		portField.setText(String.valueOf(mc.getServerPort()));
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == portField) {
+			int port = Integer.parseInt(portField.getText());
+			if(port < 65535 && port > 0) {
+				mc.changeServerConfig(port);
+			}
+			else {
+				
+			}
+		}
+	}
+	
+	public void textError() {
+		portField.setBorder(new LineBorder(Color.RED, 2));
+
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+			public void run() {
+				portField.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+			}
+		}, 2000);
+	}
+}

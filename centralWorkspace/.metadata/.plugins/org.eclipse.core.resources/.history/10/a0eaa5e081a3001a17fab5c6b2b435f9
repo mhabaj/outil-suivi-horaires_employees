@@ -1,0 +1,120 @@
+package central;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JViewport;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+public class CompanyOverviewView extends JPanel implements ListSelectionListener, ActionListener{
+
+	private JScrollPane departPane;
+
+	private JComboBox<String> departCombo;
+	
+	private Company comp;
+	
+	public CompanyOverviewView(Company comp) {
+		this.comp = comp;
+		
+		String[] departNameArray = new String[comp.getDepartment_List().size()];
+		int departIndex = 0;
+		
+		for(Department depart : comp.getDepartment_List()) {
+			try {
+				departNameArray[departIndex] = depart.getName_Department();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			departIndex++;
+		}
+		
+		departCombo = new JComboBox<>(departNameArray);
+		departCombo.setPreferredSize(new Dimension(0, 0));
+		
+		departPane = new JScrollPane();
+		
+		BoxLayout mainLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
+		this.setLayout(mainLayout);
+		
+		this.add(departCombo);
+		this.add(departPane);
+	}
+	
+	public void setData() {
+		
+		String[] departNameArray = new String[comp.getDepartment_List().size()];
+		int departIndex = 0;
+		
+		for(Department depart : comp.getDepartment_List()) {
+			try {
+				departNameArray[departIndex] = depart.getName_Department();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			departIndex++;
+		}
+		
+		departCombo = new JComboBox<>(departNameArray);
+		
+		String datetmp = LocalDate.now().toString();
+
+        DateFormat oldTMP = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        DateFormat newTMP = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+        Date dateTMP = null;
+		try {
+			dateTMP = oldTMP.parse(datetmp);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+        String date = newTMP.format(dateTMP);
+        
+        HashMap<Worker, WorkingDay> activityList = comp.getCompanyActivityPerDate(date);
+        
+        ArrayList<String> activityTempList = new ArrayList<>();
+        
+        JList activityJList = new JList(departNameList.toArray());
+
+		activityJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		activityJList.setLayoutOrientation(JList.VERTICAL);
+        
+	}
+	
+	public void update() {
+		setData();
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+	}
+
+	@Override
+	public void valueChanged(ListSelectionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
+
+}

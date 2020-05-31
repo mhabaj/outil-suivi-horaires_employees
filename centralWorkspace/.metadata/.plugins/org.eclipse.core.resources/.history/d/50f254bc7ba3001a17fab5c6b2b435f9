@@ -1,0 +1,34 @@
+package central;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.event.ListSelectionListener;
+
+public class parametersView extends JPanel implements ActionListener {
+
+	private JTextField portField;
+	
+	public parametersView(ManagerController mc) {
+		JPanel mainPane = new JPanel();
+		BoxLayout mainLayout = new BoxLayout(mainPane, BoxLayout.X_AXIS);
+		mainPane.setLayout(mainLayout);
+		
+		mainPane.add(new JLabel("Port : "));
+		
+		portField = new JTextField();
+		portField.addActionListener(this);
+		portField.setText(String.valueOf(mc.getServerPort()));
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

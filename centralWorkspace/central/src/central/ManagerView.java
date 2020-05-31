@@ -12,6 +12,7 @@ public class ManagerView extends JFrame implements WindowListener{
 	private JTabbedPane tabPane;
 	private CompanyOverviewView compOverview;
 	private WorkerView workerView;
+	private ParametersView paramView;
 	
 	private ManagerController mc;
 
@@ -21,18 +22,18 @@ public class ManagerView extends JFrame implements WindowListener{
 		
 		tabPane = new JTabbedPane();
 		
-		compOverview = new CompanyOverviewView(this, mc.getCompany());
+		compOverview = new CompanyOverviewView(mc.getCompany());
 
 		workerView = new WorkerView(this, mc.getCompany());
 		
-		JPanel pane3 = new JPanel();
+		paramView = new ParametersView(mc);
 
 		tabPane.addTab("Overview", compOverview);
 		tabPane.addTab("Workers", workerView);
-		tabPane.addTab("tab3", pane3);
+		tabPane.addTab("Parameters", paramView);
 		
 		this.setContentPane(tabPane);
-		this.setSize(600, 400);
+		this.setSize(900, 600);
 		this.setVisible(true);
 		
 		this.addWindowListener(this);
@@ -40,15 +41,26 @@ public class ManagerView extends JFrame implements WindowListener{
 	
 	public void update() {
 		compOverview.update();
-		workerView.update();
+		workerView.updateAll();
 	}
-
+	
+	public void updateInfos(int workerID) {
+		compOverview.update();
+		workerView.updateInfos(workerID);
+	}
+	
+	public void updateWorkers(int departID) {
+		compOverview.update();
+		workerView.updateWorkers(departID);
+	}
+	
 	@Override
 	public void windowOpened(WindowEvent e) {}
 
 	@Override
 	public void windowClosing(WindowEvent e) {
 		mc.serializeCompany();
+		mc.serializeServerSettings();
 		System.exit(0);
 	}
 

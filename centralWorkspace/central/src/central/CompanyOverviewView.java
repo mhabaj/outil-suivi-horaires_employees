@@ -1,245 +1,145 @@
 package central;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
-public class CompanyOverviewView extends JPanel implements ListSelectionListener, ActionListener{
+public class CompanyOverviewView extends JPanel implements ActionListener{
 
-	private JPanel departPane;
-	private JScrollPane departScrollPane;
-	private JButton addDepartmentButton;
-	private JButton delDepartmentButton;
+	private JScrollPane activityPane;
 
-	private JScrollPane workerPane;
-	private JScrollPane infosPane;
-
-	private JSplitPane splitPane1;
-	private JSplitPane splitPane2;
-
-	private int lastDepartIndex = -1;
-	private int lastWorkerIndex = -1;
-
-	private ArrayList<Integer> departList;
-	private ArrayList<ArrayList<Integer>> workerList;
-
+	private JComboBox<String> departCombo;
+	
 	private Company comp;
-	private ManagerView mv;
-
-	public CompanyOverviewView(ManagerView mv, Company comp) {
-
+	
+	public CompanyOverviewView(Company comp) {
 		this.comp = comp;
-		this.mv = mv;
-
-		infosPane = new JScrollPane();
-
-		workerPane = new JScrollPane();
-
-		departPane = new JPanel();
-		departPane.setLayout(new BoxLayout(departPane, BoxLayout.Y_AXIS));
-
-		departScrollPane = new JScrollPane();
-
-		addDepartmentButton = new JButton("Add");
-		addDepartmentButton.addActionListener(this);
-
-		delDepartmentButton = new JButton("Delete");
-		delDepartmentButton.addActionListener(this);
-
-		JPanel buttonPane = new JPanel();
-		BoxLayout buttonLayout = new BoxLayout(buttonPane, BoxLayout.X_AXIS);
-		buttonPane.setLayout(buttonLayout);
-
-		buttonPane.add(delDepartmentButton);
-		buttonPane.add(addDepartmentButton);
-
-		departPane.add(departScrollPane);
-		departPane.add(buttonPane);
-
-		splitPane2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, workerPane, infosPane);
-		splitPane2.setDividerLocation(150);
-
-		splitPane1 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, departPane, splitPane2);
-		splitPane1.setDividerLocation(150);
-
+		
+		activityPane = new JScrollPane();
+		
 		setData();
-
-		this.setLayout(new BorderLayout());
-
-		this.add(splitPane1);
-
+		
+		BorderLayout mainLayout = new BorderLayout();
+		this.setLayout(mainLayout);
+		
+		this.add(departCombo, BorderLayout.PAGE_START);
+		this.add(activityPane, BorderLayout.CENTER);
 	}
-
+	
 	public void setData() {
-
-		departList = new ArrayList<Integer>();
-		workerList = new ArrayList<ArrayList<Integer>>();
-
-		ArrayList<Department> departArray = comp.getDepartment_List();
-
-		if(departArray != null) {
-
-			int index = 0;
-
-			for(Department depart : departArray) {
-				departList.add(depart.getId_Department());
-				workerList.add(new ArrayList<Integer>());
-
-				ArrayList<Worker> workerArray = depart.getWorker_List();
-				if(workerArray != null) {
-					for(Worker worker : workerArray) {
-						workerList.get(index).add(worker.getId_Worker());
-					}
-				}
-
-				index++;
-			}
-		}
-
-		updateDList();
-	}
-
-	public void updateDList() {
-		ArrayList<String> departNameList = new ArrayList<>();
-		for(int idDepart : departList) {
+		
+		String[] departNameArray = new String[comp.getDepartment_List().size() + 1];
+		int departIndex = 1;
+		
+		departNameArray[0] = "-";
+		
+		for(Department depart : comp.getDepartment_List()) {
 			try {
-				departNameList.add(comp.getDepartmentByID(idDepart).getName_Department());
+				departNameArray[departIndex] = depart.getName_Department();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			departIndex++;
 		}
-		JList dList = new JList(departNameList.toArray());
-
-		dList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		dList.setLayoutOrientation(JList.VERTICAL);
-
-		dList.getSelectionModel().addListSelectionListener(this);
-
-		departScrollPane.setViewportView(dList);
+		
+		departCombo = new JComboBox<>(departNameArray);
+		departCombo.addActionListener(this);
+        
+		updateActivityList();
 	}
+	
+	public void updateActivityList() {
+		
+		String datetmp = LocalDate.now().toString();
 
-	public void updateWList(int id) {
-		ArrayList<String> workerNameList = new ArrayList<>();
-		for(int idWorker : workerList.get(id)) {
-			try {
-				workerNameList.add(comp.getDepartmentByID(departList.get(id)).getWorkerById(idWorker).getLastname_Worker() +" " +comp.getDepartmentByID(departList.get(id)).getWorkerById(idWorker).getFirstname_Worker());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+        DateFormat oldTMP = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        DateFormat newTMP = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+        Date dateTMP = null;
+		try {
+			dateTMP = oldTMP.parse(datetmp);
+		} catch (ParseException e) {
+			e.printStackTrace();
 		}
+        String date = newTMP.format(dateTMP);
+        
+        HashMap<Worker, WorkingDay> activityList = comp.getCompanyActivityPerDate(date);
+        
+        ArrayList<String> activityTempList = new ArrayList<>();
+        
+        for (Map.Entry<Worker, WorkingDay> entry : activityList.entrySet()) {
+            activityTempList.add(entry.getKey().getLastname_Worker() +" " +entry.getKey().getFirstname_Worker() +" : " +entry.getValue().getArrivalTime() +" - " +entry.getValue().getDepartureTime());
+        }
+        
+        JList activityJList = new JList(activityTempList.toArray());
 
-		JList wList = new JList(workerNameList.toArray());
-
-		wList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		wList.setLayoutOrientation(JList.VERTICAL);
-
-		wList.getSelectionModel().addListSelectionListener(this);
-
-		workerPane.setViewportView(wList);
+		activityJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		activityJList.setLayoutOrientation(JList.VERTICAL);
+		
+		activityPane.setViewportView(activityJList);
 	}
+	
+	public void updateActivityList(Department depart) {
+		String datetmp = LocalDate.now().toString();
 
-	public void updateInfo(int departId, int workerId) {
-
-		JList<String> jInfo;
-		ArrayList<String> infos = new ArrayList<String>();
-		Worker w = comp.getDepartment_List().get(departId).getWorker_List().get(workerId);
-
-		infos.add("Nom : " +w.getLastname_Worker());
-		infos.add("Prenom : " +w.getFirstname_Worker());
-		infos.add("Last days :");
-
-		ArrayList<WorkingDay> lastWorkingDays = w.getLastWorkingDays();
-		if(lastWorkingDays != null) {
-			for(WorkingDay wd : lastWorkingDays) {
-				infos.add(wd.getTodaysDate() +" : " +wd.getArrivalTime() +" - " +wd.getDepartureTime());
-			}
+        DateFormat oldTMP = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        DateFormat newTMP = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+        Date dateTMP = null;
+		try {
+			dateTMP = oldTMP.parse(datetmp);
+		} catch (ParseException e) {
+			e.printStackTrace();
 		}
+        String date = newTMP.format(dateTMP);
+        
+        HashMap<Worker, WorkingDay> activityList = depart.getDepartmentActivityPerDate(date);
+        
+        ArrayList<String> activityTempList = new ArrayList<>();
+        
+        for (Map.Entry<Worker, WorkingDay> entry : activityList.entrySet()) {
+            activityTempList.add(entry.getKey().getLastname_Worker() +" " +entry.getKey().getFirstname_Worker() +" : " +entry.getValue().getArrivalTime() +" - " +entry.getValue().getDepartureTime());
+        }
+        
+        JList activityJList = new JList(activityTempList.toArray());
 
-		jInfo = new JList(infos.toArray());
-		infosPane.setViewportView(jInfo);
+		activityJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		activityJList.setLayoutOrientation(JList.VERTICAL);
+		
+		activityPane.setViewportView(activityJList);
 	}
-
-	public void clearInfos() {
-		infosPane.setViewportView(null);
-	}
-
-	public void clearWList() {
-		workerPane.setViewportView(null);
-	}
-
+	
 	public void update() {
 		setData();
-		updateDList();
-		clearWList();
-		clearInfos();
-		lastDepartIndex = -1;
-		lastWorkerIndex = -1;
 	}
-
+	
 	@Override
-	public void valueChanged(ListSelectionEvent e) {
-		int departIndex = ((JList)(((JViewport)departScrollPane.getComponents()[0]).getView())).getSelectedIndex();
-		if(departIndex !=  lastDepartIndex) {
-			lastDepartIndex = departIndex;
-			updateWList(departIndex);
-			infosPane.setViewportView(null);
-		}
-		int workerIndex = ((JList)(((JViewport)workerPane.getComponents()[0]).getView())).getSelectedIndex();
-		if(workerIndex >= 0) {
-			if(workerIndex != lastWorkerIndex) {
-				lastWorkerIndex = workerIndex;
-				updateInfo(departIndex, workerIndex);
-			}
-		}
-		else {
-			lastWorkerIndex = -1;
-		}
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == addDepartmentButton) {
-			AddDepartmentView.display(mv, comp);
-		}
-		else if(e.getSource() == delDepartmentButton) {
-			int departIndex = ((JList)(((JViewport)departScrollPane.getComponents()[0]).getView())).getSelectedIndex();
-			try {
-				if(comp.getDepartmentByID(departList.get(departIndex)).getWorker_List() != null) {
-					int result = JOptionPane.showConfirmDialog(null, "This department contains workers, are you sure you want to delete it ?", "Delete department",
-							JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-					if (result == JOptionPane.OK_OPTION) {
-						comp.deleteDepartment(comp.getDepartmentByID(departList.get(departIndex)));
-						lastDepartIndex = -1;
-						lastWorkerIndex = -1;
-						mv.update();
-						clearInfos();
-					}
+	public void actionPerformed(ActionEvent event) {
+		if(event.getSource() == departCombo) {
+			if(departCombo.getSelectedItem().toString() != "-") {
+				try {
+					updateActivityList(comp.getDepartmentByName(departCombo.getSelectedItem().toString()));
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-				else {
-					comp.deleteDepartment(comp.getDepartmentByID(departList.get(departIndex)));
-					lastDepartIndex = -1;
-					lastWorkerIndex = -1;
-					mv.update();
-					clearInfos();
-				}
-			} catch (Exception exception) {
-				exception.printStackTrace();
 			}
+			else
+				updateActivityList();
 		}
-
 	}
 
 }

@@ -9,8 +9,6 @@ import java.net.Socket;
 
 public class DataTransferServer implements Runnable {
 
-	private final int DEFAULT_SERVER_PORT = 7778;
-
 	private ServerSocket mainDeviceServerSocket;
 	private Socket ClientToServerSocket;
 	private InputStream inputStream;
@@ -25,19 +23,15 @@ public class DataTransferServer implements Runnable {
 		this.mc = mc;
 
 	}
-
-	public DataTransferServer(ManagerController mc) {
-		this.serverPort = DEFAULT_SERVER_PORT;
-		this.mc = mc;
-	}
-
+	
 	public void init() throws IOException {
 
 		try {
 			this.mainDeviceServerSocket = new ServerSocket(this.serverPort);
 			status_Server = true;
 		} catch (java.net.BindException e) {
-			System.out.println("Selected Server port unavailable.");
+			System.out.println(
+					"Selected Server port already in use (did you start twice the program?) or unavailable. Try relauching the JVM/Eclipse or change port in Settings tab");
 			status_Server = false;
 
 		}
@@ -48,7 +42,6 @@ public class DataTransferServer implements Runnable {
 
 		if (status_Server == true) {
 			this.ClientToServerSocket = mainDeviceServerSocket.accept(); // socket client
-			System.out.println("New Connection from:  " + ClientToServerSocket + System.lineSeparator());
 
 			this.inputStream = this.ClientToServerSocket.getInputStream();
 
@@ -79,7 +72,7 @@ public class DataTransferServer implements Runnable {
 	}
 
 	public void stopCurrentServer() {
-
+		System.out.println("Server stopped");
 		status_Server = false;
 
 	}
@@ -88,9 +81,13 @@ public class DataTransferServer implements Runnable {
 		this.serverPort = newPort;
 	}
 
+	public int getPort() {
+		return serverPort;
+	}
+
 	@Override
 	public void run() {
-
+		System.out.println("Server starting up..");
 		try {
 			this.init();
 
@@ -104,4 +101,5 @@ public class DataTransferServer implements Runnable {
 		}
 
 	}
+
 }

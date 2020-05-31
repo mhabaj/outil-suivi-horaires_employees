@@ -2,6 +2,7 @@ package central;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Company implements Serializable {
 
@@ -48,6 +49,23 @@ public class Company implements Serializable {
 	public Company(String name_Company) {
 		this.setName_Company(name_Company);
 	}
+	
+	public HashMap<Worker, WorkingDay> getCompanyActivityPerDate(String date) {
+
+        HashMap<Worker, WorkingDay> tmp = new HashMap<Worker, WorkingDay>();
+
+        for (Department dpt : Department_List) {
+
+            HashMap<Worker, WorkingDay> tmp2 = dpt.getDepartmentActivityPerDate(date);
+
+            if (!tmp2.isEmpty()) {
+                tmp.putAll(tmp2);
+            }
+        }
+
+        return tmp;
+
+    }
 
 	/**
 	 * @return the department_List

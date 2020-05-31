@@ -1,5 +1,6 @@
 package central;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -8,24 +9,51 @@ import java.util.Date;
 import java.util.Locale;
 
 public class ManagerController {
-	private final int APPLICATION_DEFAULT_PORT = 7772;
+	private final String COMPANY_DATABASE = "src" + File.separator + "central" + File.separator + "assets"
+			+ File.separator + "save.ser";
+
+	private final String PARAMETERS_BACKUP = "src" + File.separator + "central" + File.separator + "assets"
+			+ File.separator + "settings_save.ser";
+
+	private final int APPLICATION_DEFAULT_PORT = 7700;
 
 	private Company company;
 	private DataTransferServer server;
 	private DataManager<Company> dm;
+	private DataManager<Integer> serverParameters;
 	private Thread serverThread;
 	private ManagerView view;
 
 	public ManagerController(String CompanyName) {
-		dm = new DataManager<Company>();
+		// Data settings:
+		dm = new DataManager<Company>(COMPANY_DATABASE);
 		company = dm.deserialiseObject();
-		if(company == null)
+		if (company == null)
 			company = new Company("Company");
-		server = new DataTransferServer(this, APPLICATION_DEFAULT_PORT);
+
+		////// server settings:
+		serverParameters = new DataManager<Integer>(PARAMETERS_BACKUP);
+		int parameters_backup = APPLICATION_DEFAULT_PORT;
+		try {
+			parameters_backup = serverParameters.deserialiseObject();
+			System.out.println("ICII: " + parameters_backup);
+		} catch (NullPointerException e) {
+			System.out.println(
+					"No server Config file found or the file is empty, trying using default server settings on port: "
+							+ APPLICATION_DEFAULT_PORT + System.lineSeparator());
+		}
+
+		if (parameters_backup != APPLICATION_DEFAULT_PORT) {
+			server = new DataTransferServer(this, parameters_backup);
+			System.out.println(" Configured port found! Starting up server on port: " + APPLICATION_DEFAULT_PORT
+					+ System.lineSeparator());
+		} else
+			server = new DataTransferServer(this, APPLICATION_DEFAULT_PORT);
+
 		startServer();
 		view = new ManagerView(this);
 	}
-	
+
 	public void serializeCompany() {
 		try {
 			dm.serialiseObject(company);
@@ -33,9 +61,16 @@ public class ManagerController {
 			e.printStackTrace();
 		}
 	}
-	
+
+	public void serializeServerSettings() {
+		try {
+			serverParameters.serialiseObject(server.getPort());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void parseEmulatorInput(String input) {
-		System.out.println("Reçu: " + input + System.lineSeparator());
 		String[] strTmp = input.split("/");
 		int id_Worker = Integer.parseInt(strTmp[2]);
 		String datetmp = strTmp[0];
@@ -76,11 +111,11 @@ public class ManagerController {
 
 					}
 				} catch (Exception e) {
-					
 
 					signingIn_Worker.addWorkingDay(date, time); // on creer le premier jour
 
 				}
+				view.updateInfos(signingIn_Worker.getId_Worker());
 
 			} catch (Exception e) {
 				System.out.println("INVAILD WORKER ID");
@@ -89,22 +124,26 @@ public class ManagerController {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		view.update();
 	}
 
 	public void startServer() {
 		serverThread = new Thread(server);
 		serverThread.start();
 	}
-	
+
 	public void changeServerConfig(int newPort) {
-		server.stopCurrentServer();
-		DataTransferServer serverTMP = new DataTransferServer(this, newPort);
-		server = serverTMP;
-		startServer();
+		if (newPort != server.getPort()) {
+			
+			server.stopCurrentServer();
+			DataTransferServer serverTMP = new DataTransferServer(this, newPort);
+			server = serverTMP;
+			startServer();
+		}
 
 	}
-	
+	public int getServerPort() {
+		return server.getPort();
+	}
 	public Company getCompany() {
 		return company;
 	}
@@ -152,6 +191,8 @@ public class ManagerController {
 		// DataManager<Company> dm = new DataManager<Company>();
 
 		ManagerController mg = new ManagerController("AledS6");
+		//mg.changeServerConfig(7800);
+		//mg.changeServerConfig(7700);
 
 		/*
 		 * new Thread(mg.server).start();
