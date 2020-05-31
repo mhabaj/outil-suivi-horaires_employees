@@ -21,9 +21,9 @@ public class ManagerView extends JFrame implements WindowListener{
 		
 		tabPane = new JTabbedPane();
 		
-		compOverview = new CompanyOverviewView(mc.getCompany());
+		compOverview = new CompanyOverviewView(this, mc.getCompany());
 
-		workerView = new WorkerView(mc.getCompany());
+		workerView = new WorkerView(this, mc.getCompany());
 		
 		JPanel pane3 = new JPanel();
 
@@ -37,13 +37,18 @@ public class ManagerView extends JFrame implements WindowListener{
 		
 		this.addWindowListener(this);
 	}
+	
+	public void update() {
+		compOverview.update();
+		workerView.update();
+	}
 
 	@Override
 	public void windowOpened(WindowEvent e) {}
 
 	@Override
 	public void windowClosing(WindowEvent e) {
-		mc.serialize();
+		mc.serializeCompany();
 		System.exit(0);
 	}
 

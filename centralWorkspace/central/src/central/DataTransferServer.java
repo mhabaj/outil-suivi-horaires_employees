@@ -9,53 +9,60 @@ import java.net.Socket;
 
 public class DataTransferServer implements Runnable {
 
+	private final int DEFAULT_SERVER_PORT = 7778;
+
 	private ServerSocket mainDeviceServerSocket;
 	private Socket ClientToServerSocket;
 	private InputStream inputStream;
 	private ObjectInputStream objectInputStream;
 	private ManagerController mc;
 	private int serverPort;
-
-	/**
-	 * @param mainDeviceServerSocket
-	 * @param clientToServerSocket
-	 * @throws IOException
-	 */
+	private boolean status_Server; // true = up, false = down
 
 	public DataTransferServer(ManagerController mc, int serverPort) {
-		this.mc = mc;
-		this.serverPort = serverPort;
-		try {
-			this.mainDeviceServerSocket = new ServerSocket(serverPort);
-			Runtime.getRuntime().addShutdownHook(new Thread() { // Une routine de nettoyage afin d'éviter l'occupation
-																// des ports
-				public void run() {
-					try {
-						mainDeviceServerSocket.close();
-					} catch (IOException e) {
 
-					}
-				}
-			});
-		} catch (IOException e) {
-			System.out.println("Erreur: ServerSocket initialization");
-		} // machine local donc pas d'adress
+		this.serverPort = serverPort;
+		this.mc = mc;
 
 	}
 
-	public void connect() throws IOException, ClassNotFoundException {
+	public DataTransferServer(ManagerController mc) {
+		this.serverPort = DEFAULT_SERVER_PORT;
+		this.mc = mc;
+	}
 
-		System.out.println("En attente");
-		this.ClientToServerSocket = mainDeviceServerSocket.accept(); // En attente de connection
-		System.out.println("Connection en cours de la part de " + ClientToServerSocket + "...");
+	public void init() throws IOException {
 
-		this.inputStream = this.ClientToServerSocket.getInputStream();
-		// Lecture des donnees
-		this.objectInputStream = new ObjectInputStream(inputStream);
+		try {
+			this.mainDeviceServerSocket = new ServerSocket(this.serverPort);
+			status_Server = true;
+		} catch (java.net.BindException e) {
+			System.out.println("Selected Server port unavailable.");
+			status_Server = false;
+
+		}
+
+	}
+
+	public void connectAndRetrieveData() throws IOException, ClassNotFoundException {
+
+		if (status_Server == true) {
+			this.ClientToServerSocket = mainDeviceServerSocket.accept(); // socket client
+			System.out.println("New Connection from:  " + ClientToServerSocket + System.lineSeparator());
+
+			this.inputStream = this.ClientToServerSocket.getInputStream();
+
+			this.objectInputStream = new ObjectInputStream(inputStream);
+
+			while (!ClientToServerSocket.isClosed()) {
+				listenToData();
+			}
+		}
 
 	}
 
 	public void resetFlux() throws IOException, ClassNotFoundException {
+		ClientToServerSocket.close();
 		this.ClientToServerSocket = mainDeviceServerSocket.accept();
 		this.inputStream = this.ClientToServerSocket.getInputStream();
 		this.objectInputStream = new ObjectInputStream(inputStream);
@@ -73,30 +80,28 @@ public class DataTransferServer implements Runnable {
 
 	public void stopCurrentServer() {
 
-		try {
-			objectInputStream.close();
-			inputStream.close();
-			ClientToServerSocket.close();
-			mainDeviceServerSocket.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			System.out.println("Couldn't stop server");
-		}
+		status_Server = false;
 
+	}
+
+	public void setPort(int newPort) {
+		this.serverPort = newPort;
 	}
 
 	@Override
 	public void run() {
-		try {
-			this.connect();
-			while (true) {
 
-				listenToData();
+		try {
+			this.init();
+
+			while (status_Server == true) {
+				connectAndRetrieveData();
 			}
+
 		} catch (IOException | ClassNotFoundException e) {
+			System.out.println("Server exception: " + e.getMessage());
 			e.printStackTrace();
 		}
 
 	}
-
 }

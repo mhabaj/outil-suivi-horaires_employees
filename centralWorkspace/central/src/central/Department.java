@@ -8,22 +8,22 @@ public class Department implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1212195773920642415L;
-	private int id_Department;
 	private String name_Department;
 	private ArrayList<Worker> Worker_List = new ArrayList<Worker>();
+	private Company cp;
 
 	/**
 	 * @param id_Department
 	 * @param name_Department
 	 */
-	public Department(int id_Department, String name_Department) {
-		this.setId_Department(id_Department);
-		this.setName_Department(name_Department);
-	}
+	public Department(String name_Department, Company cp) {
+		this.cp = cp;
+        this.setName_Department(name_Department);
+    }
 
 	@Override
 	public String toString() {
-		return "Department [id_Department=" + id_Department + ", name_Department=" + name_Department + ", Worker_List="
+		return "Department [name_Department=" + name_Department + ", Worker_List="
 				+ Worker_List + "]";
 	}
 
@@ -39,20 +39,6 @@ public class Department implements Serializable {
 	 */
 	public void setWorker_List(ArrayList<Worker> worker_List) {
 		Worker_List = worker_List;
-	}
-
-	/**
-	 * @return the id_Department
-	 */
-	public int getId_Department() {
-		return id_Department;
-	}
-
-	/**
-	 * @param id_Department the id_Department to set
-	 */
-	public void setId_Department(int id_Department) {
-		this.id_Department = id_Department;
 	}
 
 	/**
@@ -76,6 +62,20 @@ public class Department implements Serializable {
 
 		this.Worker_List.add(worker_To_Add);
 	}
+	
+	public void add_New_Worker_CustomTime(String firstname_Worker, String lastname_Worker,
+            String[] default_ArrivalTime_Worker, String[] default_DepartureTime_Worker) {
+        Worker worker_To_Add = new Worker(cp.getId_Worker_Counter(), firstname_Worker, lastname_Worker,
+                default_ArrivalTime_Worker, default_DepartureTime_Worker);
+        this.Worker_List.add(worker_To_Add);
+        cp.incrementWorkersNumber();
+    }
+
+    public void add_New_Worker_DefaultTime(String firstname_Worker, String lastname_Worker) {
+        Worker worker_To_Add = new Worker(cp.getId_Worker_Counter(), firstname_Worker, lastname_Worker);
+        this.Worker_List.add(worker_To_Add);
+        cp.incrementWorkersNumber();
+    }
 
 	/**
 	 * @param searched_Worker_Id

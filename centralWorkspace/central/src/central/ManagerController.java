@@ -1,6 +1,11 @@
 package central;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class ManagerController {
 	private final int APPLICATION_DEFAULT_PORT = 7771;
@@ -8,16 +13,17 @@ public class ManagerController {
 	private Company company;
 	private DataTransferServer server;
 	private DataManager<Company> dm;
+	private Thread serverThread;
 
 	public ManagerController(String CompanyName) {
 		dm = new DataManager<Company>();
-		company = getDataManager().deserialiseObject();
+		company = dm.deserialiseObject();
 		server = new DataTransferServer(this, APPLICATION_DEFAULT_PORT);
+		startServer();
 		ManagerView vue = new ManagerView(this);
-		//new Thread(this.server).start();
 	}
 	
-	public void serialize() {
+	public void serializeCompany() {
 		try {
 			dm.serialiseObject(company);
 		} catch (IOException e) {
@@ -25,59 +31,77 @@ public class ManagerController {
 		}
 	}
 	
-	public DataManager<Company> getDataManager(){
-		return dm;
-	}
-
 	public void parseEmulatorInput(String input) {
-
+		System.out.println("Reçu: " + input + System.lineSeparator());
 		String[] strTmp = input.split("/");
 		int id_Worker = Integer.parseInt(strTmp[2]);
-		String date = strTmp[0];
+		String datetmp = strTmp[0];
 		String time = strTmp[1];
 
+		////////////////////////////////////////////////////////////// on met le bon
+		////////////////////////////////////////////////////////////// format de date
+
 		try {
-			Worker signingIn_Worker = company.whereIsWorker(id_Worker).getWorkerById(id_Worker);
+			DateFormat oldTMP = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+			DateFormat newTMP = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+			Date date1 = oldTMP.parse(datetmp);
+
+			String date = newTMP.format(date1);
+			// System.out.println("DATEEE: " + date);
+			////////////////////////////////////////////////////////////
 
 			try {
-				WorkingDay wdTemp = signingIn_Worker.getLastWorkingDay();
-				if (wdTemp.getTodaysDate().equals(date)) {
+				Worker signingIn_Worker = company.whereIsWorker(id_Worker).getWorkerById(id_Worker);
 
-					if (wdTemp.getArrivalTime() == null) {
-						wdTemp.setArrivalTime(time);
-					} else {
-						if (wdTemp.getDepartureTime() == null) {
-							wdTemp.setDepartureTime(time);
+				try {
+					WorkingDay wdTemp = signingIn_Worker.getLastWorkingDay();
+					if (wdTemp.getTodaysDate().equals(date)) {
+
+						if (wdTemp.getArrivalTime() == null) {
+							wdTemp.setArrivalTime(time);
+							signingIn_Worker.addTimeOverflowArrival(time, wdTemp);
+						} else {
+							if (wdTemp.getDepartureTime() == null) {
+								wdTemp.setDepartureTime(time);
+								signingIn_Worker.addTimeOverflowDepart(time, wdTemp);
+
+							}
 						}
-					}
-				} else {
+					} else {
 
-					signingIn_Worker.addWorkingDay(date, time);
+						signingIn_Worker.addWorkingDay(date, time);
+
+					}
+				} catch (Exception e) {
+					
+
+					signingIn_Worker.addWorkingDay(date, time); // on creer le premier jour
 
 				}
+
 			} catch (Exception e) {
-				signingIn_Worker.addWorkingDay(date, time); // on creer le premier jour
-
+				System.out.println("INVAILD WORKER ID");
 			}
-
-		} catch (Exception e) {
-			System.out.println("INVAILD WORKER ID");
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 
 	}
 
-	public void updateServerSettings(int portNumber) {
-
-		server.stopCurrentServer();
-		server = new DataTransferServer(this, portNumber);
-		new Thread(this.server).start();
-
-		
+	public void startServer() {
+		serverThread = new Thread(server);
+		serverThread.start();
 	}
+	
+	public void changeServerConfig(int newPort) {
+		server.stopCurrentServer();
+		DataTransferServer serverTMP = new DataTransferServer(this, newPort);
+		server = serverTMP;
+		startServer();
 
-	/**
-	 * @return the company
-	 */
+	}
+	
 	public Company getCompany() {
 		return company;
 	}
@@ -125,69 +149,6 @@ public class ManagerController {
 		// DataManager<Company> dm = new DataManager<Company>();
 
 		ManagerController mg = new ManagerController("AledS6");
-/*
-		Worker Mah = new Worker(12346, "Mah", "----");
-		Worker Adrien = new Worker(12347, "Adrien", "----");
-		Worker Alexandre = new Worker(12348, "Alexandre", "-----");
-		Worker MohamadAli = new Worker(12349, "MohamadAli", "------");
-		Worker Tim = new Worker(12350, "Tim", "----");
-		Worker tom = new Worker(12352, "Tom", "Belda");
-
-		String[] defaultArrivalTime1 = {"10:30","10:30","9:30","10:30","10:30"};
-		String[] defaultDepartureTime1 = {"20:00","18:00","20:00","20:00","20:00"};
-		tom.setDefault_ArrivalTime_Worker(defaultArrivalTime1);
-		tom.setDefault_DepartureTime_Worker(defaultDepartureTime1);
-		
-		String[] defaultArrivalTime2 = {"14:30","14:30","14:30","14:30","18:30"};
-		String[] defaultDepartureTime2 = {"22:00","22:00","22:00","23:00","05:00"};
-		Mah.setDefault_ArrivalTime_Worker(defaultArrivalTime2);
-		Mah.setDefault_DepartureTime_Worker(defaultDepartureTime2);
-		
-		tom.addWorkingDay("21/05/2020", "11:00", "21:00");
-        tom.addWorkingDay("20/05/2020", "10:30", "20:30");
-        tom.addWorkingDay("19/05/2020", "8:30", "19:00");
-        tom.addWorkingDay("18/05/2020", "11:00", "21:00");
-        tom.addWorkingDay("17/05/2020", "10:30", "20:30");
-        tom.addWorkingDay("16/05/2020", "8:30", "19:00");
-        tom.addWorkingDay("15/05/2020", "11:00", "21:00");
-        tom.addWorkingDay("14/05/2020", "10:30", "20:30");
-        tom.addWorkingDay("13/05/2020", "8:30", "19:00");
-        tom.addWorkingDay("12/05/2020", "11:00", "21:00");
-        tom.addWorkingDay("11/05/2020", "10:30", "20:30");
-        tom.addWorkingDay("10/05/2020", "8:30", "19:00");
-        tom.addWorkingDay("09/05/2020", "11:00", "21:00");
-        tom.addWorkingDay("08/05/2020", "10:30", "20:30");
-        tom.addWorkingDay("07/05/2020", "8:30", "19:00");
-
-        Mah.addWorkingDay("21/05/2020", "15:00", "21:00");
-        Mah.addWorkingDay("20/05/2020", "18:00", "05:00");
-        Mah.addWorkingDay("19/05/2020", "14:00");
-        
-		Department bot = new Department(1, "Botlane");
-		Department mid = new Department(2, "Midlane");
-		Department jungl = new Department(3, "Jungle");
-		Department top = new Department(4, "Toplane");
-		Department pro = new Department(5, "Les pros");
-
-		bot.add_Worker(Mah);
-		bot.add_Worker(Alexandre);
-		mid.add_Worker(Adrien);
-		jungl.add_Worker(MohamadAli);
-		top.add_Worker(Tim);
-		pro.add_Worker(tom);
-
-		mg.getCompany().add_Department(bot);
-		mg.getCompany().add_Department(mid);
-		mg.getCompany().add_Department(jungl);
-		mg.getCompany().add_Department(top);
-		mg.getCompany().add_Department(pro);
-
-		try {
-			System.out.println(Mah.getLastWorkingDay().getWeekDay());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		*/
 
 		/*
 		 * new Thread(mg.server).start();

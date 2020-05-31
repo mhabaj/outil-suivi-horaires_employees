@@ -18,9 +18,6 @@ public class DataManager<Type> {
 	private FileInputStream fis;
 	private ObjectInputStream ois;
 
-	/**
-	 * @throws IOException
-	 */
 	public DataManager() {
 
 	}

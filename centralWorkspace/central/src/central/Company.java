@@ -10,17 +10,33 @@ public class Company implements Serializable {
 	 */
 	private static final long serialVersionUID = 6607331681733486180L;
 
-	private int id_Company;
-
 	private String name_Company;
 	private ArrayList<Department> Department_List = new ArrayList<Department>();
+	private int id_Worker_Counter = 10000;
 
+	public void incrementWorkersNumber() {
+		id_Worker_Counter++;
+	}
+
+	/**
+	 * @return the id_Worker_Counter
+	 */
+	public int getId_Worker_Counter() {
+		return id_Worker_Counter;
+	}
+
+	/**
+	 * @param id_Worker_Counter the id_Worker_Counter to set
+	 */
+	public void setId_Worker_Counter(int id_Worker_Counter) {
+		this.id_Worker_Counter = id_Worker_Counter;
+	}
+	
 	/**
 	 * @param id_Company
 	 * @param name_Company
 	 */
-	public Company(int id_Company, String name_Company) {
-		this.setId_Company(id_Company);
+	public Company(String name_Company) {
 		this.setName_Company(name_Company);
 	}
 
@@ -36,20 +52,6 @@ public class Company implements Serializable {
 	 */
 	public void setDepartment_List(ArrayList<Department> department_List) {
 		Department_List = department_List;
-	}
-
-	/**
-	 * @return the id_Company
-	 */
-	public int getId_Company() {
-		return id_Company;
-	}
-
-	/**
-	 * @param id_Company the id_Company to set
-	 */
-	public void setId_Company(int id_Company) {
-		this.id_Company = id_Company;
 	}
 
 	/**
@@ -72,25 +74,12 @@ public class Company implements Serializable {
 	public void add_Department(Department department_To_Add) {
 		this.Department_List.add(department_To_Add);
 	}
-	
+
 	public void add_New_Department( int id_Department, String name_Department) {
-		Department dptTemp = new Department(id_Department, name_Department);
+		Department dptTemp = new Department(name_Department, this);
 		this.Department_List.add(dptTemp);
 	}
 
-	/**
-	 * @param searched_Department_Id
-	 * @return true if searched department found, else false
-	 */
-	public boolean isDepartmentValidId(int searched_Department_Id) {
-		for (Department department : Department_List) {
-			int current_Department_Id = department.getId_Department();
-			if (current_Department_Id == searched_Department_Id)
-				return true;
-		}
-		return false;
-	}
-	
 	public Department whereIsWorker(int searched_Worker_Id) throws Exception {
 		for (Department department : Department_List) {			
 			if (department.isWorkerValidId(searched_Worker_Id) == true)
@@ -128,19 +117,10 @@ public class Company implements Serializable {
 		throw new Exception("Error Search: Department Not Found");
 	}
 
-	public Department getDepartmentById(int searched_Department_Id) throws Exception {
-		for (Department department : Department_List) {
-			int current_Department_Id = department.getId_Department();
-			if (current_Department_Id == searched_Department_Id)
-				return department;
-		}
-		throw new Exception("Error Search: Department Not Found");
-	}
-
 	@Override
 	public String toString() { // A refaire avec string buffer
-		return "Company [id_Company=" + id_Company + ", name_Company=" + name_Company + ", Department_List="
-				+ Department_List + "]";
+		return "Company [name_Company=" + name_Company + ", Department_List="
+		+ Department_List + "]";
 	}
 
 }

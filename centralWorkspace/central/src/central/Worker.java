@@ -10,9 +10,6 @@ import java.util.Locale;
 
 public class Worker implements Serializable {
 
-	/**
-	 * 
-	 */
 	private final int MONDAY = 0;
 	private final int TUESDAY = 1;
 	private final int WEDNESDAY = 2;
@@ -21,10 +18,10 @@ public class Worker implements Serializable {
 
 	private static final long serialVersionUID = 7337982580589824925L;
 	private int id_Worker;
-	private static int workingTimeOverflow_Worker;
+	private long workingTimeOverflow_Worker;
 	private String firstname_Worker, lastname_Worker;
-	private String[] default_ArrivalTime_Worker;
-	private String[] default_DepartureTime_Worker;
+	private String[] default_ArrivalTime_Worker = { "7:00", "7:00", "7:00", "7:00", "7:00" };
+	private String[] default_DepartureTime_Worker = { "17:00", "17:00", "17:00", "17:00", "17:00" };
 	private ArrayList<WorkingDay> workingDaysArray;
 
 	/**
@@ -37,6 +34,7 @@ public class Worker implements Serializable {
 
 	public Worker(int id_Worker, String firstname_Worker, String lastname_Worker, String[] default_ArrivalTime_Worker,
 			String[] default_DepartureTime_Worker) {
+
 		this.setId_Worker(id_Worker);
 		this.setFirstname_Worker(firstname_Worker);
 		this.setLastname_Worker(lastname_Worker);
@@ -47,11 +45,10 @@ public class Worker implements Serializable {
 	}
 
 	public Worker(int id_Worker, String firstname_Worker, String lastname_Worker) {
+
 		this.setId_Worker(id_Worker);
 		this.setFirstname_Worker(firstname_Worker);
 		this.setLastname_Worker(lastname_Worker);
-		this.setDefault_ArrivalTime_Worker(default_ArrivalTime_Worker);
-		this.setDefault_DepartureTime_Worker(default_DepartureTime_Worker);
 		this.workingDaysArray = new ArrayList<WorkingDay>();
 
 	}
@@ -66,17 +63,58 @@ public class Worker implements Serializable {
 	public void addTimeOverflowArrival(String arrivalTime, WorkingDay todayWorkingDay) {
 
 		try {
+			DateFormat df = new SimpleDateFormat("HH:mm");
+			Date arrivalTimeTMP = df.parse(arrivalTime);
+			Date defaultArrivalTimeTMP = null;
+			if (todayWorkingDay.getWeekDay().equals(weekDay_Code_ToString(MONDAY))) {
+				defaultArrivalTimeTMP = df.parse(default_ArrivalTime_Worker[MONDAY]);
+			} else if (todayWorkingDay.getWeekDay().equals(weekDay_Code_ToString(TUESDAY))) {
+				defaultArrivalTimeTMP = df.parse(default_ArrivalTime_Worker[TUESDAY]);
+			} else if (todayWorkingDay.getWeekDay().equals(weekDay_Code_ToString(WEDNESDAY))) {
+				defaultArrivalTimeTMP = df.parse(default_ArrivalTime_Worker[WEDNESDAY]);
+			} else if (todayWorkingDay.getWeekDay().equals(weekDay_Code_ToString(THURSDAY))) {
+				defaultArrivalTimeTMP = df.parse(default_ArrivalTime_Worker[THURSDAY]);
+			} else if (todayWorkingDay.getWeekDay().equals(weekDay_Code_ToString(FRIDAY))) {
+				defaultArrivalTimeTMP = df.parse(default_ArrivalTime_Worker[FRIDAY]);
+			}
+
+			long diffTmp = defaultArrivalTimeTMP.getTime() - arrivalTimeTMP.getTime();
+
+			workingTimeOverflow_Worker += diffTmp / (60 * 1000) % 60;
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	public void addTimeOverflowDepart(String departTime, WorkingDay todayWorkingDay) {
+
+		try {
+			Date defaultDepartTimeTMP = null;
+			DateFormat df = new SimpleDateFormat("HH:mm");
+			Date departTimeTMP = df.parse(departTime);
 
 			if (todayWorkingDay.getWeekDay().equals(weekDay_Code_ToString(MONDAY))) {
-
-				DateFormat df = new SimpleDateFormat("hh:mm:ss");
-				Date arrivalTimeTMP = df.parse(arrivalTime);
-				Date defaultArrivalTimeTMP = df.parse(default_ArrivalTime_Worker[MONDAY]);
-
-				long diffTmp = defaultArrivalTimeTMP.getTime() - arrivalTimeTMP.getTime();
-
+				defaultDepartTimeTMP = df.parse(default_DepartureTime_Worker[MONDAY]);
+			} else if (todayWorkingDay.getWeekDay().equals(weekDay_Code_ToString(TUESDAY))) {
+				defaultDepartTimeTMP = df.parse(default_DepartureTime_Worker[TUESDAY]);
+			} else if (todayWorkingDay.getWeekDay().equals(weekDay_Code_ToString(WEDNESDAY))) {
+				defaultDepartTimeTMP = df.parse(default_DepartureTime_Worker[WEDNESDAY]);
+			} else if (todayWorkingDay.getWeekDay().equals(weekDay_Code_ToString(THURSDAY))) {
+				defaultDepartTimeTMP = df.parse(default_DepartureTime_Worker[THURSDAY]);
+			} else if (todayWorkingDay.getWeekDay().equals(weekDay_Code_ToString(FRIDAY))) {
+				defaultDepartTimeTMP = df.parse(default_DepartureTime_Worker[FRIDAY]);
 			}
-		} catch (Exception e) {
+
+			long diffTmp = departTimeTMP.getTime() - defaultDepartTimeTMP.getTime();
+
+			workingTimeOverflow_Worker += diffTmp / (60 * 1000) % 60;
+
+		} catch (
+
+		Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -108,6 +146,8 @@ public class Worker implements Serializable {
 		WorkingDay wdTemp = new WorkingDay(todaysDate);
 		wdTemp.setArrivalTime(arrivalTime);
 		workingDaysArray.add(wdTemp);
+		addTimeOverflowArrival(arrivalTime, wdTemp);
+
 	}
 
 	public void addWorkingDay(String todaysDate, String arrivalTime, String departureTime) {
@@ -115,6 +155,7 @@ public class Worker implements Serializable {
 		wdTemp.setArrivalTime(arrivalTime);
 		wdTemp.setDepartureTime(departureTime);
 		workingDaysArray.add(wdTemp);
+
 	}
 
 	public WorkingDay getLastWorkingDay() throws Exception {
@@ -190,10 +231,15 @@ public class Worker implements Serializable {
 	}
 
 	public void setDefault_ArrivalTime_Worker(String day, String NewArrivalTime) throws Exception {
-        int dayCode = weekDay_Name_ToCode(day);
-        this.default_ArrivalTime_Worker[dayCode] = NewArrivalTime;
-    }
-	
+		int dayCode = weekDay_Name_ToCode(day);
+		this.default_ArrivalTime_Worker[dayCode] = NewArrivalTime;
+	}
+
+	public void setDefault_DepartureTime_Worker(String day, String NewArrivalTime) throws Exception {
+		int dayCode = weekDay_Name_ToCode(day);
+		this.default_DepartureTime_Worker[dayCode] = NewArrivalTime;
+	}
+
 	/**
 	 * @return the default_DepartureTime_Worker
 	 */
@@ -209,11 +255,6 @@ public class Worker implements Serializable {
 		this.default_DepartureTime_Worker = default_DepartureTime_Worker;
 
 	}
-    
-    public void setDefault_DepartureTime_Worker(String day, String NewArrivalTime) throws Exception {
-        int dayCode = weekDay_Name_ToCode(day);
-        this.default_DepartureTime_Worker[dayCode] = NewArrivalTime;
-    }
 
 	public void showEveryWorkingDay() {
 		for (WorkingDay workingDay : workingDaysArray) {
@@ -303,6 +344,13 @@ public class Worker implements Serializable {
 		return "Worker [id_Worker=" + id_Worker + ", firstname_Worker=" + firstname_Worker + ", lastname_Worker="
 				+ lastname_Worker + ", default_ArrivalTime_Worker=" + default_ArrivalTime_Worker
 				+ ", default_DepartureTime_Worker=" + default_DepartureTime_Worker + "]";
+	}
+
+	/**
+	 * @return the workingTimeOverflow_Worker
+	 */
+	public long getWorkingTimeOverflow_Worker() {
+		return workingTimeOverflow_Worker;
 	}
 
 }
