@@ -9,8 +9,8 @@ import java.io.ObjectOutputStream;
 
 public class DataManager<Type> {
 
-	private final String fileUrl = "src" + File.separator + "centralApplication" + File.separator + "ressources"
-			+ File.separator + "DataBase.ser";
+	private final String fileUrl = "src" + File.separator + "central" + File.separator + "assets"
+			+ File.separator + "save.ser";
 
 	private FileOutputStream fos;
 	private ObjectOutputStream oos;
@@ -18,7 +18,6 @@ public class DataManager<Type> {
 	private FileInputStream fis;
 	private ObjectInputStream ois;
 
-	
 	public DataManager() {
 
 	}
@@ -30,6 +29,7 @@ public class DataManager<Type> {
 		this.oos.writeObject(ObjectToSerialise);
 		this.oos.close();
 		this.fos.close();
+
 	}
 
 	public Type deserialiseObject() {

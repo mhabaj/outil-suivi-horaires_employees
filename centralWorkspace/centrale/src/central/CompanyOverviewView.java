@@ -1,8 +1,12 @@
 package central;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -12,9 +16,12 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-public class CompanyOverviewView extends JPanel implements ListSelectionListener {
+public class CompanyOverviewView extends JPanel implements ListSelectionListener, ActionListener{
 
-	private JScrollPane departPane;
+	private JPanel departPane;
+	private JScrollPane departScrollPane;
+	private JButton addDepartmentButton;
+	
 	private JScrollPane workerPane;
 	private JScrollPane infosPane;
 
@@ -24,20 +31,31 @@ public class CompanyOverviewView extends JPanel implements ListSelectionListener
 	private int lastDepartIndex = -1;
 	private int lastWorkerIndex = -1;
 
-	private ArrayList<String> departList = new ArrayList<String>();
-	private ArrayList<ArrayList<String>> workerList = new ArrayList<ArrayList<String>>();
+	private ArrayList<String> departList;
+	private ArrayList<ArrayList<String>> workerList;
 
 	private Company comp;
+	private ManagerView mv;
 
-	public CompanyOverviewView(Company comp) {
+	public CompanyOverviewView(ManagerView mv, Company comp) {
 
 		this.comp = comp;
+		this.mv = mv;
 
 		infosPane = new JScrollPane();
 
 		workerPane = new JScrollPane();
 
-		departPane = new JScrollPane();
+		departPane = new JPanel();
+		departPane.setLayout(new BoxLayout(departPane, BoxLayout.Y_AXIS));
+		
+		departScrollPane = new JScrollPane();
+		
+		addDepartmentButton = new JButton("Add");
+		addDepartmentButton.addActionListener(this);
+		
+		departPane.add(departScrollPane);
+		departPane.add(addDepartmentButton);
 
 		splitPane2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, workerPane, infosPane);
 		splitPane2.setDividerLocation(150);
@@ -54,17 +72,20 @@ public class CompanyOverviewView extends JPanel implements ListSelectionListener
 	}
 
 	public void setData() {
+		
+		departList = new ArrayList<String>();
+		workerList = new ArrayList<ArrayList<String>>();
 
 		ArrayList<Department> departArray = comp.getDepartment_List();
 
 		int index = 0;
 
-		for (Department depart : departArray) {
+		for(Department depart : departArray) {
 			departList.add(depart.getName_Department());
 			workerList.add(new ArrayList<String>());
 
 			ArrayList<Worker> workerArray = depart.getWorker_List();
-			for (Worker worker : workerArray) {
+			for(Worker worker : workerArray) {
 				workerList.get(index).add(worker.getFirstname_Worker());
 			}
 
@@ -82,7 +103,7 @@ public class CompanyOverviewView extends JPanel implements ListSelectionListener
 
 		dList.getSelectionModel().addListSelectionListener(this);
 
-		departPane.setViewportView(dList);
+		departScrollPane.setViewportView(dList);
 	}
 
 	public void updateWList(int id) {
@@ -102,16 +123,13 @@ public class CompanyOverviewView extends JPanel implements ListSelectionListener
 		ArrayList<String> infos = new ArrayList<String>();
 		Worker w = comp.getDepartment_List().get(departId).getWorker_List().get(workerId);
 
-		infos.add("Nom : " + w.getLastname_Worker());
-		infos.add("Prenom : " + w.getFirstname_Worker());
-		infos.add("Horaire par defaut : " + w.getDefault_ArrivalTime_Worker() + " - "
-				+ w.getDefault_DepartureTime_Worker());
-		infos.add("Derniers jours :");
+		infos.add("Nom : " +w.getLastname_Worker());
+		infos.add("Prenom : " +w.getFirstname_Worker());
+		infos.add("Last days :");
 
 		try {
-
-			for (WorkingDay wd : w.getLastWorkingDays()) {
-				infos.add(wd.getTodaysDate() + " : " + wd.getArrivalTime() + " - " + wd.getDepartureTime());
+			for(WorkingDay wd : w.getLastWorkingDays()) {
+				infos.add(wd.getTodaysDate() +" : " +wd.getArrivalTime() +" - " +wd.getDepartureTime());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -121,22 +139,40 @@ public class CompanyOverviewView extends JPanel implements ListSelectionListener
 		infosPane.setViewportView(jInfo);
 	}
 
+	public void update() {
+		setData();
+		updateDList();
+		if(lastDepartIndex != -1) {
+			updateWList(lastDepartIndex);
+		}
+	}
+
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-		int departIndex = ((JList) (((JViewport) departPane.getComponents()[0]).getView())).getSelectedIndex();
-		if (departIndex != lastDepartIndex) {
+		int departIndex = ((JList)(((JViewport)departScrollPane.getComponents()[0]).getView())).getSelectedIndex();
+		if(departIndex !=  lastDepartIndex) {
 			lastDepartIndex = departIndex;
 			updateWList(departIndex);
+			infosPane.setViewportView(null);
 		}
-		int workerIndex = ((JList) (((JViewport) workerPane.getComponents()[0]).getView())).getSelectedIndex();
-		if (workerIndex >= 0) {
-			if (workerIndex != lastWorkerIndex) {
+		int workerIndex = ((JList)(((JViewport)workerPane.getComponents()[0]).getView())).getSelectedIndex();
+		if(workerIndex >= 0) {
+			if(workerIndex != lastWorkerIndex) {
 				lastWorkerIndex = workerIndex;
 				updateInfo(departIndex, workerIndex);
 			}
-		} else {
+		}
+		else {
 			lastWorkerIndex = -1;
 		}
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == addDepartmentButton) {
+			AddDepartmentView.display(mv, comp);
+		}
+		
 	}
 
 }

@@ -105,6 +105,7 @@ public class ManagerController {
 	public Company getCompany() {
 		return company;
 	}
+
 	public static void main(String[] args) {
 		/*
 		 * System.out.println("ETAPE1: --------------------"); TimeKeeper pointeuse =
@@ -148,69 +149,6 @@ public class ManagerController {
 		// DataManager<Company> dm = new DataManager<Company>();
 
 		ManagerController mg = new ManagerController("AledS6");
-
-		Worker Mah = new Worker(12344, "Mah", "----");
-		Worker Adrien = new Worker(12347, "Adrien", "----");
-		Worker Alexandre = new Worker(12348, "Alexandre", "-----");
-		Worker MohamadAli = new Worker(12349, "MohamadAli", "------");
-		Worker Tim = new Worker(12350, "Tim", "----");
-		Worker tom = new Worker(12345, "Tom", "Belda");
-
-		String tmpArrivee[] = { "7:00", "7:00", "7:00", "7:00", "7:00" };
-		String tmpDepart[] = { "17:00", "17:00", "17:00", "17:00", "17:00" };
-		tom.setDefault_ArrivalTime_Worker(tmpArrivee);
-		tom.setDefault_DepartureTime_Worker(tmpDepart);
-
-		tom.addWorkingDay("28/05/2020", "7:30");
-		try {
-			tom.addTimeOverflowDepart("17:45", tom.getLastWorkingDay());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		System.out.println("TEMPS ADDITIONNEL: " + tom.getWorkingTimeOverflow_Worker());
-
-		tom.addWorkingDay("21/05/2020", "11:00", "21:00");
-		tom.addWorkingDay("20/05/2020", "10:30", "20:30");
-		tom.addWorkingDay("19/05/2020", "8:30", "19:00");
-		tom.addWorkingDay("18/05/2020", "11:00", "21:00");
-		tom.addWorkingDay("17/05/2020", "10:30", "20:30");
-		tom.addWorkingDay("16/05/2020", "8:30", "19:00");
-		tom.addWorkingDay("15/05/2020", "11:00", "21:00");
-		tom.addWorkingDay("14/05/2020", "10:30", "20:30");
-		tom.addWorkingDay("13/05/2020", "8:30", "19:00");
-		tom.addWorkingDay("12/05/2020", "11:00", "21:00");
-		tom.addWorkingDay("11/05/2020", "10:30", "20:30");
-		tom.addWorkingDay("10/05/2020", "8:30", "19:00");
-		tom.addWorkingDay("09/05/2020", "11:00", "21:00");
-		tom.addWorkingDay("08/05/2020", "10:30", "20:30");
-		tom.addWorkingDay("07/05/2020", "8:30", "19:00");
-
-		Department bot = new Department(1, "Botlane", mg.getCompany());
-		Department mid = new Department(2, "Midlane",mg.getCompany());
-		Department jungl = new Department(3, "Jungle",mg.getCompany());
-		Department top = new Department(4, "Toplane",mg.getCompany());
-		Department pro = new Department(5, "Les pros",mg.getCompany());
-
-		bot.add_Worker(Mah);
-		bot.add_Worker(Alexandre);
-		mid.add_Worker(Adrien);
-		jungl.add_Worker(MohamadAli);
-		top.add_Worker(Tim);
-		pro.add_Worker(tom);
-
-		mg.getCompany().add_Department(bot);
-		mg.getCompany().add_Department(mid);
-		mg.getCompany().add_Department(jungl);
-		mg.getCompany().add_Department(top);
-		mg.getCompany().add_Department(pro);
-
-		ManagerView vue = new ManagerView(mg.getCompany());
-		mg.startServer();
-		mg.changeServerConfig(7720);
-		// mg.updateServerPort(7200);
-		// mg.updateServerPort(6890);
-		// mg.updateServerPort(6895);
 
 		/*
 		 * new Thread(mg.server).start();
