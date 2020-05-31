@@ -18,11 +18,11 @@ public class Company implements Serializable {
 	public void incrementDepartmentNumber() {
 		id_Department_Counter++;
 	}
-	
+
 	public int getId_Department_Counter() {
 		return id_Department_Counter;
 	}
-	
+
 	public void incrementWorkersNumber() {
 		id_Worker_Counter++;
 	}
@@ -53,7 +53,13 @@ public class Company implements Serializable {
 	 * @return the department_List
 	 */
 	public ArrayList<Department> getDepartment_List() {
-		return Department_List;
+
+		if (Department_List.isEmpty()) {
+			return null;
+		} else {
+
+			return Department_List;
+		}
 	}
 
 	/**
@@ -125,7 +131,7 @@ public class Company implements Serializable {
 		}
 		throw new Exception("Error Search: Department Not Found");
 	}
-	
+
 	public Department getDepartmentByID(int searched_Department_ID) throws Exception {
 		for (Department department : Department_List) {
 			int current_Department_ID = department.getId_Department();
@@ -134,16 +140,16 @@ public class Company implements Serializable {
 		}
 		throw new Exception("Error Search: Department Not Found");
 	}
-	
+
 	public int deleteDepartment(Department dptToDelete) throws Exception {
-        for (Department dpt : Department_List) {
-            if (dpt.getId_Department() == dptToDelete.getId_Department()) {
-                this.Department_List.remove(dptToDelete);
-                return 1;
-            }
-        }
-        throw new Exception("Error Remove: Department not found");
-    }
+		for (Department dpt : Department_List) {
+			if (dpt.getId_Department() == dptToDelete.getId_Department()) {
+				this.Department_List.remove(dptToDelete);
+				return 1;
+			}
+		}
+		throw new Exception("Error Remove: Department not found");
+	}
 
 	@Override
 	public String toString() { // A refaire avec string buffer

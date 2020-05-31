@@ -11,6 +11,7 @@ import java.util.TimerTask;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -31,21 +32,30 @@ public class WorkerView extends JPanel implements ListSelectionListener, ActionL
 	private JButton addButton;
 
 	private JPanel menuPane;
-	private BoxLayout menuLayout;
-
 	private JScrollPane workersListPane;
 	private JScrollPane workerInfoPane;
-	private JSplitPane splitPane;
+	private JSplitPane infosSplitPane;
+	
+	private JPanel departPane;
+	private JScrollPane departScrollPane;
+	private JButton addDepartmentButton;
+	private JButton delDepartmentButton;
+	
+	private JSplitPane mainSplitPane;
 
+	private int lastDepartIndex = -1;
 	private int lastWorkerIndex = -1;
 
-	private ArrayList<Integer> workerList;
+	private ArrayList<Integer> departList;
+	private ArrayList<ArrayList<Integer>> workerList;
 
 	private JList dList;
 	private ArrayList<String> nameList;
 
 	private JTextField lastnameField;
 	private JTextField nameField;
+	
+	private JComboBox<String> departmentsCombo;
 
 	private JButton delButton;
 
@@ -66,7 +76,7 @@ public class WorkerView extends JPanel implements ListSelectionListener, ActionL
 		addButton = new JButton("add");
 		addButton.addActionListener(this);
 
-		menuLayout = new BoxLayout(menuPane, BoxLayout.X_AXIS);
+		new BoxLayout(menuPane, BoxLayout.X_AXIS);
 		menuPane = new JPanel();
 
 		menuPane.add(searchField);
@@ -76,53 +86,106 @@ public class WorkerView extends JPanel implements ListSelectionListener, ActionL
 		workersListPane = new JScrollPane();
 		workerInfoPane = new JScrollPane();
 
-		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, workersListPane, workerInfoPane);
+		infosSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, workersListPane, workerInfoPane);
 
+		departPane = new JPanel();
+		departPane.setLayout(new BoxLayout(departPane, BoxLayout.Y_AXIS));
+
+		departScrollPane = new JScrollPane();
+
+		addDepartmentButton = new JButton("Add");
+		addDepartmentButton.addActionListener(this);
+
+		delDepartmentButton = new JButton("Delete");
+		delDepartmentButton.addActionListener(this);
+
+		JPanel buttonPane = new JPanel();
+		BoxLayout buttonLayout = new BoxLayout(buttonPane, BoxLayout.X_AXIS);
+		buttonPane.setLayout(buttonLayout);
+
+		buttonPane.add(delDepartmentButton);
+		buttonPane.add(addDepartmentButton);
+
+		departPane.add(departScrollPane);
+		departPane.add(buttonPane);
+		
+		mainSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, departPane, infosSplitPane);
+		mainSplitPane.setDividerLocation(150);
+		
 		setData();
 
 		this.setLayout(new BorderLayout());
 
 		this.add(menuPane, BorderLayout.PAGE_START);
-		this.add(splitPane, BorderLayout.CENTER);
+		this.add(mainSplitPane, BorderLayout.CENTER);
 
 	}
 
 	public void setData() {
 
-		workerList = new ArrayList<Integer>();
+		departList = new ArrayList<Integer>();
+		workerList = new ArrayList<ArrayList<Integer>>();
 
 		ArrayList<Department> departArray = comp.getDepartment_List();
 
-		for(Department depart : departArray) {
+		if(departArray != null) {
 
-			ArrayList<Worker> workerArray = depart.getWorker_List();
-			if(workerArray != null) {
-				for(Worker worker : workerArray) {
-					workerList.add(worker.getId_Worker());
+			int index = 0;
+
+			for(Department depart : departArray) {
+				departList.add(depart.getId_Department());
+				workerList.add(new ArrayList<Integer>());
+
+				ArrayList<Worker> workerArray = depart.getWorker_List();
+				if(workerArray != null) {
+					for(Worker worker : workerArray) {
+						workerList.get(index).add(worker.getId_Worker());
+					}
 				}
+
+				index++;
 			}
 		}
-		updateWList();
+		updateDList();
 	}
 
-	public void updateWList() {
-		nameList = new ArrayList<>();
-		for(int id : workerList) {
+	public void updateDList() {
+		ArrayList<String> departNameList = new ArrayList<>();
+		for(int idDepart : departList) {
 			try {
-				nameList.add(comp.whereIsWorker(id).getWorkerById(id).getLastname_Worker() +" " +comp.whereIsWorker(id).getWorkerById(id).getFirstname_Worker());
+				departNameList.add(comp.getDepartmentByID(idDepart).getName_Department());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-
-		dList = new JList(nameList.toArray());
+		JList dList = new JList(departNameList.toArray());
 
 		dList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		dList.setLayoutOrientation(JList.VERTICAL);
 
 		dList.getSelectionModel().addListSelectionListener(this);
 
-		workersListPane.setViewportView(dList);
+		departScrollPane.setViewportView(dList);
+	}
+	
+	public void updateWList(int id) {
+		ArrayList<String> workerNameList = new ArrayList<>();
+		for(int idWorker : workerList.get(id)) {
+			try {
+				workerNameList.add(comp.getDepartmentByID(departList.get(id)).getWorkerById(idWorker).getLastname_Worker() +" " +comp.getDepartmentByID(departList.get(id)).getWorkerById(idWorker).getFirstname_Worker());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		JList wList = new JList(workerNameList.toArray());
+
+		wList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		wList.setLayoutOrientation(JList.VERTICAL);
+
+		wList.getSelectionModel().addListSelectionListener(this);
+
+		workersListPane.setViewportView(wList);
 	}
 
 	public void updateInfo(int workerId) {
@@ -163,6 +226,35 @@ public class WorkerView extends JPanel implements ListSelectionListener, ActionL
 		namePane.add(nameField);
 
 		infoList.add(namePane);
+		
+		String[] departmentsList = new String[comp.getDepartment_List().size()];
+        int departmentIndex = 0;
+        int workerDepartmentIndex = -1;
+        
+        for(Department d : comp.getDepartment_List()) {
+        	departmentsList[departmentIndex] = d.getName_Department();
+        	try {
+				if(d.getName_Department() == comp.whereIsWorker(w.getId_Worker()).getName_Department()) {
+					workerDepartmentIndex = departmentIndex;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+        	departmentIndex++;
+        }
+        
+        departmentsCombo = new JComboBox<>(departmentsList);
+        departmentsCombo.setSelectedIndex(workerDepartmentIndex);
+        departmentsCombo.addActionListener(this);
+        
+        JPanel departPane = new JPanel();
+		BoxLayout departBoxLayout = new BoxLayout(departPane, BoxLayout.X_AXIS);
+		departPane.setLayout(departBoxLayout);
+		
+		departPane.add(new JLabel("Department : "));
+		departPane.add(departmentsCombo);
+        
+        infoList.add(departPane);
 
 		infoList.add(new JLabel("Horaires par defaut : "));
 
@@ -195,16 +287,27 @@ public class WorkerView extends JPanel implements ListSelectionListener, ActionL
 
 	public void update() {
 		setData();
-		updateWList();
+		clearInfos();
+		lastWorkerIndex = -1;
 	}
 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
+		int departIndex = ((JList)(((JViewport)departScrollPane.getComponents()[0]).getView())).getSelectedIndex();
+		if(departIndex !=  lastDepartIndex) {
+			lastDepartIndex = departIndex;
+			updateWList(departIndex);
+			workerInfoPane.setViewportView(null);
+		}
 		int workerIndex = ((JList)(((JViewport)workersListPane.getComponents()[0]).getView())).getSelectedIndex();
-
-		if(workerIndex != lastWorkerIndex) {
-			updateInfo(workerList.get(workerIndex));
-			lastWorkerIndex = workerIndex;
+		if(workerIndex != -1) {
+			if(workerIndex != lastWorkerIndex) {
+				lastWorkerIndex = workerIndex;
+				updateInfo(workerList.get(departIndex).get(workerIndex));
+			}
+		}
+		else {
+			lastWorkerIndex = -1;
 		}
 	}
 
@@ -237,13 +340,22 @@ public class WorkerView extends JPanel implements ListSelectionListener, ActionL
 			if (result == JOptionPane.OK_OPTION) {
 				try {
 					comp.whereIsWorker(w.getId_Worker()).deleteWorker(w);
-					lastWorkerIndex = -1;
 					mv.update();
-					clearInfos();
 				} catch (Exception exception) {
 					exception.printStackTrace();
 				}
 			}
+		}
+		else if(event.getSource() == departmentsCombo) {
+			try {
+				comp.whereIsWorker(w.getId_Worker()).deleteWorker(w);
+				comp.getDepartmentByName(departmentsCombo.getSelectedItem().toString()).add_Worker(w);
+				mv.update();
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 		}
 	}
 

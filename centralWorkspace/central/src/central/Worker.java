@@ -168,7 +168,7 @@ public class Worker implements Serializable {
 
 	}
 
-	public ArrayList<WorkingDay> getLastWorkingDays() throws Exception {
+	public ArrayList<WorkingDay> getLastWorkingDays() {
 
 		if (workingDaysArray != null && !workingDaysArray.isEmpty()) {
 
@@ -187,15 +187,16 @@ public class Worker implements Serializable {
 
 			return workingDays;
 		}
-		throw new Exception("Error getLastWorkingDay: no working days found ");
+		return null;
 	}
 
-	public ArrayList<WorkingDay> getWorkingDays() throws Exception {
+	public ArrayList<WorkingDay> getWorkingDays() {
 
 		if (workingDaysArray != null && !workingDaysArray.isEmpty()) {
 			return workingDaysArray;
 		}
-		throw new Exception("Error getLastWorkingDay: no working days found ");
+		else 
+			return null;
 	}
 
 	public int getNumberWorkedDays() {

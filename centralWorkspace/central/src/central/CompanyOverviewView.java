@@ -90,20 +90,23 @@ public class CompanyOverviewView extends JPanel implements ListSelectionListener
 
 		ArrayList<Department> departArray = comp.getDepartment_List();
 
-		int index = 0;
+		if(departArray != null) {
 
-		for(Department depart : departArray) {
-			departList.add(depart.getId_Department());
-			workerList.add(new ArrayList<Integer>());
+			int index = 0;
 
-			ArrayList<Worker> workerArray = depart.getWorker_List();
-			if(workerArray != null) {
-				for(Worker worker : workerArray) {
-					workerList.get(index).add(worker.getId_Worker());
+			for(Department depart : departArray) {
+				departList.add(depart.getId_Department());
+				workerList.add(new ArrayList<Integer>());
+
+				ArrayList<Worker> workerArray = depart.getWorker_List();
+				if(workerArray != null) {
+					for(Worker worker : workerArray) {
+						workerList.get(index).add(worker.getId_Worker());
+					}
 				}
-			}
 
-			index++;
+				index++;
+			}
 		}
 
 		updateDList();
@@ -132,7 +135,7 @@ public class CompanyOverviewView extends JPanel implements ListSelectionListener
 		ArrayList<String> workerNameList = new ArrayList<>();
 		for(int idWorker : workerList.get(id)) {
 			try {
-				workerNameList.add(comp.getDepartmentByID(id).getWorkerById(idWorker).getLastname_Worker() +" " +comp.getDepartmentByID(id).getWorkerById(idWorker).getFirstname_Worker());
+				workerNameList.add(comp.getDepartmentByID(departList.get(id)).getWorkerById(idWorker).getLastname_Worker() +" " +comp.getDepartmentByID(departList.get(id)).getWorkerById(idWorker).getFirstname_Worker());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -158,12 +161,11 @@ public class CompanyOverviewView extends JPanel implements ListSelectionListener
 		infos.add("Prenom : " +w.getFirstname_Worker());
 		infos.add("Last days :");
 
-		try {
-			for(WorkingDay wd : w.getLastWorkingDays()) {
+		ArrayList<WorkingDay> lastWorkingDays = w.getLastWorkingDays();
+		if(lastWorkingDays != null) {
+			for(WorkingDay wd : lastWorkingDays) {
 				infos.add(wd.getTodaysDate() +" : " +wd.getArrivalTime() +" - " +wd.getDepartureTime());
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 
 		jInfo = new JList(infos.toArray());
@@ -174,12 +176,17 @@ public class CompanyOverviewView extends JPanel implements ListSelectionListener
 		infosPane.setViewportView(null);
 	}
 
+	public void clearWList() {
+		workerPane.setViewportView(null);
+	}
+
 	public void update() {
 		setData();
 		updateDList();
-		if(lastDepartIndex != -1) {
-			updateWList(lastDepartIndex);
-		}
+		clearWList();
+		clearInfos();
+		lastDepartIndex = -1;
+		lastWorkerIndex = -1;
 	}
 
 	@Override
@@ -210,11 +217,11 @@ public class CompanyOverviewView extends JPanel implements ListSelectionListener
 		else if(e.getSource() == delDepartmentButton) {
 			int departIndex = ((JList)(((JViewport)departScrollPane.getComponents()[0]).getView())).getSelectedIndex();
 			try {
-				if(comp.getDepartmentByID(departIndex).getWorker_List() != null) {
+				if(comp.getDepartmentByID(departList.get(departIndex)).getWorker_List() != null) {
 					int result = JOptionPane.showConfirmDialog(null, "This department contains workers, are you sure you want to delete it ?", "Delete department",
 							JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 					if (result == JOptionPane.OK_OPTION) {
-						comp.deleteDepartment(comp.getDepartmentByID(departIndex));
+						comp.deleteDepartment(comp.getDepartmentByID(departList.get(departIndex)));
 						lastDepartIndex = -1;
 						lastWorkerIndex = -1;
 						mv.update();
@@ -222,7 +229,7 @@ public class CompanyOverviewView extends JPanel implements ListSelectionListener
 					}
 				}
 				else {
-					comp.deleteDepartment(comp.getDepartmentByID(departIndex));
+					comp.deleteDepartment(comp.getDepartmentByID(departList.get(departIndex)));
 					lastDepartIndex = -1;
 					lastWorkerIndex = -1;
 					mv.update();

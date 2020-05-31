@@ -34,7 +34,6 @@ public class AddWorkerView {
         JComboBox<String> departmentsCombo = new JComboBox<>(departmentsList);
         panel.add(departmentsCombo);
         
-        
         int result = JOptionPane.showConfirmDialog(null, panel, "Add worker",
             JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if (result == JOptionPane.OK_OPTION) {

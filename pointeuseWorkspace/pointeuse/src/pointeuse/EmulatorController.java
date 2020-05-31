@@ -40,7 +40,7 @@ public class EmulatorController {
 
 			// Initialisation du socket d'envoie
 			try {
-				socket = new Socket("127.0.0.1", 7720);
+				socket = new Socket("127.0.0.1", 7772);
 				// Flux de donnees:
 				outputStream = socket.getOutputStream();
 				// Envoie des donnes via objectOutputStream:

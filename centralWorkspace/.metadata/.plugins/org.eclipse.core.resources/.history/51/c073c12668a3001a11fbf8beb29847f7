@@ -1,0 +1,10 @@
+package central;
+
+import java.awt.event.ActionListener;
+
+import javax.swing.JPanel;
+import javax.swing.event.ListSelectionListener;
+
+public class parametersViewextends extends JPanel implements ActionListener {
+
+}

@@ -8,12 +8,13 @@ import java.util.Date;
 import java.util.Locale;
 
 public class ManagerController {
-	private final int APPLICATION_DEFAULT_PORT = 7771;
+	private final int APPLICATION_DEFAULT_PORT = 7772;
 
 	private Company company;
 	private DataTransferServer server;
 	private DataManager<Company> dm;
 	private Thread serverThread;
+	private ManagerView view;
 
 	public ManagerController(String CompanyName) {
 		dm = new DataManager<Company>();
@@ -22,7 +23,7 @@ public class ManagerController {
 			company = new Company("Company");
 		server = new DataTransferServer(this, APPLICATION_DEFAULT_PORT);
 		startServer();
-		ManagerView vue = new ManagerView(this);
+		view = new ManagerView(this);
 	}
 	
 	public void serializeCompany() {
@@ -88,7 +89,7 @@ public class ManagerController {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-
+		view.update();
 	}
 
 	public void startServer() {

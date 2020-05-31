@@ -1,0 +1,21 @@
+package central;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JPanel;
+import javax.swing.event.ListSelectionListener;
+
+public class parametersView extends JPanel implements ActionListener {
+
+	public parametersView(ManagerController mc) {
+		
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

@@ -1,6 +1,7 @@
 package central;
 
 import java.awt.Dimension;
+import java.util.ArrayList;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -11,24 +12,24 @@ public class WorkingDaysTableView extends JScrollPane implements TableModelListe
 
 	private JTable workedDaysTab;
 	private Worker w;
-	
+
 	public WorkingDaysTableView(Worker w) {
 
 		this.w = w;
-		
+
 		Object[][] workedDaysList = new Object[w.getNumberWorkedDays()][3];
 
 		int indexListFill = 0;
 
-		try {
-			for(WorkingDay wd : w.getWorkingDays()) {
+		ArrayList<WorkingDay> workingDays = w.getWorkingDays();
+		
+		if(workingDays != null) {
+			for(WorkingDay wd : workingDays) {
 				workedDaysList[indexListFill][0] = wd.getTodaysDate();
 				workedDaysList[indexListFill][1] = wd.getArrivalTime();
 				workedDaysList[indexListFill][2] = wd.getDepartureTime();
 				indexListFill++;
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 
 		String[] workedDaysHeader = {"Jour", "Heure d'arrivé", "Heure de départ"};

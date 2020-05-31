@@ -46,11 +46,13 @@ public class Department implements Serializable {
 	 * @return the worker_List
 	 */
 	public ArrayList<Worker> getWorker_List() {
-		if(Worker_List.size() == 0)
-			return null;
-		else
-			return Worker_List;
-	}
+        if (Worker_List.isEmpty()) {
+            return null;
+        }
+        else {
+            return Worker_List;
+        }
+    }
 
 	/**
 	 * @param worker_List the worker_List to set
