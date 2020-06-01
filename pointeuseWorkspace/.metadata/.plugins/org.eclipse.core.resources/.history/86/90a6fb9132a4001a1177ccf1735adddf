@@ -80,7 +80,7 @@ public class ParametersView extends JPanel implements ActionListener {
 		if(e.getSource() == changeIPButton) {
 			String address = addressField.getText();
 			emc.changeServerAddress(address);
-			System.out.println("Address changed to : " +address);
+			System.out.println("Port changed to : " +port);
 		}
 	}
 	

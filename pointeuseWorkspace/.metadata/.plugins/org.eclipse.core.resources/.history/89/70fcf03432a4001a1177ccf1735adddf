@@ -28,11 +28,11 @@ public class EmulatorController {
 	private TimeManagerController time;
 
 	public EmulatorController() {
-		setupSettings();
-		view = new EmulatorView(this);
 		time = new TimeManagerController(view);
 		Thread thread = new Thread(time);
 		thread.start();
+		setupSettings();
+		view = new EmulatorView(this);
 	}
 
 	public TimeManagerController getTimeManager() {

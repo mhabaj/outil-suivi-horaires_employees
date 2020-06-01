@@ -24,15 +24,16 @@ public class EmulatorController {
 
 	private int serverPort;
 	private String serverAddress;
-	private EmulatorView view;
+	private EmulatorView vue;
 	private TimeManagerController time;
 
 	public EmulatorController() {
-		setupSettings();
-		view = new EmulatorView(this);
-		time = new TimeManagerController(view);
+		vue = new EmulatorView(this);
+		time = new TimeManagerController(vue);
 		Thread thread = new Thread(time);
 		thread.start();
+		setupSettings();
+
 	}
 
 	public TimeManagerController getTimeManager() {

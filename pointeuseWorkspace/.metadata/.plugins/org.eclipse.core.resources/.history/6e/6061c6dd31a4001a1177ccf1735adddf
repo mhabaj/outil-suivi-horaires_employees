@@ -71,7 +71,6 @@ public class ParametersView extends JPanel implements ActionListener {
 			int port = Integer.parseInt(portField.getText());
 			if(port < 65535 && port > 0) {
 				emc.changeServerPort(port);
-				System.out.println("Port changed to : " +port);
 			}
 			else {
 				textError();
@@ -80,7 +79,6 @@ public class ParametersView extends JPanel implements ActionListener {
 		if(e.getSource() == changeIPButton) {
 			String address = addressField.getText();
 			emc.changeServerAddress(address);
-			System.out.println("Address changed to : " +address);
 		}
 	}
 	
