@@ -2,12 +2,14 @@ package central;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -19,6 +21,8 @@ public class ParametersView extends JPanel implements ActionListener {
 	private JTextField portField;
 	private ManagerController mc;
 	
+	private JButton changePortButton;
+	
 	public ParametersView(ManagerController mc) {
 		this.mc = mc;
 		
@@ -29,9 +33,13 @@ public class ParametersView extends JPanel implements ActionListener {
 		mainPane.add(new JLabel("Port : "));
 		
 		portField = new JTextField();
-		portField.addActionListener(this);
+		portField.setMaximumSize(new Dimension(150, 25));
 		portField.setText(String.valueOf(mc.getServerPort()));
 		mainPane.add(portField);
+		
+		changePortButton = new JButton("Change");
+		changePortButton.addActionListener(this);
+		mainPane.add(changePortButton);
 		
 		this.setLayout(new BorderLayout());
 		this.add(mainPane, BorderLayout.PAGE_START);
@@ -39,13 +47,14 @@ public class ParametersView extends JPanel implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == portField) {
+		if(e.getSource() == changePortButton) {
 			int port = Integer.parseInt(portField.getText());
 			if(port < 65535 && port > 0) {
-				mc.changeServerConfig(port);
+				if(port != mc.getServerPort())
+					mc.changeServerConfig(port);
 			}
 			else {
-				
+				textError();
 			}
 		}
 	}

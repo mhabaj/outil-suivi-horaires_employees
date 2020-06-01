@@ -1,0 +1,35 @@
+package pointeuse;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Timer;
+import java.util.TimerTask;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
+
+public class EmulatorVue extends JFrame {
+
+	private EmulatorController emc;
+
+	public EmulatorVue(EmulatorController emc) {
+
+		this.emc = emc;
+
+		
+		
+		this.setTitle("pointeuse");
+		this.setContentPane(mainPane);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setSize(300, 200);
+		this.setVisible(true);
+	}
+
+}

@@ -13,11 +13,11 @@ import java.util.Scanner;
 
 public class EmulatorController {
 
-	private EmulatorVue vue;
+	private EmulatorView vue;
 	private TimeManagerController time;
 
 	public EmulatorController() {
-		vue = new EmulatorVue(this);
+		vue = new EmulatorView(this);
 		time = new TimeManagerController(vue);
 		Thread thread = new Thread(time);
 		thread.start();

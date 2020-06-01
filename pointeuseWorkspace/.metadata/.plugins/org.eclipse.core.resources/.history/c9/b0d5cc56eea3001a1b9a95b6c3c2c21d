@@ -1,0 +1,97 @@
+package pointeuse;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
+
+public class ParametersView extends JPanel implements ActionListener {
+
+	private JTextField portField;
+	private JTextField IPField;
+	private EmulatorController mc;
+	
+	private JButton changePortButton;
+	private JButton changeIPButton;
+	
+	public ParametersView(EmulatorController emc) {
+		this.mc = emc;
+		
+		JPanel portPane = new JPanel();
+		BoxLayout portLayout = new BoxLayout(portPane, BoxLayout.X_AXIS);
+		portPane.setLayout(portLayout);
+		
+		portPane.add(new JLabel("Port : "));
+		
+		portField = new JTextField();
+		portField.addActionListener(this);
+		portField.setText(String.valueOf(12));
+		portPane.add(portField);
+
+		changePortButton = new JButton("Change");
+		changePortButton.addActionListener(this);
+		portPane.add(changePortButton);
+		
+		JPanel IPPane = new JPanel();
+		BoxLayout IPLayout = new BoxLayout(IPPane, BoxLayout.X_AXIS);
+		IPPane.setLayout(IPLayout);
+		
+		IPPane.add(new JLabel("IP : "));
+		
+		IPField = new JTextField();
+		IPField.addActionListener(this);
+		IPField.setText(String.valueOf(1526002));
+		IPPane.add(IPField);
+
+		changeIPButton = new JButton("Change");
+		changeIPButton.addActionListener(this);
+		IPPane.add(changeIPButton);
+		
+		this.setLayout(new GridLayout());
+		this.add(portPane, GridLayout.PAGE_START);
+		this.add(IPPane, GridLayout.CENTER);
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == changePortButton) {
+			int port = Integer.parseInt(portField.getText());
+			if(port < 65535 && port > 0) {
+				System.out.println("on change pour " +port);
+			}
+			else {
+				textError();
+			}
+		}
+		if(e.getSource() == changeIPButton) {
+			int IP = Integer.parseInt(IPField.getText());
+			if(IP < 65535 && IP > 0) {
+				System.out.println("on change pour " +IP);
+			}
+			else {
+				textError();
+			}
+		}
+	}
+	
+	public void textError() {
+		portField.setBorder(new LineBorder(Color.RED, 2));
+
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+			public void run() {
+				portField.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+			}
+		}, 2000);
+	}
+}
+
