@@ -7,18 +7,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
-public class EmulatorVue extends JFrame implements ActionListener {
+public class TimeClockView extends JPanel implements ActionListener {
 
 	private EmulatorController emc;
-	private JPanel mainPane = new JPanel();
 	private JPanel timePane = new JPanel();
 	private JPanel entryPane = new JPanel();
 	private BorderLayout mainLayout;
@@ -28,11 +27,11 @@ public class EmulatorVue extends JFrame implements ActionListener {
 	private JLabel roundedTimeLabel;
 	private JTextField idField;
 	private JButton sendIdButton;
-
-	public EmulatorVue(EmulatorController emc) {
-
+	
+	public TimeClockView(EmulatorController emc) {
+		
 		this.emc = emc;
-
+		
 		idField = new JTextField();
 		idField.setColumns(5);
 		idField.setBorder(javax.swing.BorderFactory.createEmptyBorder());
@@ -61,18 +60,12 @@ public class EmulatorVue extends JFrame implements ActionListener {
 		timePane.add(roundedTimeLabel);
 
 		mainLayout = new BorderLayout();
-		mainPane.setLayout(mainLayout);
+		this.setLayout(mainLayout);
 
-		mainPane.add(timePane, BorderLayout.CENTER);
-		mainPane.add(entryPane, BorderLayout.PAGE_END);
-
-		this.setTitle("pointeuse");
-		this.setContentPane(mainPane);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setSize(300, 200);
-		this.setVisible(true);
+		this.add(timePane, BorderLayout.CENTER);
+		this.add(entryPane, BorderLayout.PAGE_END);
 	}
-
+	
 	public void setTime(String time) {
 		timeLabel.setText(time);
 	}
@@ -109,5 +102,4 @@ public class EmulatorVue extends JFrame implements ActionListener {
 			}
 		}, 2000);
 	}
-
 }

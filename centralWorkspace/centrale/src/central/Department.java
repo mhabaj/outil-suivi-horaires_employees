@@ -2,36 +2,71 @@ package central;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Department implements Serializable {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1212195773920642415L;
 	private String name_Department;
-	private ArrayList<Worker> Worker_List = new ArrayList<Worker>();
+	private ArrayList<Worker> Worker_List;
 	private Company cp;
+	private int id_Department;
 
 	/**
 	 * @param id_Department
 	 * @param name_Department
 	 */
 	public Department(String name_Department, Company cp) {
+		Worker_List = new ArrayList<Worker>();
+		id_Department = cp.getId_Department_Counter();
 		this.cp = cp;
-        this.setName_Department(name_Department);
-    }
+		this.setName_Department(name_Department);
+		cp.incrementDepartmentNumber();
+	}
+
+	/**
+	 * @return the id_Department
+	 */
+	public int getId_Department() {
+		return id_Department;
+	}
+
+	/**
+	 * @param id_Department the id_Department to set
+	 */
+	public void setId_Department(int id_Department) {
+		this.id_Department = id_Department;
+	}
 
 	@Override
 	public String toString() {
-		return "Department [name_Department=" + name_Department + ", Worker_List="
-				+ Worker_List + "]";
+		return "Department [name_Department=" + name_Department + ", Worker_List=" + Worker_List + "]";
+	}
+
+	public HashMap<Worker, WorkingDay> getDepartmentActivityPerDate(String date) {
+
+		HashMap<Worker, WorkingDay> listeWorkerWorkingDays = new HashMap<Worker, WorkingDay>();
+
+		for (Worker worker : Worker_List) {
+
+			if (worker.checkWorkingDayByDate(date) == true) {
+				listeWorkerWorkingDays.put(worker, worker.getWorkingDayByDate(date));
+
+			}
+		}
+
+		return listeWorkerWorkingDays;
 	}
 
 	/**
 	 * @return the worker_List
 	 */
 	public ArrayList<Worker> getWorker_List() {
-		return Worker_List;
+		if (Worker_List.isEmpty()) {
+			return null;
+		} else {
+			return Worker_List;
+		}
 	}
 
 	/**
@@ -62,20 +97,20 @@ public class Department implements Serializable {
 
 		this.Worker_List.add(worker_To_Add);
 	}
-	
-	public void add_New_Worker_CustomTime(String firstname_Worker, String lastname_Worker,
-            String[] default_ArrivalTime_Worker, String[] default_DepartureTime_Worker) {
-        Worker worker_To_Add = new Worker(cp.getId_Worker_Counter(), firstname_Worker, lastname_Worker,
-                default_ArrivalTime_Worker, default_DepartureTime_Worker);
-        this.Worker_List.add(worker_To_Add);
-        cp.incrementWorkersNumber();
-    }
 
-    public void add_New_Worker_DefaultTime(String firstname_Worker, String lastname_Worker) {
-        Worker worker_To_Add = new Worker(cp.getId_Worker_Counter(), firstname_Worker, lastname_Worker);
-        this.Worker_List.add(worker_To_Add);
-        cp.incrementWorkersNumber();
-    }
+	public void add_New_Worker_CustomTime(String firstname_Worker, String lastname_Worker,
+			String[] default_ArrivalTime_Worker, String[] default_DepartureTime_Worker) {
+		Worker worker_To_Add = new Worker(cp.getId_Worker_Counter(), firstname_Worker, lastname_Worker,
+				default_ArrivalTime_Worker, default_DepartureTime_Worker);
+		this.Worker_List.add(worker_To_Add);
+		cp.incrementWorkersNumber();
+	}
+
+	public void add_New_Worker_DefaultTime(String firstname_Worker, String lastname_Worker) {
+		Worker worker_To_Add = new Worker(cp.getId_Worker_Counter(), firstname_Worker, lastname_Worker);
+		this.Worker_List.add(worker_To_Add);
+		cp.incrementWorkersNumber();
+	}
 
 	/**
 	 * @param searched_Worker_Id
@@ -123,7 +158,7 @@ public class Department implements Serializable {
 		return false;
 	}
 
-	public Worker getWorkerByName(String searched_Worker_Firstname, String searched_Worker_Lastname) throws Exception {
+	public Worker getWorkerByName(String searched_Worker_Firstname, String searched_Worker_Lastname) {
 		for (Worker worker : Worker_List) {
 			String current_Worker_Firstname = worker.getFirstname_Worker();
 			String current_Worker_Lastname = worker.getLastname_Worker();
@@ -131,7 +166,13 @@ public class Department implements Serializable {
 					&& (current_Worker_Lastname.equals(searched_Worker_Lastname)))
 				return worker;
 		}
-		throw new Exception("Error Search: Worker Not Found");
+		return null;
+	}
+
+	public Worker getWorkerByFullName(String searched_Worker_FullName) throws Exception {
+		String[] name = searched_Worker_FullName.split(" ");
+
+		return getWorkerByName(name[1], name[0]);
 	}
 
 	public int deleteWorker(Worker workerToDelete) throws Exception {

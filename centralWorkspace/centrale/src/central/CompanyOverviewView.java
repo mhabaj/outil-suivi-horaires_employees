@@ -1,178 +1,156 @@
 package central;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
-public class CompanyOverviewView extends JPanel implements ListSelectionListener, ActionListener{
+public class CompanyOverviewView extends JPanel implements ActionListener {
 
-	private JPanel departPane;
-	private JScrollPane departScrollPane;
-	private JButton addDepartmentButton;
-	
-	private JScrollPane workerPane;
-	private JScrollPane infosPane;
+	private JScrollPane activityPane;
 
-	private JSplitPane splitPane1;
-	private JSplitPane splitPane2;
-
-	private int lastDepartIndex = -1;
-	private int lastWorkerIndex = -1;
-
-	private ArrayList<String> departList;
-	private ArrayList<ArrayList<String>> workerList;
+	private JComboBox<String> departCombo;
 
 	private Company comp;
-	private ManagerView mv;
 
-	public CompanyOverviewView(ManagerView mv, Company comp) {
-
+	public CompanyOverviewView(Company comp) {
 		this.comp = comp;
-		this.mv = mv;
 
-		infosPane = new JScrollPane();
-
-		workerPane = new JScrollPane();
-
-		departPane = new JPanel();
-		departPane.setLayout(new BoxLayout(departPane, BoxLayout.Y_AXIS));
-		
-		departScrollPane = new JScrollPane();
-		
-		addDepartmentButton = new JButton("Add");
-		addDepartmentButton.addActionListener(this);
-		
-		departPane.add(departScrollPane);
-		departPane.add(addDepartmentButton);
-
-		splitPane2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, workerPane, infosPane);
-		splitPane2.setDividerLocation(150);
-
-		splitPane1 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, departPane, splitPane2);
-		splitPane1.setDividerLocation(150);
+		activityPane = new JScrollPane();
 
 		setData();
 
-		this.setLayout(new BorderLayout());
+		BorderLayout mainLayout = new BorderLayout();
+		this.setLayout(mainLayout);
 
-		this.add(splitPane1);
-
+		this.add(departCombo, BorderLayout.PAGE_START);
+		this.add(activityPane, BorderLayout.CENTER);
 	}
 
 	public void setData() {
-		
-		departList = new ArrayList<String>();
-		workerList = new ArrayList<ArrayList<String>>();
+		String[] departNameArray = null;
+		if (comp.getDepartment_List() == null) {
+			departNameArray = new String[1];
+			departNameArray[0] = "-";
+			departCombo = new JComboBox<>(departNameArray);
+			departCombo.addActionListener(this);
 
-		ArrayList<Department> departArray = comp.getDepartment_List();
+			updateActivityList();
+		} else {
+			departNameArray = new String[comp.getDepartment_List().size() + 1];
 
-		int index = 0;
+			int departIndex = 1;
 
-		for(Department depart : departArray) {
-			departList.add(depart.getName_Department());
-			workerList.add(new ArrayList<String>());
+			departNameArray[0] = "-";
 
-			ArrayList<Worker> workerArray = depart.getWorker_List();
-			for(Worker worker : workerArray) {
-				workerList.get(index).add(worker.getFirstname_Worker());
+			for (Department depart : comp.getDepartment_List()) {
+				try {
+					departNameArray[departIndex] = depart.getName_Department();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				departIndex++;
 			}
 
-			index++;
+			departCombo = new JComboBox<>(departNameArray);
+			departCombo.addActionListener(this);
+
+			updateActivityList();
 		}
-
-		updateDList();
 	}
 
-	public void updateDList() {
-		JList dList = new JList(departList.toArray());
+	public void updateActivityList() {
 
-		dList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		dList.setLayoutOrientation(JList.VERTICAL);
+		String datetmp = LocalDate.now().toString();
 
-		dList.getSelectionModel().addListSelectionListener(this);
-
-		departScrollPane.setViewportView(dList);
-	}
-
-	public void updateWList(int id) {
-		JList wList = new JList(workerList.get(id).toArray());
-
-		wList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		wList.setLayoutOrientation(JList.VERTICAL);
-
-		wList.getSelectionModel().addListSelectionListener(this);
-
-		workerPane.setViewportView(wList);
-	}
-
-	public void updateInfo(int departId, int workerId) {
-
-		JList<String> jInfo;
-		ArrayList<String> infos = new ArrayList<String>();
-		Worker w = comp.getDepartment_List().get(departId).getWorker_List().get(workerId);
-
-		infos.add("Nom : " +w.getLastname_Worker());
-		infos.add("Prenom : " +w.getFirstname_Worker());
-		infos.add("Last days :");
-
+		DateFormat oldTMP = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+		DateFormat newTMP = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+		Date dateTMP = null;
 		try {
-			for(WorkingDay wd : w.getLastWorkingDays()) {
-				infos.add(wd.getTodaysDate() +" : " +wd.getArrivalTime() +" - " +wd.getDepartureTime());
-			}
-		} catch (Exception e) {
+			dateTMP = oldTMP.parse(datetmp);
+		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+		String date = newTMP.format(dateTMP);
 
-		jInfo = new JList(infos.toArray());
-		infosPane.setViewportView(jInfo);
+		HashMap<Worker, WorkingDay> activityList = comp.getCompanyActivityPerDate(date);
+
+		ArrayList<String> activityTempList = new ArrayList<>();
+
+		for (Map.Entry<Worker, WorkingDay> entry : activityList.entrySet()) {
+			activityTempList.add(entry.getKey().getLastname_Worker() + " " + entry.getKey().getFirstname_Worker()
+					+ " : " + entry.getValue().getArrivalTime() + " - " + entry.getValue().getDepartureTime());
+		}
+
+		JList activityJList = new JList(activityTempList.toArray());
+
+		activityJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		activityJList.setLayoutOrientation(JList.VERTICAL);
+
+		activityPane.setViewportView(activityJList);
+	}
+
+	public void updateActivityList(Department depart) {
+		String datetmp = LocalDate.now().toString();
+
+		DateFormat oldTMP = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+		DateFormat newTMP = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+		Date dateTMP = null;
+		try {
+			dateTMP = oldTMP.parse(datetmp);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		String date = newTMP.format(dateTMP);
+
+		HashMap<Worker, WorkingDay> activityList = depart.getDepartmentActivityPerDate(date);
+
+		ArrayList<String> activityTempList = new ArrayList<>();
+
+		for (Map.Entry<Worker, WorkingDay> entry : activityList.entrySet()) {
+			activityTempList.add(entry.getKey().getLastname_Worker() + " " + entry.getKey().getFirstname_Worker()
+					+ " : " + entry.getValue().getArrivalTime() + " - " + entry.getValue().getDepartureTime());
+		}
+
+		JList activityJList = new JList(activityTempList.toArray());
+
+		activityJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		activityJList.setLayoutOrientation(JList.VERTICAL);
+
+		activityPane.setViewportView(activityJList);
 	}
 
 	public void update() {
 		setData();
-		updateDList();
-		if(lastDepartIndex != -1) {
-			updateWList(lastDepartIndex);
-		}
 	}
 
 	@Override
-	public void valueChanged(ListSelectionEvent e) {
-		int departIndex = ((JList)(((JViewport)departScrollPane.getComponents()[0]).getView())).getSelectedIndex();
-		if(departIndex !=  lastDepartIndex) {
-			lastDepartIndex = departIndex;
-			updateWList(departIndex);
-			infosPane.setViewportView(null);
+	public void actionPerformed(ActionEvent event) {
+		if (event.getSource() == departCombo) {
+			if (departCombo.getSelectedItem().toString() != "-") {
+				try {
+					updateActivityList(comp.getDepartmentByName(departCombo.getSelectedItem().toString()));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else
+				updateActivityList();
 		}
-		int workerIndex = ((JList)(((JViewport)workerPane.getComponents()[0]).getView())).getSelectedIndex();
-		if(workerIndex >= 0) {
-			if(workerIndex != lastWorkerIndex) {
-				lastWorkerIndex = workerIndex;
-				updateInfo(departIndex, workerIndex);
-			}
-		}
-		else {
-			lastWorkerIndex = -1;
-		}
-	}
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == addDepartmentButton) {
-			AddDepartmentView.display(mv, comp);
-		}
-		
 	}
 
 }

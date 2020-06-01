@@ -34,13 +34,12 @@ public class AddWorkerView {
         JComboBox<String> departmentsCombo = new JComboBox<>(departmentsList);
         panel.add(departmentsCombo);
         
-        
         int result = JOptionPane.showConfirmDialog(null, panel, "Add worker",
             JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if (result == JOptionPane.OK_OPTION) {
             try {
 				comp.getDepartmentByName(departmentsCombo.getSelectedItem().toString()).add_New_Worker_DefaultTime(nameField.getText(), lastnameField.getText());
-				mv.update();
+				mv.updateWorkers(comp.getDepartmentByName(departmentsCombo.getSelectedItem().toString()).getId_Department());
             } catch (Exception e) {
 				e.printStackTrace();
 			}

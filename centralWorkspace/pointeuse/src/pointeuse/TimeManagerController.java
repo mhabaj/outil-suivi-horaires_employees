@@ -17,14 +17,14 @@ public class TimeManagerController implements Runnable {
 	private LocalTime current_Time;
 	private LocalTime rounded_Time;
 
-	private EmulatorVue vue;
+	private EmulatorView vue;
 
 	/**
 	 * @param current_Date
 	 * @param current_Time
 	 * @param rounded_Time
 	 */
-	public TimeManagerController(EmulatorVue vue) {
+	public TimeManagerController(EmulatorView vue) {
 		this.vue = vue;
 	}
 

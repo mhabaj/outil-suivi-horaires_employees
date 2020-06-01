@@ -66,6 +66,7 @@ public class Worker implements Serializable {
 			DateFormat df = new SimpleDateFormat("HH:mm");
 			Date arrivalTimeTMP = df.parse(arrivalTime);
 			Date defaultArrivalTimeTMP = null;
+			
 			if (todayWorkingDay.getWeekDay().equals(weekDay_Code_ToString(MONDAY))) {
 				defaultArrivalTimeTMP = df.parse(default_ArrivalTime_Worker[MONDAY]);
 			} else if (todayWorkingDay.getWeekDay().equals(weekDay_Code_ToString(TUESDAY))) {
@@ -168,7 +169,7 @@ public class Worker implements Serializable {
 
 	}
 
-	public ArrayList<WorkingDay> getLastWorkingDays() throws Exception {
+	public ArrayList<WorkingDay> getLastWorkingDays() {
 
 		if (workingDaysArray != null && !workingDaysArray.isEmpty()) {
 
@@ -187,15 +188,16 @@ public class Worker implements Serializable {
 
 			return workingDays;
 		}
-		throw new Exception("Error getLastWorkingDay: no working days found ");
+		return null;
 	}
 
-	public ArrayList<WorkingDay> getWorkingDays() throws Exception {
+	public ArrayList<WorkingDay> getWorkingDays() {
 
 		if (workingDaysArray != null && !workingDaysArray.isEmpty()) {
 			return workingDaysArray;
 		}
-		throw new Exception("Error getLastWorkingDay: no working days found ");
+		else 
+			return null;
 	}
 
 	public int getNumberWorkedDays() {
@@ -262,17 +264,17 @@ public class Worker implements Serializable {
 		}
 	}
 
-	public WorkingDay getWorkingDayByDate(String searched_Date) throws Exception {
+	public WorkingDay getWorkingDayByDate(String searched_Date){
 		for (WorkingDay workingDay : workingDaysArray) {
 			String current_WorkingDay_Date = workingDay.getTodaysDate();
 			if (current_WorkingDay_Date.equals(searched_Date))
 				return workingDay;
 		}
-		throw new Exception("Error Search: WorkingDay Not Found");
+		return null;
 
 	}
 
-	public boolean checkWorkingDayByDate(String searched_Date) throws Exception {
+	public boolean checkWorkingDayByDate(String searched_Date) {
 		for (WorkingDay workingDay : workingDaysArray) {
 			String current_WorkingDay_Date = workingDay.getTodaysDate();
 			if (current_WorkingDay_Date.equals(searched_Date))
