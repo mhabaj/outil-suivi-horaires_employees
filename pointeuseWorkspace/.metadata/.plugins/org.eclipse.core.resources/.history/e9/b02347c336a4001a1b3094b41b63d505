@@ -77,44 +77,46 @@ public class EmulatorController {
 			}
 
 			System.out.println(readData(DATA_BACKUP_PATH));
+		} else {
+			System.out.println("ENVOYER UN MESSAGE DERREUR ICI");
 		}
 	}
 
 	public void setupSettings() {
 
-        ArrayList<String> parameters = readData(SETTINGS_BACKUP_PATH);
+		ArrayList<String> parameters = readData(SETTINGS_BACKUP_PATH);
 
-        if (parameters != null) {
+		if (parameters != null) {
 
-            try {
-                int importedPort = Integer.parseInt(parameters.get(0));
-                String importedServerAddress = parameters.get(1);
-                if (importedPort != SERVER_DEFAULT_PORT && importedServerAddress != SERVER_DEFAULT_ADDRESS) {
-                    serverPort = importedPort;
-                    serverAddress = importedServerAddress;
-                    System.out.println("Config file found, Port: " + serverPort + ", Address: "
-                            + serverAddress + System.lineSeparator());
-                } else {
-                    serverPort = SERVER_DEFAULT_PORT;
-                    serverAddress = SERVER_DEFAULT_ADDRESS;
-                    System.out.println("Using default server settings, Port: " + serverPort + ", Address: "
-                            + serverAddress + System.lineSeparator());
-                }
-            } catch (NumberFormatException | IndexOutOfBoundsException e) {
-                serverPort = SERVER_DEFAULT_PORT;
-                serverAddress = SERVER_DEFAULT_ADDRESS;
-                System.out.println("invalid Config file data. Using default server settings, Port: " + serverPort
-                        + ", Address: " + serverAddress + System.lineSeparator());
-            }
+			try {
+				int importedPort = Integer.parseInt(parameters.get(0));
+				String importedServerAddress = parameters.get(1);
+				if (importedPort != SERVER_DEFAULT_PORT && importedServerAddress != SERVER_DEFAULT_ADDRESS) {
+					serverPort = importedPort;
+					serverAddress = importedServerAddress;
+					System.out.println("Config file found, Port: " + serverPort + ", Address: "
+							+ serverAddress + System.lineSeparator());
+				} else {
+					serverPort = SERVER_DEFAULT_PORT;
+					serverAddress = SERVER_DEFAULT_ADDRESS;
+					System.out.println("Using default server settings, Port: " + serverPort + ", Address: "
+							+ serverAddress + System.lineSeparator());
+				}
+			} catch (NumberFormatException | IndexOutOfBoundsException e) {
+				serverPort = SERVER_DEFAULT_PORT;
+				serverAddress = SERVER_DEFAULT_ADDRESS;
+				System.out.println("invalid Config file data. Using default server settings, Port: " + serverPort
+						+ ", Address: " + serverAddress + System.lineSeparator());
+			}
 
-        } else {
-            serverPort = SERVER_DEFAULT_PORT;
-            serverAddress = SERVER_DEFAULT_ADDRESS;
-            System.out.println("No Config file detected. Using default server settings: Port" + serverPort + "Address:"
-                    + serverAddress + System.lineSeparator());
-        }
+		} else {
+			serverPort = SERVER_DEFAULT_PORT;
+			serverAddress = SERVER_DEFAULT_ADDRESS;
+			System.out.println("No Config file detected. Using default server settings: Port" + serverPort + "Address:"
+					+ serverAddress + System.lineSeparator());
+		}
 
-    }
+	}
 
 	public int getServerPort() {
 		return serverPort;

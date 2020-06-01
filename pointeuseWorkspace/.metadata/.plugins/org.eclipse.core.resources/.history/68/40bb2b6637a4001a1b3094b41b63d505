@@ -36,14 +36,12 @@ public class ParametersView extends JPanel implements ActionListener {
 	public ParametersView(EmulatorController emc) {
 		this.emc = emc;
 		
-		//Main panel for the port input
 		JPanel portPane = new JPanel();
 		BoxLayout portLayout = new BoxLayout(portPane, BoxLayout.X_AXIS);
 		portPane.setLayout(portLayout);
 		
 		portPane.add(new JLabel("Port : "));
 		
-		//Port panel textfield
 		portField = new JTextField();
 		portField.setMaximumSize(new Dimension(150, 25));
 		portField.addActionListener(this);
@@ -94,9 +92,6 @@ public class ParametersView extends JPanel implements ActionListener {
 		}
 	}
 	
-	/**
-	 * @brief highligh the text area when there is an error
-	 */
 	public void textError() {
 		portField.setBorder(new LineBorder(Color.RED, 2));
 

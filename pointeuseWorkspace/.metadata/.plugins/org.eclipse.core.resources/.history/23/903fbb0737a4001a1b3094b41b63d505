@@ -16,10 +16,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
-/**
- * @author User
- * @brief Pane that controls the emulator parameters
- */
 public class ParametersView extends JPanel implements ActionListener {
 
 	private JTextField portField;
@@ -27,23 +23,17 @@ public class ParametersView extends JPanel implements ActionListener {
 	private EmulatorController emc;
 	
 	private JButton changePortButton;
-	private JButton changeAddressButton;
+	private JButton changeIPButton;
 	
-	/**
-	 * @brief constructor for the class
-	 * @param emc
-	 */
 	public ParametersView(EmulatorController emc) {
 		this.emc = emc;
 		
-		//Main panel for the port input
 		JPanel portPane = new JPanel();
 		BoxLayout portLayout = new BoxLayout(portPane, BoxLayout.X_AXIS);
 		portPane.setLayout(portLayout);
 		
 		portPane.add(new JLabel("Port : "));
 		
-		//Port panel textfield
 		portField = new JTextField();
 		portField.setMaximumSize(new Dimension(150, 25));
 		portField.addActionListener(this);
@@ -66,9 +56,9 @@ public class ParametersView extends JPanel implements ActionListener {
 		addressField.setText(String.valueOf(emc.getServerAddress()));
 		addressPane.add(addressField);
 
-		changeAddressButton = new JButton("Change");
-		changeAddressButton.addActionListener(this);
-		addressPane.add(changeAddressButton);
+		changeIPButton = new JButton("Change");
+		changeIPButton.addActionListener(this);
+		addressPane.add(changeIPButton);
 		
 		this.setLayout(new GridLayout(7, 0));
 		this.add(portPane);
@@ -87,16 +77,13 @@ public class ParametersView extends JPanel implements ActionListener {
 				textError();
 			}
 		}
-		if(e.getSource() == changeAddressButton) {
+		if(e.getSource() == changeIPButton) {
 			String address = addressField.getText();
 			emc.changeServerAddress(address);
 			System.out.println("Address changed to : " +address +System.lineSeparator());
 		}
 	}
 	
-	/**
-	 * @brief highligh the text area when there is an error
-	 */
 	public void textError() {
 		portField.setBorder(new LineBorder(Color.RED, 2));
 

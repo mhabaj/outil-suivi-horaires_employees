@@ -77,6 +77,8 @@ public class EmulatorController {
 			}
 
 			System.out.println(readData(DATA_BACKUP_PATH));
+		} else {
+			System.out.println("ENVOYER UN MESSAGE DERREUR ICI");
 		}
 	}
 
