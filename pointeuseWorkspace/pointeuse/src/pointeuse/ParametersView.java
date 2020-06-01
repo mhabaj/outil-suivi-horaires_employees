@@ -19,14 +19,14 @@ import javax.swing.border.LineBorder;
 public class ParametersView extends JPanel implements ActionListener {
 
 	private JTextField portField;
-	private JTextField IPField;
-	private EmulatorController mc;
+	private JTextField addressField;
+	private EmulatorController emc;
 	
 	private JButton changePortButton;
 	private JButton changeIPButton;
 	
 	public ParametersView(EmulatorController emc) {
-		this.mc = emc;
+		this.emc = emc;
 		
 		JPanel portPane = new JPanel();
 		BoxLayout portLayout = new BoxLayout(portPane, BoxLayout.X_AXIS);
@@ -37,32 +37,32 @@ public class ParametersView extends JPanel implements ActionListener {
 		portField = new JTextField();
 		portField.setMaximumSize(new Dimension(150, 25));
 		portField.addActionListener(this);
-		portField.setText(String.valueOf(12));
+		portField.setText(String.valueOf(emc.getServerPort()));
 		portPane.add(portField);
 
 		changePortButton = new JButton("Change");
 		changePortButton.addActionListener(this);
 		portPane.add(changePortButton);
 		
-		JPanel IPPane = new JPanel();
-		BoxLayout IPLayout = new BoxLayout(IPPane, BoxLayout.X_AXIS);
-		IPPane.setLayout(IPLayout);
+		JPanel addressPane = new JPanel();
+		BoxLayout IPLayout = new BoxLayout(addressPane, BoxLayout.X_AXIS);
+		addressPane.setLayout(IPLayout);
 		
-		IPPane.add(new JLabel("IP : "));
+		addressPane.add(new JLabel("IP : "));
 		
-		IPField = new JTextField();
-		IPField.setMaximumSize(new Dimension(150, 25));
-		IPField.addActionListener(this);
-		IPField.setText(String.valueOf(1526002));
-		IPPane.add(IPField);
+		addressField = new JTextField();
+		addressField.setMaximumSize(new Dimension(150, 25));
+		addressField.addActionListener(this);
+		addressField.setText(String.valueOf(emc.getServerAddress()));
+		addressPane.add(addressField);
 
 		changeIPButton = new JButton("Change");
 		changeIPButton.addActionListener(this);
-		IPPane.add(changeIPButton);
+		addressPane.add(changeIPButton);
 		
 		this.setLayout(new GridLayout(7, 0));
 		this.add(portPane);
-		this.add(IPPane);
+		this.add(addressPane);
 	}
 	
 	@Override
@@ -70,20 +70,15 @@ public class ParametersView extends JPanel implements ActionListener {
 		if(e.getSource() == changePortButton) {
 			int port = Integer.parseInt(portField.getText());
 			if(port < 65535 && port > 0) {
-				System.out.println("on change pour " +port);
+				emc.changeServerPort(port);
 			}
 			else {
 				textError();
 			}
 		}
 		if(e.getSource() == changeIPButton) {
-			int IP = Integer.parseInt(IPField.getText());
-			if(IP < 65535 && IP > 0) {
-				System.out.println("on change pour " +IP);
-			}
-			else {
-				textError();
-			}
+			String address = addressField.getText();
+			emc.changeServerAddress(address);
 		}
 	}
 	

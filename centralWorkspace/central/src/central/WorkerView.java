@@ -12,6 +12,7 @@ import java.util.TimerTask;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -30,6 +31,7 @@ public class WorkerView extends JPanel implements ListSelectionListener, ActionL
 	private JTextField searchField;
 	private JButton searchButton;
 	private JButton addWorkerButton;
+	private JButton addEntryFileButton;
 
 	private JPanel menuPane;
 	private JScrollPane workerScrollPane;
@@ -57,24 +59,31 @@ public class WorkerView extends JPanel implements ListSelectionListener, ActionL
 
 	private JComboBox<String> departCombo;
 
+	private JButton addEntryButton;
 	private JButton delButton;
 
+	private ManagerController mc;
 	private ManagerView mv;
 	private Company comp;
 	private Worker w;
 
-	public WorkerView(ManagerView mv, Company comp) {
+	public WorkerView(ManagerController mc) {
 
-		this.mv = mv;
-		this.comp = comp;
+		this.mc = mc;
+		this.mv = mc.getManagerView();
+		this.comp = mc.getCompany();
 
 		searchField = new JTextField();
 		searchField.setColumns(10);
 
-		searchButton = new JButton("search");
+		searchButton = new JButton("Search");
 		searchButton.addActionListener(this);
-		addWorkerButton = new JButton("add");
+		addWorkerButton = new JButton("Add worker");
 		addWorkerButton.addActionListener(this);
+		addEntryFileButton = new JButton("Add entry from file");
+		addEntryFileButton.addActionListener(this);
+		addEntryButton = new JButton("Add entry");
+		addEntryButton.addActionListener(this);
 
 		new BoxLayout(menuPane, BoxLayout.X_AXIS);
 		menuPane = new JPanel();
@@ -82,6 +91,8 @@ public class WorkerView extends JPanel implements ListSelectionListener, ActionL
 		menuPane.add(searchField);
 		menuPane.add(searchButton);
 		menuPane.add(addWorkerButton);
+		menuPane.add(addEntryFileButton);
+		menuPane.add(addEntryButton);
 
 		workerScrollPane = new JScrollPane();
 		workerInfoPane = new JScrollPane();
@@ -188,7 +199,7 @@ public class WorkerView extends JPanel implements ListSelectionListener, ActionL
 		workerScrollPane.setViewportView(workerJList);
 	}
 
-	public void updateInfo(int workerId) {
+	public void setInfo(int workerId) {
 
 		JPanel infoPane = new JPanel();
 		infoPane.setLayout(new BorderLayout());
@@ -266,8 +277,8 @@ public class WorkerView extends JPanel implements ListSelectionListener, ActionL
 
 		infoList.add(new JLabel("Pointages :"));
 
-		WorkingDaysTableView workedDaysTab = new WorkingDaysTableView(w);
-
+		WorkingDaysTableView workedDaysTab = new WorkingDaysTableView(this, w);
+		
 		delButton = new JButton("delete");
 		delButton.addActionListener(this);
 
@@ -304,7 +315,7 @@ public class WorkerView extends JPanel implements ListSelectionListener, ActionL
 		setData();
 		try {
 			if(workerList.get(departList.indexOf(comp.whereIsWorker(workerID).getId_Department())).indexOf(workerID) == lastWorkerIndex) {
-				updateInfo(workerID);
+				setInfo(workerID);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -327,12 +338,13 @@ public class WorkerView extends JPanel implements ListSelectionListener, ActionL
 			lastDepartIndex = departIndex;
 			updateWList(departIndex);
 			workerInfoPane.setViewportView(null);
+			lastWorkerIndex = -1;
 		}
 		int workerIndex = ((JList)(((JViewport)workerScrollPane.getComponents()[0]).getView())).getSelectedIndex();
 		if(workerIndex != -1) {
 			if(workerIndex != lastWorkerIndex) {
 				lastWorkerIndex = workerIndex;
-				updateInfo(workerList.get(departIndex).get(workerIndex));
+				setInfo(workerList.get(departIndex).get(workerIndex));
 			}
 		}
 	}
@@ -376,10 +388,10 @@ public class WorkerView extends JPanel implements ListSelectionListener, ActionL
 			}
 		}
 		else if(event.getSource() == addWorkerButton) {
-			AddWorkerView.display(mv, comp);
+			AddWorkerView.display(mc);
 		}
-		if(event.getSource() == addDepartButton) {
-			AddDepartmentView.display(mv, comp);
+		else if(event.getSource() == addDepartButton) {
+			AddDepartmentView.display(mc);
 		}
 		else if(event.getSource() == delDepartButton) {
 			int departIndex = ((JList)(((JViewport)departScrollPane.getComponents()[0]).getView())).getSelectedIndex();
@@ -389,12 +401,12 @@ public class WorkerView extends JPanel implements ListSelectionListener, ActionL
 							JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 					if (result == JOptionPane.OK_OPTION) {
 						comp.deleteDepartment(comp.getDepartmentByID(departList.get(departIndex)));
-						mv.update();
+						mv.updateAll();
 					}
 				}
 				else {
 					comp.deleteDepartment(comp.getDepartmentByID(departList.get(departIndex)));
-					mv.update();
+					mv.updateAll();
 				}
 			} catch (Exception exception) {
 				exception.printStackTrace();
@@ -417,12 +429,26 @@ public class WorkerView extends JPanel implements ListSelectionListener, ActionL
 			try {
 				comp.whereIsWorker(w.getId_Worker()).deleteWorker(w);
 				comp.getDepartmentByName(departCombo.getSelectedItem().toString()).add_Worker(w);
-				mv.update();
+				mv.updateAll();
 
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
+		}
+		else if(event.getSource() == addEntryFileButton) {
+			JFileChooser filechooser = new JFileChooser();
+
+			int returnValue = filechooser.showOpenDialog(null);
+
+			if (returnValue == JFileChooser.APPROVE_OPTION) {
+				String selectedFile = filechooser.getSelectedFile().getAbsolutePath();
+				mc.importFromFile(selectedFile);
+				mv.updateInfos(w.getId_Worker());
+			}
+		}
+		else if(event.getSource() == addEntryButton) {
+			AddEntryView.display(mc, w);
 		}
 	}
 

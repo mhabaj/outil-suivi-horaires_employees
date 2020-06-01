@@ -14,6 +14,8 @@ public class WorkingDay implements Serializable {
 	private String arrivalTime;
 	private String departureTime;
 	private String weekDay;
+	private int timeOverFlow;
+	private boolean calculedTime = false;
 
 	/**
 	 * @param todaysDate
@@ -21,13 +23,6 @@ public class WorkingDay implements Serializable {
 	 * @param departureTime
 	 */
 	public WorkingDay(String todaysDate, String arrivalTime, String departureTime) {
-		this.setTodaysDate(todaysDate);
-		this.setArrivalTime(arrivalTime);
-		this.setDepartureTime(departureTime);
-		this.setWeekDay();
-	}
-
-	public WorkingDay(String todaysDate, String weekDay, String arrivalTime, String departureTime) {
 		this.setTodaysDate(todaysDate);
 		this.setArrivalTime(arrivalTime);
 		this.setDepartureTime(departureTime);
@@ -47,6 +42,19 @@ public class WorkingDay implements Serializable {
 				+ departureTime + "]";
 	}
 
+	public boolean isTimeCalculated() {
+		return calculedTime;
+	}
+	
+	public void setTimeOverflow(int timeOverflow) {
+		this.timeOverFlow = timeOverflow;
+		calculedTime = true;
+	}
+	
+	public int getTimeOverflow() {
+		return timeOverFlow;
+	}
+	
 	/**
 	 * @return the todaysDate
 	 */

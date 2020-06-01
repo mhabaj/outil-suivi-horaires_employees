@@ -59,7 +59,64 @@ public class Worker implements Serializable {
 	public int getId_Worker() {
 		return id_Worker;
 	}
-
+	
+	public void addTimeOverflow(WorkingDay workingDay) {
+		if(workingDay.isTimeCalculated()) {
+			workingTimeOverflow_Worker -= workingDay.getTimeOverflow();
+			calculateTimeOverflow(workingDay);
+			workingTimeOverflow_Worker += workingDay.getTimeOverflow();
+		}
+		else {
+			if(workingDay.getArrivalTime() != null && workingDay.getDepartureTime() != null) {
+				calculateTimeOverflow(workingDay);
+				workingTimeOverflow_Worker += workingDay.getTimeOverflow();
+			}
+		}
+	}
+	
+	public void calculateTimeOverflow(WorkingDay workingDay) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+		try {
+			Date arrivalTime = dateFormat.parse(workingDay.getArrivalTime());
+			Date departureTime = dateFormat.parse(workingDay.getDepartureTime());
+			
+			Date defaultArrivalTimeTMP = null;
+			Date defaultDepartureTimeTMP = null;
+			if (workingDay.getWeekDay().equals(weekDay_Code_ToString(MONDAY))) {
+				defaultArrivalTimeTMP = dateFormat.parse(default_ArrivalTime_Worker[MONDAY]);
+				defaultDepartureTimeTMP = dateFormat.parse(default_DepartureTime_Worker[MONDAY]);
+			} else if (workingDay.getWeekDay().equals(weekDay_Code_ToString(TUESDAY))) {
+				defaultArrivalTimeTMP = dateFormat.parse(default_ArrivalTime_Worker[TUESDAY]);
+				defaultDepartureTimeTMP = dateFormat.parse(default_DepartureTime_Worker[TUESDAY]);
+			} else if (workingDay.getWeekDay().equals(weekDay_Code_ToString(WEDNESDAY))) {
+				defaultArrivalTimeTMP = dateFormat.parse(default_ArrivalTime_Worker[WEDNESDAY]);
+				defaultDepartureTimeTMP = dateFormat.parse(default_DepartureTime_Worker[WEDNESDAY]);
+			} else if (workingDay.getWeekDay().equals(weekDay_Code_ToString(THURSDAY))) {
+				defaultArrivalTimeTMP = dateFormat.parse(default_ArrivalTime_Worker[THURSDAY]);
+				defaultDepartureTimeTMP = dateFormat.parse(default_DepartureTime_Worker[THURSDAY]);
+			} else if (workingDay.getWeekDay().equals(weekDay_Code_ToString(FRIDAY))) {
+				defaultArrivalTimeTMP = dateFormat.parse(default_ArrivalTime_Worker[FRIDAY]);
+				defaultDepartureTimeTMP = dateFormat.parse(default_DepartureTime_Worker[FRIDAY]);
+			}
+			
+			long defaultWorkingTimeSec = defaultDepartureTimeTMP.getTime() - defaultArrivalTimeTMP.getTime();
+			
+			long workingTimeSec= departureTime.getTime() - arrivalTime.getTime();
+			
+			long timeOverflowSec = workingTimeSec - defaultWorkingTimeSec;
+			
+			int timeOverflow = (int)(timeOverflowSec / 60000);
+			
+			workingDay.setTimeOverflow(timeOverflow);
+			
+		} catch (ParseException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+/*
 	public void addTimeOverflowArrival(String arrivalTime, WorkingDay todayWorkingDay) {
 
 		try {
@@ -83,7 +140,6 @@ public class Worker implements Serializable {
 			workingTimeOverflow_Worker += diffTmp / (60 * 1000) % 60;
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -119,7 +175,7 @@ public class Worker implements Serializable {
 			e.printStackTrace();
 		}
 
-	}
+	}*/
 
 	/**
 	 * @param id_Worker the id_Worker to set
@@ -146,7 +202,7 @@ public class Worker implements Serializable {
 		WorkingDay wdTemp = new WorkingDay(todaysDate);
 		wdTemp.setArrivalTime(arrivalTime);
 		workingDaysArray.add(wdTemp);
-		addTimeOverflowArrival(arrivalTime, wdTemp);
+		//addTimeOverflowArrival(arrivalTime, wdTemp);
 
 	}
 

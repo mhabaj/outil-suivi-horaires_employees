@@ -12,9 +12,10 @@ public class WorkingDaysTableView extends JScrollPane implements TableModelListe
 
 	private JTable workedDaysTab;
 	private Worker w;
+	private WorkerView wv;
 
-	public WorkingDaysTableView(Worker w) {
-
+	public WorkingDaysTableView(WorkerView wv, Worker w) {
+		this.wv = wv;
 		this.w = w;
 
 		Object[][] workedDaysList = new Object[w.getNumberWorkedDays()][3];
@@ -49,10 +50,15 @@ public class WorkingDaysTableView extends JScrollPane implements TableModelListe
 		int column = workedDaysTab.getSelectedColumn();
 		String changedHour = (String)workedDaysTab.getValueAt(row, column);
 		try {
-			if(column == 1)
+			if(column == 1) {
 				w.getWorkingDayByDate((String)workedDaysTab.getValueAt(row, 0)).setArrivalTime(changedHour);
-			else if(column == 2)
+				w.addTimeOverflow(w.getWorkingDayByDate((String)workedDaysTab.getValueAt(row, 0)));
+			}
+			else if(column == 2) {
 				w.getWorkingDayByDate((String)workedDaysTab.getValueAt(row, 0)).setDepartureTime(changedHour);
+				w.addTimeOverflow(w.getWorkingDayByDate((String)workedDaysTab.getValueAt(row, 0)));
+			}
+			wv.updateInfos(w.getId_Worker());
 		} catch (Exception exception) {
 			exception.printStackTrace();
 		}

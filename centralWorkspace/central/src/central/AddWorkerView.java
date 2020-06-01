@@ -11,7 +11,7 @@ import javax.swing.JTextField;
 
 public class AddWorkerView {
 
-	public static void display(ManagerView mv, Company comp) {
+	public static void display(ManagerController mc) {
 		
         JPanel panel = new JPanel(new GridLayout(0, 1));
 
@@ -23,10 +23,10 @@ public class AddWorkerView {
         panel.add(new JLabel("First name:"));
         panel.add(nameField);
 		
-        String[] departmentsList = new String[comp.getDepartment_List().size()];
+        String[] departmentsList = new String[mc.getCompany().getDepartment_List().size()];
         int departmentIndex = 0;
         
-        for(Department d : comp.getDepartment_List()) {
+        for(Department d : mc.getCompany().getDepartment_List()) {
         	departmentsList[departmentIndex] = d.getName_Department();
         	departmentIndex++;
         }
@@ -38,8 +38,8 @@ public class AddWorkerView {
             JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if (result == JOptionPane.OK_OPTION) {
             try {
-				comp.getDepartmentByName(departmentsCombo.getSelectedItem().toString()).add_New_Worker_DefaultTime(nameField.getText(), lastnameField.getText());
-				mv.updateWorkers(comp.getDepartmentByName(departmentsCombo.getSelectedItem().toString()).getId_Department());
+            	mc.getCompany().getDepartmentByName(departmentsCombo.getSelectedItem().toString()).add_New_Worker_DefaultTime(nameField.getText(), lastnameField.getText());
+				mc.getManagerView().updateWorkers(mc.getCompany().getDepartmentByName(departmentsCombo.getSelectedItem().toString()).getId_Department());
             } catch (Exception e) {
 				e.printStackTrace();
 			}

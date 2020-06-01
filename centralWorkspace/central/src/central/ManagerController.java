@@ -1,12 +1,14 @@
 package central;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Scanner;
 
 public class ManagerController {
 	private final String COMPANY_DATABASE = "src" + File.separator + "central" + File.separator + "assets"
@@ -53,6 +55,10 @@ public class ManagerController {
 		startServer();
 		view = new ManagerView(this);
 	}
+	
+	public ManagerView getManagerView() {
+		return view;
+	}
 
 	public void serializeCompany() {
 		try {
@@ -69,10 +75,28 @@ public class ManagerController {
 			e.printStackTrace();
 		}
 	}
+	
+	public void importFromFile(String filePath) {
+
+        try {
+            File file = new File(filePath);
+            if (file.exists()) {
+                Scanner reader = new Scanner(file);
+                while (reader.hasNextLine()) {
+                    parseEmulatorInput(reader.nextLine());
+                }
+                reader.close();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 	public void parseEmulatorInput(String input) {
 		String[] strTmp = input.split("/");
 		int id_Worker = Integer.parseInt(strTmp[2]);
+		System.out.println(id_Worker);
 		String datetmp = strTmp[0];
 		String time = strTmp[1];
 
@@ -97,12 +121,12 @@ public class ManagerController {
 
 						if (wdTemp.getArrivalTime() == null) {
 							wdTemp.setArrivalTime(time);
-							signingIn_Worker.addTimeOverflowArrival(time, wdTemp);
+							//signingIn_Worker.addTimeOverflowArrival(time, wdTemp);
 						} else {
 							if (wdTemp.getDepartureTime() == null) {
 								wdTemp.setDepartureTime(time);
-								signingIn_Worker.addTimeOverflowDepart(time, wdTemp);
-
+								//signingIn_Worker.addTimeOverflowDepart(time, wdTemp);
+								signingIn_Worker.addTimeOverflow(wdTemp);
 							}
 						}
 					} else {

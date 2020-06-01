@@ -22,9 +22,9 @@ public class ManagerView extends JFrame implements WindowListener{
 		
 		tabPane = new JTabbedPane();
 		
-		compOverview = new CompanyOverviewView(mc.getCompany());
+		compOverview = new CompanyOverviewView(mc);
 
-		workerView = new WorkerView(this, mc.getCompany());
+		workerView = new WorkerView(mc);
 		
 		paramView = new ParametersView(mc);
 
@@ -39,18 +39,18 @@ public class ManagerView extends JFrame implements WindowListener{
 		this.addWindowListener(this);
 	}
 	
-	public void update() {
-		compOverview.update();
+	public void updateAll() {
+		compOverview.updateAll();
 		workerView.updateAll();
 	}
 	
 	public void updateInfos(int workerID) {
-		compOverview.update();
+		compOverview.updateActivity();
 		workerView.updateInfos(workerID);
 	}
 	
 	public void updateWorkers(int departID) {
-		compOverview.update();
+		compOverview.updateAll();
 		workerView.updateWorkers(departID);
 	}
 	
