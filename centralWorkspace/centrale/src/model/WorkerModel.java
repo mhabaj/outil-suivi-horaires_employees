@@ -20,7 +20,7 @@ public class WorkerModel implements Serializable {
 	private final int FRIDAY = 4;
 
 	private static final long serialVersionUID = 7337982580589824925L;
-	private int id_Worker;
+	private int id_Worker;//a worker ID is minimum 10000 and max 99999
 	private long workingTimeOverflow_Worker;
 	private String firstname_Worker, lastname_Worker;
 	private String[] default_ArrivalTime_Worker = { "7:00", "7:00", "7:00", "7:00", "7:00" };

@@ -48,7 +48,7 @@ public class MainView extends JFrame {
 
 		tabPane.addTab("Parameters", param);
 
-		this.setTitle("pointeuse");
+		this.setTitle("Check-in Client");
 		this.setContentPane(tabPane);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(300, 300);

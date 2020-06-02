@@ -17,7 +17,7 @@ public class CompanyModel implements Serializable {
 
 	private String name_Company;
 	private ArrayList<DepartmentModel> Department_List;
-	private int id_Worker_Counter = 10000;
+	private int id_Worker_Counter = 10000; //a worker ID is minimum 10000 and max 99999
 	private int id_Department_Counter = 1;
 
 	/**
