@@ -1,4 +1,4 @@
-package central;
+package view;
 
 import java.awt.Dimension;
 
@@ -7,24 +7,41 @@ import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
+import model.WorkerModel;
+
+/**
+ * @author Alhabaj Mahmod / Belda Tom / Dakroub MohamadAli
+ * 
+ *         Table of the default time for a worker
+ */
 public class DefaultTimeTableView extends JScrollPane implements TableModelListener {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4660008490663951414L;
 
 	private JTable defaultTimeTab;
 
-	private Worker w;
+	private WorkerModel w;
 
-	public DefaultTimeTableView(Worker w) {
+	/**
+	 * @param w worker constructor for the default time table
+	 */
+	public DefaultTimeTableView(WorkerModel w) {
 
 		this.w = w;
 
+		// get all the default time in an array
 		Object[][] defaultTimeList = new Object[2][5];
 
-		for(int loopDays = 0; loopDays < 5; loopDays++) {
+		for (int loopDays = 0; loopDays < 5; loopDays++) {
 			defaultTimeList[0][loopDays] = w.getDefault_ArrivalTime_Worker_ByWeekDayCode(loopDays);
 			defaultTimeList[1][loopDays] = w.getDefault_DepartureTime_Worker_ByWeekDayCode(loopDays);
 		}
 
-		String[] defaultTimeHeader = {"Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"};
+		// set the header of the table
+		String[] defaultTimeHeader = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" };
 
 		defaultTimeTab = new JTable(defaultTimeList, defaultTimeHeader);
 		defaultTimeTab.getModel().addTableModelListener(this);
@@ -37,44 +54,46 @@ public class DefaultTimeTableView extends JScrollPane implements TableModelListe
 
 	@Override
 	public void tableChanged(TableModelEvent e) {
+		// get the selected row and column
 		int row = defaultTimeTab.getSelectedRow();
 		int column = defaultTimeTab.getSelectedColumn();
-		String changedHour = (String)defaultTimeTab.getValueAt(row, column);
+		// get the selected time
+		String changedHour = (String) defaultTimeTab.getValueAt(row, column);
 		try {
-			if(row == 0) {
-				switch(column) {
-				case 0 :
+			// change the default time
+			if (row == 0) {
+				switch (column) {
+				case 0:
 					w.setDefault_ArrivalTime_Worker("Monday", changedHour);
 					break;
-				case 1 :
+				case 1:
 					w.setDefault_ArrivalTime_Worker("Tuesday", changedHour);
 					break;
-				case 2 :
+				case 2:
 					w.setDefault_ArrivalTime_Worker("Wednesday", changedHour);
 					break;
-				case 3 :
+				case 3:
 					w.setDefault_ArrivalTime_Worker("Thursday", changedHour);
 					break;
-				case 4 :
+				case 4:
 					w.setDefault_ArrivalTime_Worker("Friday", changedHour);
 					break;
 				}
-			}
-			else if(row == 0) {
-				switch(column) {
-				case 0 :
+			} else if (row == 0) {
+				switch (column) {
+				case 0:
 					w.setDefault_DepartureTime_Worker("Monday", changedHour);
 					break;
-				case 1 :
+				case 1:
 					w.setDefault_DepartureTime_Worker("Tuesday", changedHour);
 					break;
-				case 2 :
+				case 2:
 					w.setDefault_DepartureTime_Worker("Wednesday", changedHour);
 					break;
-				case 3 :
+				case 3:
 					w.setDefault_DepartureTime_Worker("Thursday", changedHour);
 					break;
-				case 4 :
+				case 4:
 					w.setDefault_DepartureTime_Worker("Friday", changedHour);
 					break;
 				}

@@ -1,4 +1,4 @@
-package pointeuse;
+package controller;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -11,20 +11,22 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Locale;
 
-public class TimeManagerController implements Runnable {
+import view.MainView;
+
+public class TimeController implements Runnable {
 
 	private LocalDate current_Date;
 	private LocalTime current_Time;
 	private LocalTime rounded_Time;
 
-	private EmulatorView vue;
+	private MainView vue;
 
 	/**
 	 * @param current_Date
 	 * @param current_Time
 	 * @param rounded_Time
 	 */
-	public TimeManagerController(EmulatorView vue) {
+	public TimeController(MainView vue) {
 		this.vue = vue;
 	}
 

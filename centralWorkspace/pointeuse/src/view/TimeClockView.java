@@ -1,4 +1,4 @@
-package pointeuse;
+package view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -15,9 +15,20 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
+import controller.MainController;
+
+/**
+ * pane that shows the clock
+ * 
+ * @author Alhabaj Mahmod/ Belda Tom / Dakroub MohamadAli
+ */
 public class TimeClockView extends JPanel implements ActionListener {
 
-	private EmulatorController emc;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5885399341786570866L;
+	private MainController emc;
 	private JPanel timePane = new JPanel();
 	private JPanel entryPane = new JPanel();
 	private BorderLayout mainLayout;
@@ -27,15 +38,22 @@ public class TimeClockView extends JPanel implements ActionListener {
 	private JLabel roundedTimeLabel;
 	private JTextField idField;
 	private JButton sendIdButton;
-	
-	public TimeClockView(EmulatorController emc) {
-		
+
+	/**
+	 * constructor for the clock
+	 * 
+	 * @param emc emulator controller
+	 */
+	public TimeClockView(MainController emc) {
+
 		this.emc = emc;
-		
+
+		// field for the id to send
 		idField = new JTextField();
 		idField.setColumns(5);
 		idField.setBorder(javax.swing.BorderFactory.createEmptyBorder());
 
+		// button to send id
 		sendIdButton = new JButton("IN/OUT");
 		sendIdButton.addActionListener(this);
 
@@ -45,10 +63,12 @@ public class TimeClockView extends JPanel implements ActionListener {
 		entryPane.add(idField);
 		entryPane.add(sendIdButton);
 
+		// label to show the time
 		timeLabel = new JLabel("");
 		timeLabel.setFont(timeLabel.getFont().deriveFont(50.0f));
 		timeLabel.setHorizontalAlignment(JLabel.CENTER);
 
+		// label to show the rounded time
 		roundedTimeLabel = new JLabel("");
 		roundedTimeLabel.setFont(roundedTimeLabel.getFont().deriveFont(35.0f));
 		roundedTimeLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -65,11 +85,21 @@ public class TimeClockView extends JPanel implements ActionListener {
 		this.add(timePane, BorderLayout.CENTER);
 		this.add(entryPane, BorderLayout.PAGE_END);
 	}
-	
+
+	/**
+	 * set the current time on the clock
+	 * 
+	 * @param time current time
+	 */
 	public void setTime(String time) {
 		timeLabel.setText(time);
 	}
 
+	/**
+	 * set the rounded time on the clock
+	 * 
+	 * @param time rounded time
+	 */
 	public void setRoundedTime(String time) {
 		roundedTimeLabel.setText(time);
 	}
@@ -91,6 +121,9 @@ public class TimeClockView extends JPanel implements ActionListener {
 
 	}
 
+	/**
+	 * highlight the text area when there is an error
+	 */
 	public void textError() {
 		idField.setText("");
 		idField.setBorder(new LineBorder(Color.RED, 2));

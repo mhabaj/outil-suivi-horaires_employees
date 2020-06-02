@@ -7,6 +7,6 @@
 <listEntry value="4"/>
 </listAttribute>
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_EXCLUDE_TEST_CODE" value="true"/>
-<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="central.MainTest"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="view.MainTest"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="centrale"/>
 </launchConfiguration>
