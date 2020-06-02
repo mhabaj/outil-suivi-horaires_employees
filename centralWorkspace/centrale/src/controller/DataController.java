@@ -22,7 +22,6 @@ import java.util.Scanner;
 public class DataController<Type> {
 
 	private String fileUrl;
-
 	private FileOutputStream fos;
 	private ObjectOutputStream oos;
 

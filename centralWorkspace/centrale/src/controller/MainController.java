@@ -25,9 +25,9 @@ import view.MainView;
  *
  */
 public class MainController {
-	private final String COMPANY_DATABASE = "src" + File.separator + "assets" + File.separator + "dataBase.ser";
+	private final String COMPANY_DATABASE = "." + File.separator + "assets" + File.separator + "dataBase.ser";
 
-	private final String PARAMETERS_BACKUP = "src" + File.separator + "assets" + File.separator + "settings_save.ser";
+	private final String PARAMETERS_BACKUP = "." + File.separator + "assets" + File.separator + "settings_save.ser";
 
 	private final int APPLICATION_DEFAULT_PORT = 7700;
 	private final int DEFAULT_AUTO_BACKUP_RATE_MS = 20000; // Auto backup delay 20 secs default

@@ -24,9 +24,9 @@ import view.MainView;
  */
 public class MainController {
 
-	private final String DATA_BACKUP_PATH = "src" + File.separator + "assets" + File.separator + "DATA_BACKUP.txt";
+	private final String DATA_BACKUP_PATH = "." + File.separator + "assets" + File.separator + "DATA_BACKUP.txt";
 
-	private final String SETTINGS_BACKUP_PATH = "src" + File.separator + "assets" + File.separator + "config.txt";
+	private final String SETTINGS_BACKUP_PATH = "." + File.separator + "assets" + File.separator + "config.txt";
 
 	private final int SERVER_DEFAULT_PORT = 7700;
 	private final String SERVER_DEFAULT_ADDRESS = "127.0.0.1";
