@@ -75,9 +75,9 @@ public class ParametersView extends JPanel implements ActionListener {
 	 */
 	public void setServerStatu(boolean server) {
 		if (server)
-			serverStatus.setText("Server Statu : UP");
+			serverStatus.setText("Server Status : UP");
 		else
-			serverStatus.setText("Server Statu : DOWN");
+			serverStatus.setText("Server Status : DOWN");
 	}
 
 	@Override

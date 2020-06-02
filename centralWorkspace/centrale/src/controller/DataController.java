@@ -74,7 +74,6 @@ public class DataController<Type> {
 				this.fis.close();
 				return obj;
 			} catch (EOFException e) {
-				this.ois.close();// closing ressources
 				this.fis.close();
 				return null;
 			}
@@ -106,7 +105,5 @@ public class DataController<Type> {
 		}
 
 	}
-
-	
 
 }

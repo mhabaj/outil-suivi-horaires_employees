@@ -162,107 +162,129 @@ public class MainController {
 	 * 
 	 * @param input
 	 */
-	public void parseEmulatorInput(String input) {
+	public void parseEmulatorInput(String str) {
 
-		if (input.matches(
-				"(20)\\d\\d([-])(0[1-9]|1[012])\\2(0[1-9]|[12][0-9]|3[01])\\/([01][0-9]|2[0-3]|\\d{0}[0-9]):[0-5][0-9]\\/([0-9][0-9][0-9][0-9][0-9])")) {
-			String[] strTmp = input.split("/"); // split data into 3 strings
+		String input = str.trim(); // remove spaces
+		if (!input.equals("")) {
+			// (20)\\d\\d([-])(0[1-9]|1[012])\\2(0[1-9]|[12][0-9]|3[01])\\/ : we take the
+			// number 20 with 2 more digits, then a "-", then 0 with a digit from 1 -> 9 OR
+			// 1 with digit from 0->2...etc We will get at the end the format : yyyy-MM-dd/
 
-			if (strTmp.length < 3) {
-				System.out.println("Couldn't Parse input DATA  " + System.lineSeparator()); // invalide input -> end
-			} else {
+			// ([01][0-9]|2[0-3]|\\d{0}[0-9]):[0-5][0-9]\\/ : we take 0, 1 or 2 with any
+			// digit from 0 to 9, except 2 with a digit from 0 to 23 (for 20:00, 22:00,
+			// 23:00..). Finally we get a format: HH:mm/ or H:mm/
 
-				int id_Worker = Integer.parseInt(strTmp[2]); // get worker id from split operation
-				String datetmp = strTmp[0];// get dateOfAction from split operation
-				String time = strTmp[1];// get timeOfAction from split operation
+			// ([1-9][0-9][0-9][0-9][0-9]) : we take 5 digits between 0 and 9 (first one
+			// 1-9) (Worker ID is 5 digits and starts at 10000). Finally we get : workerID
 
-				try {
+			// We could've parsed it with code, but for simplicity and time effeciency
+			// reasons, we chose regular expressions in here.
 
-					// Parse date into the right dd/MM/yyyy format for further treatment:
-					///////////////////////////////////////////////////////////////////
-					DateFormat oldTMP = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-					DateFormat newTMP = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
-					Date date1 = oldTMP.parse(datetmp);
+			if (input.matches(
+					"(20)\\d\\d([-])(0[1-9]|1[012])\\2(0[1-9]|[12][0-9]|3[01])\\/([01][0-9]|2[0-3]|\\d{0}[0-9]):[0-5][0-9]\\/([1-9][0-9][0-9][0-9][0-9])")) {
+				String[] strTmp = input.split("/"); // split data into 3 strings
 
-					String date = newTMP.format(date1);
-					//////////////////////////////////////////////////////////////////
-					// check if the event day is weekend or not:
-					Date tmpDate = new SimpleDateFormat("dd/MM/yyyy").parse(date); // parse date String into Date
-																					// object
-					DateFormat format2 = new SimpleDateFormat("EEEE", Locale.US); // Get the day name out of the
-																					// Date (Local.US
-																					// for english days names)
-					String weekDay = format2.format(tmpDate); // convert Date name to String
-					if (!weekDay.equals("Saturday") && !weekDay.equals("Sunday")) {
+				if (strTmp.length < 3) {
+					System.out.println("Couldn't Parse input DATA  " + System.lineSeparator()); // invalide input -> end
+				} else {
 
-						try {
-							// check if worker is in company
-							WorkerModel signingIn_Worker = company.whereIsWorker(id_Worker).getWorkerById(id_Worker);
+					int id_Worker = Integer.parseInt(strTmp[2]); // get worker id from split operation
+					String datetmp = strTmp[0];// get dateOfAction from split operation
+					String time = strTmp[1];// get timeOfAction from split operation
+
+					try {
+
+						// Parse date into the right dd/MM/yyyy format for further treatment:
+						///////////////////////////////////////////////////////////////////
+						DateFormat oldTMP = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+						DateFormat newTMP = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+						Date date1 = oldTMP.parse(datetmp);
+
+						String date = newTMP.format(date1);
+						//////////////////////////////////////////////////////////////////
+						// check if the event day is weekend or not:
+						Date tmpDate = new SimpleDateFormat("dd/MM/yyyy").parse(date); // parse date String into Date
+																						// object
+						DateFormat format2 = new SimpleDateFormat("EEEE", Locale.US); // Get the day name out of the
+																						// Date (Local.US
+																						// for english days names)
+						String weekDay = format2.format(tmpDate); // convert Date name to String
+						if (!weekDay.equals("Saturday") && !weekDay.equals("Sunday")) {
 
 							try {
-								// check if worker already signed in during current day :
-								WorkingDayModel wdTemp = signingIn_Worker.getLastWorkingDay();
-								if (wdTemp.getTodaysDate().equals(date)) {
+								// check if worker is in company
+								WorkerModel signingIn_Worker = company.whereIsWorker(id_Worker)
+										.getWorkerById(id_Worker);
 
-									if (wdTemp.getArrivalTime() == null) { // if not checked in arrival:
-										wdTemp.setArrivalTime(time); // check-in Arrival
-									} else {
-										if (wdTemp.getDepartureTime() == null) { // if he is finishing his day:
-											wdTemp.setDepartureTime(time);
-											signingIn_Worker.addTimeOverflow(wdTemp); // calculate if he left early or
-																						// late
-																						// (if
-																						// he
-																						// did respect his schedule
+								try {
+									// check if worker already signed in during current day :
+									WorkingDayModel wdTemp = signingIn_Worker.getLastWorkingDay();
+									WorkingDayModel wdTemp2 = signingIn_Worker.getWorkingDayByDate(date);
+
+									if (wdTemp.getTodaysDate().equals(date)) {
+
+										if (wdTemp.getArrivalTime() == null) { // if not checked in arrival:
+											wdTemp.setArrivalTime(time); // check-in Arrival
+										} else {
+											if (wdTemp.getDepartureTime() == null) { // if he is finishing his day:
+												wdTemp.setDepartureTime(time);
+												signingIn_Worker.addTimeOverflow(wdTemp);
+											}
 										}
-									}
-								} else {
+									} else if (wdTemp2 != null) {
 
-									signingIn_Worker.addWorkingDay(date, time); // if the event day never found, create
-																				// it
-																				// and
-																				// add
-																				// the arrival time
+										if (wdTemp2.getArrivalTime() == null) { // if not checked in arrival:
+											wdTemp2.setArrivalTime(time); // check-in Arrival
+										} else {
+											if (wdTemp2.getDepartureTime() == null) { // if he is finishing his day:
+												wdTemp2.setDepartureTime(time);
+												signingIn_Worker.addTimeOverflow(wdTemp2);
+											}
+
+										}
+									} else {
+										signingIn_Worker.addWorkingDay(date, time);
+									}
+								} catch (Exception e) {
+
+									signingIn_Worker.addWorkingDay(date, time); // If it's his first day, create it and
+																				// sign
+																				// him
+																				// in
+																				// with
+																				// arrival time
 
 								}
+								view.updateInfos(signingIn_Worker.getId_Worker());
+
 							} catch (Exception e) {
-
-								signingIn_Worker.addWorkingDay(date, time); // If it's his first day, create it and sign
-																			// him
-																			// in
-																			// with
-																			// arrival time
-
+								// Could'nt identify worker using input ID -> end task
+								System.out.println("Invalid worker ID" + System.lineSeparator());
 							}
-							view.updateInfos(signingIn_Worker.getId_Worker());
+						} else {
+							System.out.println("invalide entry as given date is a Saturday or a Sunday. "
+									+ System.lineSeparator());
+							// Weekend so company closed
 
-						} catch (Exception e) {
-							// Could'nt identify worker using input ID -> end task
-							System.out.println("Invalid worker ID" + System.lineSeparator());
 						}
-					} else {
-						System.out.println(
-								"invalide entry as given date is a Saturday or a Sunday. " + System.lineSeparator());
-						// Weekend so company closed
-
+					} catch (ParseException e1) {
+						System.out.println("Couldn't Parse input Date  " + System.lineSeparator()); // invalide date
+																									// input
+																									// ->
+																									// end
+																									// current Task.
 					}
-				} catch (ParseException e1) {
-					System.out.println("Couldn't Parse input Date  " + System.lineSeparator()); // invalide date
-																								// input
-																								// ->
-																								// end
-																								// current Task.
+
 				}
 
+			} else
+
+			{
+				System.out.println(
+						" Invalide Input Data structure. Please refer to documentation for parsable/Valid data format:  yyyy-MM-dd/HH:mm (or H:mm)/workerID "
+								+ System.lineSeparator()); // cant parse -> stop treatment
+
 			}
-
-		} else
-
-		{
-			System.out.println(
-					" Invalide Input Data structure. Please refer to documentation for parsable/Valid data format  "
-							+ System.lineSeparator()); // cant parse -> stop treatment
-
 		}
 	}
 

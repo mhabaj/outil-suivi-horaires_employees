@@ -573,8 +573,10 @@ public class WorkerView extends JPanel implements ListSelectionListener, ActionL
 		else if (event.getSource() == addEntryFileButton) {
 			// ask for the file to use
 			JFileChooser filechooser = new JFileChooser();
-			FileNameExtensionFilter Filefilter = new FileNameExtensionFilter("TEXT FILES", "txt", "text");
+			FileNameExtensionFilter Filefilter = new FileNameExtensionFilter("Text file contains on each line: YYYY-MM-DD/HH:mm/workerID ", "txt", "text");
 			filechooser.setFileFilter(Filefilter);
+			
+
 
 			int returnValue = filechooser.showOpenDialog(null);
 

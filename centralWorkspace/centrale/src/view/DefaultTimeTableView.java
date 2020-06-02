@@ -44,7 +44,7 @@ public class DefaultTimeTableView extends JScrollPane implements TableModelListe
 		}
 
 		// set the header of the table
-		String[] defaultTimeHeader = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" };
+		String[] defaultTimeHeader = { "Monday(HH:mm)", "Tuesday(HH:mm)", "Wednesday(HH:mm)", "Thursday(HH:mm)", "Friday(HH:mm)" };
 
 		defaultTimeTab = new JTable(defaultTimeList, defaultTimeHeader);
 		defaultTimeTab.getModel().addTableModelListener(this);
@@ -82,7 +82,7 @@ public class DefaultTimeTableView extends JScrollPane implements TableModelListe
 					w.setDefault_ArrivalTime_Worker("Friday", changedHour);
 					break;
 				}
-			} else if (row == 0) {
+			} else if (row == 1) {
 				switch (column) {
 				case 0:
 					w.setDefault_DepartureTime_Worker("Monday", changedHour);
