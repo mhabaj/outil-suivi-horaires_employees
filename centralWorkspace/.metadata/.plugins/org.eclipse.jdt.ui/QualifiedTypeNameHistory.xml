@@ -19,7 +19,6 @@
 <fullyQualifiedTypeName name="java.awt.Dimension"/>
 <fullyQualifiedTypeName name="java.util.Calendar"/>
 <fullyQualifiedTypeName name="java.sql.Time"/>
-<fullyQualifiedTypeName name="central.ManagerController"/>
 <fullyQualifiedTypeName name="java.text.DateFormat"/>
 <fullyQualifiedTypeName name="java.text.SimpleDateFormat"/>
 <fullyQualifiedTypeName name="java.util.Date"/>
@@ -36,5 +35,9 @@
 <fullyQualifiedTypeName name="java.time.chrono.Era"/>
 <fullyQualifiedTypeName name="central.Department"/>
 <fullyQualifiedTypeName name="org.omg.PortableInterceptor.SYSTEM_EXCEPTION"/>
+<fullyQualifiedTypeName name="central.ManagerController"/>
+<fullyQualifiedTypeName name="java.io.Serializable"/>
+<fullyQualifiedTypeName name="java.awt.GridLayout"/>
 <fullyQualifiedTypeName name="java.lang.System"/>
+<fullyQualifiedTypeName name="javax.swing.filechooser.FileNameExtensionFilter"/>
 </qualifiedTypeNameHistroy>
