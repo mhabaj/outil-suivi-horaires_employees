@@ -12,12 +12,18 @@ import model.WorkerModel;
 import model.WorkingDayModel;
 
 /**
+ * Pane that shows all the worked days of a worker
+ * 
  * @author Alhabaj Mahmod /Belda Tom / Dakroub MohamadAli
  * 
- *         Pane that shows all the worked days of a worker
+ * 
  */
 public class WorkingDaysTableView extends JScrollPane implements TableModelListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -754949008728367374L;
 	private JTable workedDaysTab;
 	private WorkerModel w;
 	private WorkerView wv;

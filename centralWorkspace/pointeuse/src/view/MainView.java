@@ -7,9 +7,12 @@ import javax.swing.JTabbedPane;
 import controller.MainController;
 
 /**
+ * 
+ * frame for the time clock application
+ * 
  * @author Alhabaj Mahmod / Belda Tom / Dakroub MohamadAli
  * 
- *         frame for the time clock application
+ * 
  */
 public class MainView extends JFrame {
 
@@ -17,8 +20,6 @@ public class MainView extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = -1038445110009748435L;
-
-	private MainController emc;
 
 	private JTabbedPane tabPane;
 
@@ -32,7 +33,6 @@ public class MainView extends JFrame {
 	 * @param emc emulator controller
 	 */
 	public MainView(MainController emc) {
-
 
 		// create tabs
 		tabPane = new JTabbedPane();

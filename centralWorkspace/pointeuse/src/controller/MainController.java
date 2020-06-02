@@ -286,6 +286,7 @@ public class MainController {
 	}
 
 	public static void main(String args[]) {
+		@SuppressWarnings("unused")
 		MainController control = new MainController();
 	}
 

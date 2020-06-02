@@ -32,12 +32,20 @@ import model.DepartmentModel;
 import model.WorkerModel;
 
 /**
+ * 
+ * Pane for the management of the workers
+ * 
  * @author Alhabaj Mahmod / Belda Tom / Dakroub MohamadAli
  * 
- *         Pane for the management of the workers
+ * 
  */
+@SuppressWarnings("rawtypes")
 public class WorkerView extends JPanel implements ListSelectionListener, ActionListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7858075020052301724L;
 	private JTextField searchField;
 	private JButton searchButton;
 	private JButton addWorkerButton;
@@ -183,6 +191,7 @@ public class WorkerView extends JPanel implements ListSelectionListener, ActionL
 	/**
 	 * update the department list
 	 */
+	@SuppressWarnings({ "unchecked" })
 	public void updateDList() {
 		ArrayList<String> departNameList = new ArrayList<>();
 		// get all the departments in the list
@@ -209,6 +218,7 @@ public class WorkerView extends JPanel implements ListSelectionListener, ActionL
 	 * 
 	 * @param departID id of the selected department
 	 */
+	@SuppressWarnings("unchecked")
 	public void updateWList(int departID) {
 		ArrayList<String> workerNameList = new ArrayList<>();
 		// get all the worker in a list
@@ -234,9 +244,12 @@ public class WorkerView extends JPanel implements ListSelectionListener, ActionL
 	}
 
 	/**
+	 * 
+	 * set all the informations on a worker
+	 * 
 	 * @param workerId id of the selected worker
 	 * 
-	 *                 set all the informations on a worker
+	 * 
 	 */
 	public void setInfo(int workerId) {
 
@@ -332,7 +345,6 @@ public class WorkerView extends JPanel implements ListSelectionListener, ActionL
 		delButton.addActionListener(this);
 
 		JPanel paramPane = new JPanel();
-		BoxLayout paramLayout = new BoxLayout(paramPane, BoxLayout.X_AXIS);
 
 		paramPane.add(delButton);
 

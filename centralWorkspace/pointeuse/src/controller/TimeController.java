@@ -13,6 +13,13 @@ import java.util.Locale;
 
 import view.MainView;
 
+/**
+ * 
+ * Runnable clock with rounding time and dates functionalities
+ * 
+ * @author Alhabaj Mahmod /Belda Tom / Dakroub MohamadAli
+ *
+ */
 public class TimeController implements Runnable {
 
 	private LocalDate current_Date;
@@ -31,8 +38,10 @@ public class TimeController implements Runnable {
 	}
 
 	/**
-	 * @param current_Time the current_Time to set
+	 * Updates current Time displayed
+	 * 
 	 */
+	@SuppressWarnings("static-access")
 	public void updateCurrent_Time() {
 		this.current_Time = LocalTime.now().parse(LocalTime.now().truncatedTo(ChronoUnit.HOURS)
 				.plusMinutes(LocalTime.now().getMinute()).format(DateTimeFormatter.ofPattern("HH:mm")));
@@ -48,7 +57,7 @@ public class TimeController implements Runnable {
 	}
 
 	/**
-	 * @brief Update current date
+	 * Update current date
 	 */
 	public void updateCurrent_Date() {
 		this.current_Date = LocalDate.now();
@@ -76,18 +85,24 @@ public class TimeController implements Runnable {
 	}
 
 	/**
-	 * @param rounded_Time the rounded_Time to set
+	 * Update current rounded time
 	 */
 	public void updateRounded_Time() {
 		this.rounded_Time = roundedTime();
 	}
 
+	/**
+	 * @return current rounded time
+	 */
 	public String getRounded_Time() {
 		updateRounded_Time();
 		return this.rounded_Time.toString();
 
 	}
 
+	/**
+	 * Update all clock components
+	 */
 	public void update_All() {
 		this.updateCurrent_Time();
 		this.updateCurrent_Date();
@@ -97,6 +112,9 @@ public class TimeController implements Runnable {
 		vue.setRoundedTime(getRounded_Time());
 	}
 
+	/**
+	 * @return return day name of the week
+	 */
 	public String getTodayWeekDay() {
 		Date tmpDate;
 		String todayweekDay = null;

@@ -18,9 +18,11 @@ import javax.swing.border.LineBorder;
 import controller.MainController;
 
 /**
+ * Pane that shows the parameters
+ * 
  * @author Alhabaj Mahmod / Belda Tom / Dakroub MohamadAli
  * 
- *         Pane that shows the parameters
+ * 
  */
 public class ParametersView extends JPanel implements ActionListener {
 

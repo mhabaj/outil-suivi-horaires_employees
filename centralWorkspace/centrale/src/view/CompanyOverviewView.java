@@ -33,6 +33,8 @@ import model.WorkingDayModel;
  * 
  * 
  */
+
+@SuppressWarnings("rawtypes")
 public class CompanyOverviewView extends JPanel implements ActionListener {
 
 	/**
@@ -136,6 +138,7 @@ public class CompanyOverviewView extends JPanel implements ActionListener {
 	/**
 	 * update workers informations of the day
 	 */
+	@SuppressWarnings("unchecked")
 	public void updateActivityList() {
 
 		// get today's date
@@ -175,6 +178,7 @@ public class CompanyOverviewView extends JPanel implements ActionListener {
 	 * 
 	 * @param depart selected department
 	 */
+	@SuppressWarnings("unchecked")
 	public void updateActivityList(DepartmentModel depart) {
 		// get today's date
 		String datetmp = LocalDate.now().toString();
