@@ -38,10 +38,12 @@
 <fullyQualifiedTypeName name="central.ManagerController"/>
 <fullyQualifiedTypeName name="java.io.Serializable"/>
 <fullyQualifiedTypeName name="java.awt.GridLayout"/>
-<fullyQualifiedTypeName name="java.lang.System"/>
 <fullyQualifiedTypeName name="javax.swing.filechooser.FileNameExtensionFilter"/>
 <fullyQualifiedTypeName name="model.WorkingDayModel"/>
 <fullyQualifiedTypeName name="model.WorkerModel"/>
 <fullyQualifiedTypeName name="model.DepartmentModel"/>
 <fullyQualifiedTypeName name="model.CompanyModel"/>
+<fullyQualifiedTypeName name="javax.swing.JOptionPane"/>
+<fullyQualifiedTypeName name="java.lang.System"/>
+<fullyQualifiedTypeName name="java.awt.event.WindowEvent"/>
 </qualifiedTypeNameHistroy>
