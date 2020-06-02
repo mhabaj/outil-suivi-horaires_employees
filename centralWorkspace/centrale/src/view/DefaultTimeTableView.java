@@ -10,9 +10,12 @@ import javax.swing.event.TableModelListener;
 import model.WorkerModel;
 
 /**
+ * 
+ * Table of the default time for a worker
+ * 
  * @author Alhabaj Mahmod / Belda Tom / Dakroub MohamadAli
  * 
- *         Table of the default time for a worker
+ * 
  */
 public class DefaultTimeTableView extends JScrollPane implements TableModelListener {
 

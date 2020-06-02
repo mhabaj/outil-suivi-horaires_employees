@@ -8,9 +8,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
+ * 
+ * Manages network connections and communications with Clients
+ * 
  * @author Alhabaj Mahmod/ Belda Tom/ Dakroub MohamadAli
  * 
- *         Manages network connections and communications with Clients
+ * 
  * 
  */
 public class ServerController implements Runnable {

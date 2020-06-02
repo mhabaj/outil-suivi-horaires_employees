@@ -11,9 +11,12 @@ import controller.MainController;
 import model.WorkerModel;
 
 /**
+ * 
+ * pop up window for adding an entry
+ * 
  * @author Alhabaj Mahmod / Belda Tom / Dakroub MohamadAli
  * 
- *         pop up window for adding an entry
+ * 
  */
 public class AddEntryView {
 

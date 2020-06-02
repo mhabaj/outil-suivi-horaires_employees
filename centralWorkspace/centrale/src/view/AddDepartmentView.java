@@ -11,9 +11,10 @@ import controller.MainController;
 import model.DepartmentModel;
 
 /**
+ * Pop up window for adding a department
+ * 
  * @author Alhabaj Mahmod / Belda Tom / Dakroub MohamadAli
  * 
- *         Pop up window for adding a department
  * 
  */
 public class AddDepartmentView {

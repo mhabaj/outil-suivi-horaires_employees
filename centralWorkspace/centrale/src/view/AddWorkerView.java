@@ -13,8 +13,9 @@ import controller.MainController;
 import model.DepartmentModel;
 
 /**
- * @author Alhabaj Mahmod / Belda Tom / Dakroub MohamadAli pop up window for
- *         adding a worker
+ * pop up window for adding a worker
+ * 
+ * @author Alhabaj Mahmod / Belda Tom / Dakroub MohamadAli
  */
 public class AddWorkerView {
 

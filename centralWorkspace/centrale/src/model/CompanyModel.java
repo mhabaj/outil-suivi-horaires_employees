@@ -6,9 +6,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
+ * 
+ * Represents the Company data Structure
+ * 
  * @author Alhabaj Mahmod/ Belda Tom/ Dakroub MohamadAli
  * 
- *         Represents the Company data Structure
+ * 
  *
  */
 public class CompanyModel implements Serializable {
@@ -17,7 +20,7 @@ public class CompanyModel implements Serializable {
 
 	private String name_Company;
 	private ArrayList<DepartmentModel> Department_List;
-	private int id_Worker_Counter = 10000; //a worker ID is minimum 10000 and max 99999
+	private int id_Worker_Counter = 10000; // a worker ID is minimum 10000 and max 99999
 	private int id_Department_Counter = 1;
 
 	/**
@@ -136,17 +139,6 @@ public class CompanyModel implements Serializable {
 	 */
 	public void add_Department(DepartmentModel department_To_Add) {
 		this.Department_List.add(department_To_Add);
-	}
-
-	/**
-	 * Creates a new Department and adds it to the company's Departments index
-	 * 
-	 * @param id_Department
-	 * @param name_Department
-	 */
-	public void add_New_Department(int id_Department, String name_Department) {
-		DepartmentModel dptTemp = new DepartmentModel(name_Department, this);
-		this.Department_List.add(dptTemp);
 	}
 
 	/**

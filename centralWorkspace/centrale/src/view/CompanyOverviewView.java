@@ -26,9 +26,12 @@ import model.WorkerModel;
 import model.WorkingDayModel;
 
 /**
+ * 
+ * pane that shows the main activity of the company
+ * 
  * @author Alhabaj Mahmod / Belda Tom / Dakroub MohamadAli
  * 
- *         pane that shows the main activity of the company
+ * 
  */
 public class CompanyOverviewView extends JPanel implements ActionListener {
 
@@ -116,7 +119,6 @@ public class CompanyOverviewView extends JPanel implements ActionListener {
 
 		// if there is departments
 		if (comp.getDepartment_List() != null) {
-			int departIndex = 0;
 
 			// add all the departments in the combo box
 			for (DepartmentModel depart : comp.getDepartment_List()) {
@@ -126,7 +128,7 @@ public class CompanyOverviewView extends JPanel implements ActionListener {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				departIndex++;
+
 			}
 		}
 	}

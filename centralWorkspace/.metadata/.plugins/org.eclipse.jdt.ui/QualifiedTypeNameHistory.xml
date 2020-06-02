@@ -40,4 +40,8 @@
 <fullyQualifiedTypeName name="java.awt.GridLayout"/>
 <fullyQualifiedTypeName name="java.lang.System"/>
 <fullyQualifiedTypeName name="javax.swing.filechooser.FileNameExtensionFilter"/>
+<fullyQualifiedTypeName name="model.WorkingDayModel"/>
+<fullyQualifiedTypeName name="model.WorkerModel"/>
+<fullyQualifiedTypeName name="model.DepartmentModel"/>
+<fullyQualifiedTypeName name="model.CompanyModel"/>
 </qualifiedTypeNameHistroy>

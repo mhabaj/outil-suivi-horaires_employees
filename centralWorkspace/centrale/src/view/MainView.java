@@ -9,9 +9,12 @@ import javax.swing.JTabbedPane;
 import controller.MainController;
 
 /**
+ * 
+ * Frame for the application
+ * 
  * @author Alhabaj Mahmod / Belda Tom / Dakroub MohamadAli
  * 
- *         Frame for the application
+ * 
  */
 public class MainView extends JFrame implements WindowListener {
 

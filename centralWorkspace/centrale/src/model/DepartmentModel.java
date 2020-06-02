@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
+ * 
+ * Represents the Department data Structure inside a Company
+ * 
  * @author Alhabaj Mahmod/ Belda Tom/ Dakroub MohamadAli
  *
- *         Represents the Department data Structure inside a Company
  *
  */
 

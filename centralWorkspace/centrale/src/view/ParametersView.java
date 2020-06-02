@@ -1,6 +1,5 @@
 package view;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -15,14 +14,16 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
-import javax.swing.event.ListSelectionListener;
 
 import controller.MainController;
 
 /**
+ * 
+ * Pane to set the parameters of the application
+ * 
  * @author Alhabaj Mahmod/ Belda Tom / Dakroub MohamadAli
  * 
- *         Pane to set the parameters of the application
+ * 
  */
 public class ParametersView extends JPanel implements ActionListener {
 

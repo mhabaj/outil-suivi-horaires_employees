@@ -33,7 +33,6 @@ public class MainView extends JFrame {
 	 */
 	public MainView(MainController emc) {
 
-		this.emc = emc;
 
 		// create tabs
 		tabPane = new JTabbedPane();
